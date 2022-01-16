@@ -1,0 +1,24 @@
+.side-profile {
+   padding: 1.5rem 4rem;
+   text-align: center;
+   z-index: 10;
+   background: $light-2;
+   border-radius: 5px;
+
+   &__img {
+      display: inline-block;
+      height: 6rem;
+      width: 6rem;
+      border-radius: 50%; 
+   }
+
+   &__name {
+      font-size: 1.4rem;
+      font-weight: 600;
+   }
+
+   &__bio {
+      font-size: 1rem;
+      color: $grey-2;
+   }
+}

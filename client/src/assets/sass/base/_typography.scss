@@ -1,0 +1,26 @@
+@font-face {
+	font-family: myFont;
+  	src: url(../../fonts/OpenSans-Regular.ttf);
+}
+
+@font-face {
+	font-family: Roboto;
+  	src: url('../../fonts/Roboto-Regular.ttf');
+}
+
+@font-face {
+	font-family: myFontBold;
+  	src: url('../../fonts/OpenSans-Bold.ttf');
+}
+
+@font-face {
+	font-family: myFontLight;
+  	src: url('../../fonts/OpenSans-Light.ttf');
+}
+
+body {
+   font-family: Roboto;
+   font-weight: 400;
+   font-size: 1.2rem;
+	color: $grey-1;
+}

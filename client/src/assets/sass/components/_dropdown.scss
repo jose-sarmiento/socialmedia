@@ -1,0 +1,90 @@
+.drop {
+	position: absolute;
+	top: 5.5rem;
+	right: 0;
+	width: 28rem;
+	background-color: $light-1;
+	box-shadow: 0 2px 15px rgba(0,0,0,.2);
+	z-index: 	1000!important;
+	padding: 0 .5rem;
+	background: $light-2;
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1rem .4rem 0;
+		margin-bottom: 1rem;
+	}
+
+	&__heading {
+		font-size: 1.4rem;
+		color: $black;
+	}
+
+	&--notification {
+		height: calc(100vh - 5.5rem);
+		display: block;
+	}
+
+	&--options {
+		height: 50vh;
+		display: block;
+	}
+}
+
+.notification {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	padding: .8rem .4rem;
+
+	&__img {
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 50%;
+		display: block;
+		margin-right: 1rem;
+	}
+
+	&__details {
+		flex: 1;
+		line-height: 1.1rem;
+	}
+
+	&__text {
+		font-size: 1.2rem;
+		color: $grey-2;
+		letter-spacing: .3px;
+
+		&--unseen {
+			color: $grey-1;
+			font-weight: 600;
+		}
+	}
+
+	&__time {
+		margin-top: 0;
+		font-size: 1rem;
+		color: $grey-4;
+		padding: 0;
+
+		&--unseen {
+			color: $grey-1;
+			font-weight: 600;
+		}
+	}
+
+	&__unseen {
+		height: 1rem;
+		width: 1rem;
+		border-radius: 50%;
+		background-color: $primary-color;
+	}
+}
+
+.option {
+	display: block;
+	width: 100%;
+}
+

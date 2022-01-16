@@ -1,0 +1,62 @@
+.chat {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	text-decoration: none;
+	padding: .2rem 1rem;
+	margin-top: .5rem;
+	color: $light-3;
+
+	&:hover {
+		background: $gradient-reverse;
+	}
+
+	&--unseen {
+		color: $light-1;
+	}
+
+	&__user {
+		border-radius: 50%;
+		position: relative;
+		font-size: 1.2rem;
+		font-weight: 400;
+	}
+
+	&__img {
+		display: block;
+		width: 2.6rem;
+		height: 2.6rem;
+		border-radius: 50%;
+	}
+
+	&__active-dot {
+		height: 1rem;
+		width: 1rem;
+		border-radius: 50%;
+		background: $primary-color-light;
+		border: 2px solid $primary-color;
+		z-index: 100;
+		position: absolute;
+		bottom: -2px;
+		right: 0;
+	}
+
+	&__content {
+		flex: 1;
+		margin-left: 1rem;
+		margin-right: 1rem;
+	}
+
+	// &__username {
+	// 	flex: 1;
+	// 	font-size: 1.1rem;
+	// 	font-weight: 400;
+	// }
+
+	&__white-dot {
+		width: 1rem;
+		height: 1rem;
+		border-radius: 50%;
+		background: $light-1;
+	}
+}

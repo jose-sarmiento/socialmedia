@@ -1,0 +1,80 @@
+.friend-item {
+   text-decoration: none;
+   display: flex;
+   padding: .5rem .3rem;
+   align-items: center;
+   justify-content: space-between;
+   color: $grey-1;
+
+   &:not(last-child) {
+      margin-bottom: 1rem;
+   }
+
+   &__img-wrapper {
+      position: relative;
+   }
+
+   &__active {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      height: 1rem;
+      width: 1rem;
+      border-radius: 50%;
+      background-color: lightgreen;
+      border: 2px solid $light-2;
+   }
+
+   &__white-dot {
+      display: inline-block;
+      height: 1rem;
+      width: 1rem;
+      border-radius: 50%;
+      background-color: $light-1;
+   }
+
+   &__img {
+      height: 2.5rem;
+      width: 2.5rem;
+      border-radius: 50%;
+      display: block;
+   }
+
+   &__name {
+      font-size: 1.2rem;
+      margin-right: auto;
+      margin-left: 1rem;
+
+      &--dark {
+         color: $grey-2;
+      }
+
+      &--light {
+         color: $light-2;
+      }
+
+      &--active {
+         color: $light-1;
+      }
+   }
+
+   &__subtitle {
+      font-size: 1rem;
+      margin-left: 1rem;
+      color: $grey-2;
+   }
+
+   &__btn {
+      border: 1px solid $primary-color;
+      color: $primary-color;
+      padding: .4rem .6rem;
+      border-radius: 3px;
+      font-size: 1.1rem;
+      margin-left: 1rem;
+
+      &:hover {
+         background: $primary-color;
+         color: $light-1;
+      }
+   }
+} 

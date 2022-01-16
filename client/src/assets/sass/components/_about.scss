@@ -1,0 +1,131 @@
+.about {
+	max-width: 90%;
+	margin: 0 auto;
+
+	&__icon {
+		font-size: 1.2rem;
+		color: $grey-2;
+
+		&--save {
+			color: $primary-color;
+		}
+	}
+
+	&__form {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		grid-auto-columns: 1fr;
+		grid-column-gap: 1.2rem;
+		font-size: 1.1rem;
+		font-family: Roboto;
+		padding: 1rem 1.2rem;
+
+		input::placeholder,
+		textarea::placeholder {
+			color: $grey-3;
+		}
+
+		.editBtn-wrapper {
+			grid-column: 1/-1;
+			grid-row: 1/2;
+			height: auto;
+			display: flex;
+			justify-content: flex-end;
+		}
+
+		.editBtn {
+			padding: 0.5rem 1.2rem;
+			font-size: 1.2rem;
+			border: 1px solid $primary-color;
+			color: $primary-color;
+			font-weight: 500;
+			transition: all 0.3s ease;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+
+			&:hover {
+				background: $primary-color;
+				color: $light-1!important;
+			}
+
+			&:hover svg {
+				color: $light-1!important;
+			}
+
+			&::active {
+				outline: none;
+			}
+		}
+
+		fieldset {
+			padding: 1rem 1.5rem;
+			border: 1px solid $light-3;
+			background: $light-2;
+			margin-bottom: 1.5rem;
+
+			legend {
+				padding: 0.5rem 1rem;
+				font-weight: 600;
+				font-size: 1.2rem;
+				display: flex;
+				align-items: center;
+
+				span {
+					margin-right: .6rem;
+					display: flex;
+					align-items: center;
+				}
+			}
+
+			input[type='date']::-webkit-inner-spin-button,
+			input[type='date']::-webkit-calendar-picker-indicator {
+				display: none;
+				-webkit-appearance: none;
+			}
+
+			.form__group {
+				display: flex;
+			}
+
+			.about__label {
+				margin-right: 1rem;
+				font-family: inherit;
+			}
+
+			.about__input {
+				border: none;
+				outline: none;
+				display: block;
+				font-family: inherit;
+				font-size: inherit;
+				flex-grow: 1;
+				border-radius: 1rem;
+				padding: .3rem .6rem;
+			}
+
+			.about__input--active {
+				border: none;
+				outline: none;
+			}
+
+		}
+
+		.bio {
+		}
+
+		textarea {
+			text-indent: 1rem;
+			line-height: 1.5rem;
+			font-size: 1.1rem;
+			font-family: inherit;
+			color: $grey-1;
+			outline: none;
+			border: none;
+			resize: none;
+			display: block;
+			min-height: 10rem;
+			width: 100%;
+		}
+	}
+}

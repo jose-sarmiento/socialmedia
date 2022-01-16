@@ -1,0 +1,45 @@
+.toast {
+	position: absolute!important;
+	top: 5rem;
+	left: 50%;
+	min-width: 20rem;
+	padding: 1rem 2rem;
+	margin: 0 auto;
+	z-index: 2000;
+	border-radius: 100px;
+	box-shadow: 0px 3px 1rem rgba(0,0,0,.3);
+	transform: translate(-50%, 5rem) scale(.6);
+	opacity: 0;
+	@include flex-center;
+	animation: slideUp .8s ease-in forwards;
+
+	&--info {
+		background-image: linear-gradient(to top right, rgb(66, 179, 245), rgb(66, 233, 245));
+	}
+
+	&__message {
+		font-size: 1.4rem;
+		color: $light-1;
+		font-weight: 600;
+		text-transform: capitalize;
+	}
+}
+
+@keyframes slideUp {
+	0% {
+		transform: translate(-50%, 5rem) scale(.6);
+		opacity: 0;
+	} 
+	50% {
+		transform: translate(-50%, 3rem) scale(.7);
+		opacity: .5;
+	}
+	95% {
+		transform: translate(-50%, -.8rem) scale(1.05);
+		opacity: .8;
+	}
+	100% {
+		transform: translate(-50%, 0) scale(1);
+		opacity: 1;
+	}
+}

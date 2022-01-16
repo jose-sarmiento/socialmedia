@@ -1,0 +1,23 @@
+@mixin flex-center {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+@mixin flex-center-x {
+   display: flex;
+   justify-content: center;
+}
+
+@mixin flex-center-y {
+   display: flex;
+   align-items: center;
+}
+
+@mixin box-shadow {
+   box-shadow: 0 2px 3px rgba(0,0,0,.1);
+}
+
+@mixin box-shadow-active {
+   box-shadow: 0 2px 4px rgba($primary-color,.4);
+}

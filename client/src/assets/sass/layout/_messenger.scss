@@ -1,0 +1,91 @@
+.messenger {
+	grid-column: 3/4;
+	// grid-row: 1/-1;
+	height: 100vh;
+  position: sticky;
+	top: 0;
+	border-left: 1px solid $light-3;
+	background-image: $gradient;
+
+	&__header {
+		background-image: $gradient-reverse;
+		height: 5.5rem;
+		width: 100%;
+		box-shadow: $shadow-light;
+		padding-left: 2rem;
+		color: $light-1;
+		@include flex-center-y;
+	}
+
+	&__heading {
+		margin-left: 1rem;
+	}
+
+	&__buttons {
+		display: flex;
+		margin-top: .7rem;
+		margin-bottom: .7rem;
+	}
+
+	&__button {
+		display: inline-block;
+		flex: 1;
+		padding: .6rem;
+		color: $light-1;
+		border: none;
+		border-radius: 3rem;
+		background: transparent;
+		cursor: pointer;
+
+		&--active {
+			background: $gradient;
+		}
+	}
+
+	&__chats {
+		// padding: 0 1rem;
+	}
+
+	&__footer {
+		background-image: $gradient;
+		@include flex-center;
+		height: 5.5rem;
+		width: 100%;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 1rem auto;
+	}
+
+	&__search-form {
+		width: 90%;
+		border-radius: 3rem;
+		margin: 0 auto;
+		background: $primary-color;
+	}
+
+	&__search-label {
+		flex: 0;
+		color: $light-grey;
+		background: transparent;
+		padding: .6rem .4rem .6rem .8rem;
+	}
+
+	&__search {
+		flex: 1;
+		padding: .8rem .2rem;
+		border: 1px solid transparent;
+		background: transparent;
+		color: $light-1;
+
+		&:focus {
+			outline: none;
+		}
+	}
+}
+
+
+
+
+

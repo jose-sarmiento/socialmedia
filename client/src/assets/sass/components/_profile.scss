@@ -1,0 +1,114 @@
+.profile {
+	width: 100%;
+	background: $light-2;
+
+	&__container {
+		position: absolute;
+		left: 50%;
+		transform: translate(-50%, -60%);
+	}
+
+	&__image {
+		height: 10rem;
+		width: 10rem;
+		border-radius: 50%;
+		box-shadow: $shadow-light;
+	}
+
+	&__name {
+		color: $light-1;
+		font-size: 2rem;
+		text-shadow: $grey-3 0px 0px 10px;
+	}
+
+	&__edit-cover {
+		color: $light-1;
+		text-decoration: none;
+		font-style: normal;
+		align-self: flex-end;
+		background: rgba(0, 0, 0, .5);
+		backdrop-filter: blur(10px);
+		display: inline-block;
+		padding: .5rem 1.5rem;
+	}
+
+	&__footer {
+		height: 5rem;
+		display: flex;
+	}
+
+	&__image-wrapper {
+		width: 15rem;
+		position: relative;
+	}
+
+	&__edit-profile {
+		position: absolute;
+		bottom: 1rem;
+		right: 1rem;
+	}
+
+	&__links {
+		flex: 1;
+	}
+}
+
+.cover {
+	height: 25rem;
+	overflow: hidden;
+	@include flex-center;
+	position: relative;
+	background: $light-2;
+
+	&__image {
+		display: block;
+		width: 100%;
+	}
+
+	&__footer {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		height: 4rem;
+		padding: 0 .5rem .5rem 15rem;
+	}
+}
+
+.full-h-nav {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	align-items: stretch;
+
+	&__item {
+		list-style: none;
+
+		&:not(:last-of-type) {
+			margin-right: 2rem;
+		}
+	}
+
+	&__link {
+		font-family: inherit;
+		font-weight: 600;
+		font-size: 1.2rem;
+		color: $grey-4;
+		text-decoration: none;
+		display: inline-block;
+		height: 100%;
+		border-bottom: 3px solid transparent;
+		@include flex-center;
+
+		&--active {
+			border-bottom: 3px solid $primary-color;
+			color: $black;
+		}
+
+		&:hover {
+			border-bottom: 3px solid $primary-color;
+		}
+	}
+}
