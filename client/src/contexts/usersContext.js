@@ -16,7 +16,8 @@ const initialState = {
 	profile: null,
 	people: [],
 	friendRequests: [],
-	friends: []
+	friends: [],
+	birthdays: [],
 };
 
 export const UsersProvider = ({ children }) => {

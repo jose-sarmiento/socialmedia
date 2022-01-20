@@ -1,5 +1,5 @@
 import React from 'react';
-import ListItem from './ListItem';
+import FriendRequestItem from './FriendRequestItem';
 import { FaUserPlus } from 'react-icons/fa';
 import { confirmRequest, rejectRequest } from '../contexts/actions/userActions';
 import { useAuthContext, useUsersContext } from '../contexts';
@@ -29,9 +29,8 @@ const FriendRequestList = ({ friends }) => {
 			<div className='list__group'>
 				<ul className='list__body'>
 					{friends.map(friend => (
-						<ListItem
+						<FriendRequestItem
 							key={friend._id}
-							listType='accept'
 							friend={friend}
 							confirm={handleRequestConfirm}
 							reject={handleRequestReject}

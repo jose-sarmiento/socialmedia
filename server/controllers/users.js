@@ -26,7 +26,7 @@ const getUsers = async (req, res) => {
 				},
 			},
 		},
-		{ $project: { firstname: 1, lastname: 1, profileImage: 1 } },
+		{ $project: { firstname: 1, lastname: 1, profileImage: 1, birthdate: 1 } },
 	]);
 	res.send(people);
 };
@@ -66,6 +66,7 @@ const getUser = async (req, res) => {
 										firstname: 1,
 										lastname: 1,
 										profileImage: 1,
+										birthdate: 1
 									},
 								},
 							],

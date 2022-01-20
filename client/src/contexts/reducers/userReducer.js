@@ -72,12 +72,31 @@ const userReducer = (state, action) => {
                             ...el.recipientInfo,
                         })),
                 },
-                friends: action.payload.userFriends.filter(
-                    (el) => el.status === 3
-                ),
-                friendRequests: action.payload.userFriends.filter(
-                    (el) => el.status === 2
-                ),
+                friends: action.payload.userFriends
+                    .filter((el) => el.status === 3)
+                    .map((item) => ({
+                        createdAt: item.createdAt,
+                        updatedAt: item.updatedAt,
+                        status: item.status,
+                        ...item.recipientInfo,
+                    })),
+                friendRequests: action.payload.userFriends
+                    .filter((el) => el.status === 2)
+                    .map((item) => ({
+                        createdAt: item.createdAt,
+                        updatedAt: item.updatedAt,
+                        status: item.status,
+                        ...item.recipientInfo,
+                    })),
+                birthdays: action.payload.userFriends
+                    .filter((el) => el.status === 3)
+                    .map((item) => ({
+                        createdAt: item.createdAt,
+                        updatedAt: item.updatedAt,
+                        status: item.status,
+                        ...item.recipientInfo,
+                    }))
+                    .filter(item => isBirthdayToday(item.birthdate)),
                 loadingUser: false,
             };
         case users.getUserFailed:
@@ -148,14 +167,14 @@ const userReducer = (state, action) => {
                     coverImage: action.payload.user.coverImage,
                     photos: action.payload.user.photos.sort(function (a, b) {
                         return new Date(b.createdAt) - new Date(a.createdAt);
-                    })
+                    }),
                 },
                 profile: {
                     ...state.profile,
                     coverImage: action.payload.user.coverImage,
                     photos: action.payload.user.photos.sort(function (a, b) {
                         return new Date(b.createdAt) - new Date(a.createdAt);
-                    })
+                    }),
                 },
                 uploadCoverLoading: false,
             };
@@ -175,14 +194,14 @@ const userReducer = (state, action) => {
                     profileImage: action.payload.user.profileImage,
                     photos: action.payload.user.photos.sort(function (a, b) {
                         return new Date(b.createdAt) - new Date(a.createdAt);
-                    })
+                    }),
                 },
                 profile: {
                     ...state.profile,
                     profileImage: action.payload.user.profileImage,
                     photos: action.payload.user.photos.sort(function (a, b) {
                         return new Date(b.createdAt) - new Date(a.createdAt);
-                    })
+                    }),
                 },
                 uploadProfileLoading: false,
             };
@@ -253,3 +272,14 @@ const userReducer = (state, action) => {
 };
 
 export default userReducer;
+
+const isBirthdayToday = (date) => {
+    const inputDate = new Date(date);
+    inputDate.setHours(0,0,0,0)
+    inputDate.setYear(0);
+    const todaysDate = new Date();
+    todaysDate.setHours(0,0,0,0)
+    todaysDate.setYear(0)
+
+    return todaysDate.valueOf() == inputDate.valueOf()
+}

@@ -139,7 +139,6 @@ export const getUsers = ({token}) => async dispatch => {
 				headers: { Authorization: `Bearer ${token}` },
 			}
 		);
-		console.log(data)
 		dispatch({type: users.getUsersSuccess, payload: data})
 	} catch (error) {
 		dispatch({
