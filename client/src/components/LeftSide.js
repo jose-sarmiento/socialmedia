@@ -6,14 +6,16 @@ import profile2 from '../assets/img/profiles/d2.jpg'
 import profile3 from '../assets/img/profiles/d1.jpg'
 import {changeActiveLink} from '../contexts/actions/appActions'
 
-import { useAppContext} from '../contexts'
+import { useAppContext, useUsersContext } from '../contexts'
 
 const LeftSide = () => {
 	const {activeLink, dispatch} = useAppContext()
+	const {friends} = useUsersContext()
 
 	const handleLinkChange = (id) => {
 		changeActiveLink(id)(dispatch)
 	}
+
 	return (
 		<div className="left-content">
 			<div className="tabs">
@@ -37,7 +39,7 @@ const LeftSide = () => {
 							className={isActive => (isActive ? 'tabs__tab tabs__tab--active': 'tabs__tab')}
 						>
 							Friends
-							<span className="tabs__count">(143)</span>
+							<span className="tabs__count">{`(${friends.length})`}</span>
 						</NavLink>
 						<NavLink 
 							to='/pages' 
@@ -82,157 +84,3 @@ const LeftSide = () => {
 }
 
 export default LeftSide
-
-			// <section className="list">
-			// 	<div className="list__heading">
-			// 		<div className="list__icon-wrapper">
-			// 			<FaGift className="list__icon" />
-			// 		</div>
-
-			// 		<h3 className="list__title">Birthdays</h3>
-			// 	</div>
-
-			// 	<div className="list__group list__group--hide">
-			// 		<div className="list__body">
-			// 			<a href="/" className="friend-item friend-item--col3">
-			// 				<img className="friend-item__img" src={img1} />
-
-			// 				<div className="mr-auto lh-0">
-			// 					<h4 className="friend-item__name">Jane Smith Doe</h4>
-			// 					<span className="friend-item__subtitle">7 mutual friends</span>
-			// 				</div>
-			// 			</a>
-			// 		</div>
-			// 	</div>
-			// </section>
-
-			// <section className="list">
-			// 	<div className="list__heading">
-			// 		<div className="list__icon-wrapper">
-			// 			<i className="fa fa-users list__icon"></i>
-			// 		</div>
-
-			// 		<h3 className="list__title">Friends</h3>
-			// 		<i className="fa fa-chevron-right"></i>
-			// 	</div>
-
-			// 	<div className="list__group list__group--hide">
-			// 		<div className="list__body list__body--friendslist">
-			// 			<a href="/" className="friend-item friend-item--col2">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name">Jane Smith Doe</h4>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col2">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name">Jane Smith Doe</h4>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col2">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name">Jane Smith Doe</h4>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col2">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name">Jane Smith Doe</h4>
-			// 			</a>
-
-
-			// 			<a href="/" className="friend-item friend-item--col2">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name">Jane Smith Doe</h4>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col2">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name">Jane Smith Doe</h4>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col2">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name">Jane Smith Doe</h4>
-			// 			</a>
-
-			// 			<button className="list__btn">See more</button>
-			// 		</div>
-			// 	</div>
-			// </section>
-
-			// <section className="list">
-			// 	<div className="list__heading">
-			// 		<div className="list__icon-wrapper">
-			// 			<i className="fa fa-users list__icon"></i>
-			// 		</div>
-			// 		<h3 className="list__title">Friends Suggestion</h3>
-			// 		<i className="fa fa-chevron-right"></i>
-			// 	</div>
-			// 	<div className="list__group list-group--active">
-			// 		<div className="list__body list__body--friendslist">
-			// 			<a href="/" className="friend-item friend-item--col3">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name friend-item__name--dark">Jane Smith Doe</h4>
-			// 				<button className="btn btn--blue btn--circle">
-			// 					<i className="fa fa-user-plus" aria-hidden="true"></i>
-			// 				</button>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col3">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name friend-item__name--dark">Jane Smith Doe</h4>
-			// 				<button className="btn btn--blue btn--circle">
-			// 					<i className="fa fa-user-plus" aria-hidden="true"></i>
-			// 				</button>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col3">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name friend-item__name--dark">Jane Smith Doe</h4>
-			// 				<button className="btn btn--blue btn--circle">
-			// 					<i className="fa fa-user-plus" aria-hidden="true"></i>
-			// 				</button>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col3">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name friend-item__name--dark">Jane Smith Doe</h4>
-			// 				<button className="btn btn--blue btn--circle">
-			// 					<i className="fa fa-user-plus" aria-hidden="true"></i>
-			// 				</button>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col3">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name friend-item__name--dark">Jane Smith Doe</h4>
-			// 				<button className="btn btn--blue btn--circle">
-			// 					<i className="fa fa-user-plus" aria-hidden="true"></i>
-			// 				</button>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col3">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name friend-item__name--dark">Jane Smith Doe</h4>
-			// 				<button className="btn btn--blue btn--circle">
-			// 					<i className="fa fa-user-plus" aria-hidden="true"></i>
-			// 				</button>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col3">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name friend-item__name--dark">Jane Smith Doe</h4>
-			// 				<button className="btn btn--blue btn--circle">
-			// 					<i className="fa fa-user-plus" aria-hidden="true"></i>
-			// 				</button>
-			// 			</a>
-
-			// 			<a href="/" className="friend-item friend-item--col3">
-			// 				<img className="friend-item__img" src={img1}>
-			// 				<h4 className="friend-item__name friend-item__name--dark">Jane Smith Doe</h4>
-			// 				<button className="btn btn--blue btn--circle">
-			// 					<i className="fa fa-user-plus" aria-hidden="true"></i>
-			// 				</button>
-			// 			</a>
-			// 			<button className="list__btn">See more</button>
-			// 		</div>
-			// 	</div>
-			// </section>

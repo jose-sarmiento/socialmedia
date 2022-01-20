@@ -6,6 +6,7 @@ import RegisterScreen from '../pages/RegisterScreen'
 import HomeScreen from '../pages/HomeScreen' 
 import ProfileScreen from '../pages/ProfileScreen' 
 import ViewPostScreen from '../pages/ViewPostScreen' 
+import FriendsScreen from '../pages/FriendsScreen' 
 
 function App() {
 
@@ -31,6 +32,10 @@ function App() {
      {/*   <Route path="/profile/:id">
           <ProfileScreen />
         </Route>*/}
+
+        <PrivateRoute path="/friends">
+          <FriendsScreen />
+        </PrivateRoute>
 
         <PrivateRoute path="/posts/:id">
           <ViewPostScreen />

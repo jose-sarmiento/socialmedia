@@ -23,7 +23,8 @@ const login = async (req, res) => {
         'coverImage',
         'email',
         'sex',
-        'profileImage'
+        'profileImage',
+        'photos'
       ])
     )
 }
@@ -49,6 +50,7 @@ const register = async (req, res) => {
         "email",
         "sex",
         "profileImage",
+        "photos"
       ])
     );
 }

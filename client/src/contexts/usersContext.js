@@ -13,7 +13,7 @@ const userFromStorage = localStorage.getItem(USER_STORAGE_KEY)
    
 const initialState = {
 	user: userFromStorage,
-	profile: {},
+	profile: null,
 	people: [],
 	friendRequests: [],
 	friends: []

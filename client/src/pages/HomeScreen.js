@@ -4,21 +4,17 @@ import {
 	Header,
 	LeftSide,
 	Timeline,
-	Messenger
+	Messenger,
+	Loader
 } from '../components'
-import { useAuthContext } from '../contexts'
+import { useUsersContext } from '../contexts'
 
 const HomeScreen = () => {
-	const { auth } = useAuthContext()
-	const history = useHistory()
+	const { loadingUser } = useUsersContext()
 
-	useEffect(() => {
-		if (!auth) {
-			return history.push('/login')
-		}
-	}, [history, auth])
-
-	if (!auth) return null
+	if(loadingUser) {
+		return <Loader />
+	}
 
 	return (
 		<>

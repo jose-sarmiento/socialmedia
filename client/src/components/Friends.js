@@ -4,9 +4,7 @@ import FriendRequestList from './FriendRequestList'
 import PeopleList from './PeopleList'
 import MyFriendsList from './MyFriendsList'
  
-const Friends = ({friends, friendRequests, people}) => {
-
-	if (!friends) return null
+const Friends = ({friends, friendRequests, people =[]}) => {
 
 	return (
 		<div className='friends'>

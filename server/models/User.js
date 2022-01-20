@@ -3,6 +3,13 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Joi = require('joi')
 
+const photoSchema = new mongoose.Schema({
+	path: String, 
+	thumbnail: String, 
+	name: String,
+	createdAt: { type: Date, default: Date.now },
+})
+
 const userSchema = new mongoose.Schema({
 	firstname: {
 		type: String,
@@ -57,10 +64,7 @@ const userSchema = new mongoose.Schema({
 	bio: String,
 	friends: [{
 		type: mongoose.Schema.Types.ObjectId, ref: 'Friends'}],
-	photos: [{
-		url: String, 
-		name: String
-	}]
+	photos: [photoSchema]
 })
 
 userSchema.virtual('fullname')
@@ -105,3 +109,4 @@ const User = mongoose.model('User', userSchema)
 
 module.exports.validateUser = validateUser
 module.exports.User = User
+module.exports.photoSchema = photoSchema

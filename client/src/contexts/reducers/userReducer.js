@@ -1,14 +1,14 @@
-import * as users from '../constants/userConstants';
+import * as users from "../constants/userConstants";
 
 const userReducer = (state, action) => {
     switch (action.type) {
         case users.getProfileRequested:
             return { ...state, loadingProfile: true };
         case users.getProfileSuccess:
-            return { 
-                ...state, 
-                profile: action.payload, 
-                loadingProfile: false 
+            return {
+                ...state,
+                profile: action.payload,
+                loadingProfile: false,
             };
         case users.getProfileFailed:
             return {
@@ -20,7 +20,6 @@ const userReducer = (state, action) => {
         case users.getUserRequested:
             return { ...state, loadingUser: true };
         case users.getUserSuccess:
-            console.log('success')
             return {
                 ...state,
                 user: {
@@ -38,6 +37,9 @@ const userReducer = (state, action) => {
                     school: action.payload.school,
                     status: action.payload.status,
                     bio: action.payload.bio,
+                    photos: action.payload.photos.sort(function (a, b) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    }),
                 },
                 profile: {
                     _id: action.payload._id,
@@ -54,18 +56,27 @@ const userReducer = (state, action) => {
                     school: action.payload.school,
                     status: action.payload.status,
                     bio: action.payload.bio,
-                    friends: action.payload.userFriends.filter(
-                        el => el.status === 3
-                    ).map(el => ({status: el.status, ...el.recipientInfo})),
-                    friendRequests: action.payload.userFriends.filter(
-                        el => el.status === 2
-                    ).map(el => ({status: el.status, ...el.recipientInfo})),
+                    photos: action.payload.photos.sort(function (a, b) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    }),
+                    friends: action.payload.userFriends
+                        .filter((el) => el.status === 3)
+                        .map((el) => ({
+                            status: el.status,
+                            ...el.recipientInfo,
+                        })),
+                    friendRequests: action.payload.userFriends
+                        .filter((el) => el.status === 2)
+                        .map((el) => ({
+                            status: el.status,
+                            ...el.recipientInfo,
+                        })),
                 },
                 friends: action.payload.userFriends.filter(
-                    el => el.status === 3
+                    (el) => el.status === 3
                 ),
                 friendRequests: action.payload.userFriends.filter(
-                    el => el.status === 2
+                    (el) => el.status === 2
                 ),
                 loadingUser: false,
             };
@@ -117,8 +128,8 @@ const userReducer = (state, action) => {
         case users.getFriendsSuccess:
             return {
                 ...state,
-                friends: action.payload.filter(el => el.status === 3),
-                friendRequests: action.payload.filter(el => el.status === 2),
+                friends: action.payload.filter((el) => el.status === 3),
+                friendRequests: action.payload.filter((el) => el.status === 2),
                 loadingFriends: false,
             };
         case users.getFriendsFailed:
@@ -135,6 +146,16 @@ const userReducer = (state, action) => {
                 user: {
                     ...state.user,
                     coverImage: action.payload.user.coverImage,
+                    photos: action.payload.user.photos.sort(function (a, b) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    })
+                },
+                profile: {
+                    ...state.profile,
+                    coverImage: action.payload.user.coverImage,
+                    photos: action.payload.user.photos.sort(function (a, b) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    })
                 },
                 uploadCoverLoading: false,
             };
@@ -152,6 +173,16 @@ const userReducer = (state, action) => {
                 user: {
                     ...state.user,
                     profileImage: action.payload.user.profileImage,
+                    photos: action.payload.user.photos.sort(function (a, b) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    })
+                },
+                profile: {
+                    ...state.profile,
+                    profileImage: action.payload.user.profileImage,
+                    photos: action.payload.user.photos.sort(function (a, b) {
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    })
                 },
                 uploadProfileLoading: false,
             };
@@ -188,7 +219,7 @@ const userReducer = (state, action) => {
                 ...state,
                 friends: [...state.friends, { ...action.payload.friend }],
                 friendRequests: state.friendRequests.filter(
-                    friend => friend._id !== action.payload.friend._id
+                    (friend) => friend._id !== action.payload.friend._id
                 ),
                 confirmFriendLoading: false,
             };
@@ -205,7 +236,7 @@ const userReducer = (state, action) => {
             return {
                 ...state,
                 friendRequests: state.friendRequests.filter(
-                    el => el._id !== action.payload.userId
+                    (el) => el._id !== action.payload.userId
                 ),
                 rejectFriendLoading: false,
             };
@@ -217,7 +248,7 @@ const userReducer = (state, action) => {
             };
 
         default:
-            throw new Error('Invalid action type');
+            throw new Error("Invalid action type");
     }
 };
 

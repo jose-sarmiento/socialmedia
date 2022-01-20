@@ -1,23 +1,21 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { FaImage, FaUserFriends } from 'react-icons/fa';
-import d4 from '../assets/img/profiles/d4.jpg';
-import d5 from '../assets/img/profiles/d5.jpg';
-import d6 from '../assets/img/profiles/d6.jpg';
-import d7 from '../assets/img/profiles/d7.jpg';
-import d8 from '../assets/img/profiles/d8.jpg';
-import d9 from '../assets/img/profiles/d9.jpg';
-import d10 from '../assets/img/profiles/d10.jpg';
-import d11 from '../assets/img/profiles/d11.jpg';
-import d12 from '../assets/img/profiles/d12.jpg';
-import d13 from '../assets/img/profiles/d13.jpg';
 import { PostList, CreatePost, Loader } from '../components';
 
 import { useUsersContext } from '../contexts';
 
 const NewsFeed = () => {
-	const { profile, loadingUser, loadingProfile } = useUsersContext();
+	const [recentPhotos, setRecentPhotos] =  useState([])
 
-	if (!profile) return null
+	const { profile } = useUsersContext();
+
+	useEffect(() => {
+		const sorted = profile.photos.sort(function(a,b){
+		  return new Date(b.createdAt) - new Date(a.createdAt);
+		});
+		setRecentPhotos(sorted.slice(0,6))
+		console.log(recentPhotos)
+	},[profile.photos])
 
 	return (
 		<div className='profile__grid'>
@@ -46,27 +44,27 @@ const NewsFeed = () => {
 							<FaImage className='card__icon' />
 							<span className='card__title'>Photos</span>
 							<span className='card__middot'>&#9679;</span>
-							<span className='count'>404</span>
+							<span className='count'>{profile.photos.length}</span>
 						</div>
 						<div className='card__body'>
 							<div className='grid__images'>
 								<div className='grid__image grid__image--1'>
-									<img src={d4} />
+									{recentPhotos[0] && <img src={recentPhotos[0].thumbnail} />}
 								</div>
 								<div className='grid__image grid__image--2'>
-									<img src={d5} />
+									{recentPhotos[1] && <img src={recentPhotos[1].thumbnail} />}
 								</div>
 								<div className='grid__image grid__image--3'>
-									<img src={d6} />
+									{recentPhotos[2] && <img src={recentPhotos[2].thumbnail} />}
 								</div>
 								<div className='grid__image grid__image--4'>
-									<img src={d7} />
+									{recentPhotos[3] && <img src={recentPhotos[3].thumbnail} />}
 								</div>
 								<div className='grid__image grid__image--5'>
-									<img src={d8} />
+									{recentPhotos[4] && <img src={recentPhotos[4].thumbnail} />}
 								</div>
 								<div className='grid__image grid__image--6'>
-									<img src={d9} />
+									{recentPhotos[5] && <img src={recentPhotos[5].thumbnail} />}
 								</div>
 							</div>
 						</div>

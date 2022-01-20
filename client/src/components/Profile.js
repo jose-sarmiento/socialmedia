@@ -21,8 +21,6 @@ const Profile = ({ user, uploadCover, uploadProfile }) => {
 		uploadProfile(formData);
 	};
 
-	if (!user) return null;
-
 	return (
 		<div className='profile mb-1'>
 			<div className='cover'>

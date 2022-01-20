@@ -49,13 +49,22 @@ const createPost = async (req, res) => {
 				} else {
 					thumbnail = createThumbFromVideo(file);
 				}
+
 				return {
 					type,
-					path: `uploads/${file.filename}`,
-					thumbnail: `uploads/${thumbnail}`,
+					path: `${protocol}://${host}:${port}/uploads/${file.filename}`,
+					thumbnail: `${protocol}://${host}:${port}/uploads/${thumbnail}`,
+					name: file.originalname,
 				};
 			})
 		);
+		reqBody.photos = reqBody.multimedia
+			.filter((media) => media.type === "image")
+			.map((media) => ({
+				name: media.name,
+				path: media.path,
+				thumbnail: media.thumbnail,
+			}));
 	}
 
 	const post = await Post.create({ author: req.user._id, ...reqBody });
@@ -100,7 +109,10 @@ const reactPost = async (req, res) => {
 	let post = await Post.findById({ _id: req.params.id });
 	if (!post) throw new NotFound("Post not found with the given id");
 
-	const alreadyReact = await Post.findOne({ _id: req.params.id, "reactions.userId": req.user._id })
+	const alreadyReact = await Post.findOne({
+		_id: req.params.id,
+		"reactions.userId": req.user._id,
+	});
 
 	let result;
 	if (alreadyReact) {
@@ -108,12 +120,14 @@ const reactPost = async (req, res) => {
 			{
 				_id: req.params.id,
 				reactions: {
-					$elemMatch: { userId: req.user._id }
-				}
+					$elemMatch: { userId: req.user._id },
+				},
 			},
 			{
-				$set: {"reactions.$.reaction": req.body.reaction}
-			}, {new: true});
+				$set: { "reactions.$.reaction": req.body.reaction },
+			},
+			{ new: true }
+		);
 	} else {
 		result = await Post.findOneAndUpdate(
 			{ _id: req.params.id },
@@ -122,27 +136,16 @@ const reactPost = async (req, res) => {
 					reactions: {
 						userId: req.user._id,
 						userName: req.user.firstname,
-						reaction: req.body.reaction
+						reaction: req.body.reaction,
 					},
 				},
 				$inc: { "meta.likes": 1 },
 			},
-			{new: true}
+			{ new: true }
 		);
 	}
 
-
 	res.status(StatusCodes.OK).json({ result, created: true });
-};
-
-module.exports = {
-	getPosts,
-	getPost,
-	getNewPosts,
-	createPost,
-	updatePost,
-	deletePost,
-	reactPost,
 };
 
 async function generateThumb(file) {
@@ -173,3 +176,15 @@ function createThumbFromVideo(video) {
 		);
 	return newFilename;
 }
+
+module.exports = {
+	getPosts,
+	getPost,
+	getNewPosts,
+	createPost,
+	updatePost,
+	deletePost,
+	reactPost,
+	generateThumb
+};
+

@@ -15,7 +15,8 @@ const MediaSchema = Schema({
   thumbnail: {
     type: String,
     required: true
-  }
+  },
+  name: String
 })
 
 module.exports = MediaSchema

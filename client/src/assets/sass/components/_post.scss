@@ -68,6 +68,7 @@
 	&__image-wrapper {
 		overflow: hidden;
 		@include flex-center;
+
 		&--more {
 			position: relative;
 
@@ -101,9 +102,9 @@
 
 	&__image {
 		display: block;
-		width: 100%;
 		border-radius: 0px;
 		filter: brightness(.95);
+		object-fit: contain;
 	}
 
 	&__media-count {

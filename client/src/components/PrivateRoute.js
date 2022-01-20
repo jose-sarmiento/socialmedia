@@ -3,13 +3,13 @@ import { Route, Redirect } from 'react-router-dom';
 import { useAuthContext } from '../contexts';
 
 const PrivateRoute = ({ children, ...rest }) => {
-	const { auth } = useAuthContext();
+	const { auth, user, profile } = useAuthContext();
 
 	return (
 		<Route
 			{...rest}
 			render={({ location }) =>
-				auth ? (
+				(auth) ? (
 					children
 				) : (
 					<Redirect

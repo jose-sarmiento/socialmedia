@@ -37,6 +37,7 @@ export const getUserDetails =
 					headers: { Authorization: `Bearer ${token}` },
 				}
 			);			
+
 			dispatch({ type: users.getUserSuccess, payload: data });
 			localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(data));
 		} catch (error) {
@@ -138,6 +139,7 @@ export const getUsers = ({token}) => async dispatch => {
 				headers: { Authorization: `Bearer ${token}` },
 			}
 		);
+		console.log(data)
 		dispatch({type: users.getUsersSuccess, payload: data})
 	} catch (error) {
 		dispatch({

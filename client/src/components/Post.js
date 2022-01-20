@@ -3,13 +3,11 @@ import { FaCamera, FaShare } from 'react-icons/fa';
 import moment from 'moment';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 import PostMedias from './PostMedias';
 import ReactButton from './ReactButton';
 import Toast from './Toast';
 import ReactionPreviews from './ReactionPreviews';
 import Comment from './Comment';
-import { showToast } from '../contexts/actions/appActions';
 
 import { useAppContext, useAuthContext } from '../contexts';
 

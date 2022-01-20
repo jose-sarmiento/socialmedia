@@ -1,26 +1,27 @@
-const { User } = require('../models/User');
-const { Friend } = require('../models/Friend');
-const { BadRequest } = require('../errors');
-const { StatusCodes } = require('http-status-codes');
-const mongoose = require('mongoose');
+const { User } = require("../models/User");
+const { Friend } = require("../models/Friend");
+const { BadRequest } = require("../errors");
+const { StatusCodes } = require("http-status-codes");
+const { generateThumb } = require("./posts");
+const mongoose = require("mongoose");
 
 const getUsers = async (req, res) => {
 	const people = await User.aggregate([
-		{ $match: { friends: { $exists: true, $ne: [] } } },
+		{ $match: { friends: { $exists: true } } },
 		{
 			$lookup: {
-				from: 'friends',
-				localField: 'friends',
-				foreignField: '_id',
-				as: 'userFriends',
+				from: "friends",
+				localField: "friends",
+				foreignField: "_id",
+				as: "userFriends",
 			},
 		},
 		{
 			$match: {
-				'userFriends.requester': {
+				"userFriends.requester": {
 					$ne: mongoose.Types.ObjectId(req.user._id),
 				},
-				'userFriends.recipient': {
+				"userFriends.recipient": {
 					$ne: mongoose.Types.ObjectId(req.user._id),
 				},
 			},
@@ -36,13 +37,13 @@ const getUser = async (req, res) => {
 		// { $project: { password: 0 } },
 		{
 			$lookup: {
-				from: 'friends',
+				from: "friends",
 				pipeline: [
 					{
 						$match: {
 							$expr: {
 								$eq: [
-									'$requester',
+									"$requester",
 									mongoose.Types.ObjectId(req.params.id),
 								],
 							},
@@ -50,13 +51,13 @@ const getUser = async (req, res) => {
 					},
 					{
 						$lookup: {
-							from: 'users',
-							let: { recipientId: '$recipient' },
+							from: "users",
+							let: { recipientId: "$recipient" },
 							pipeline: [
 								{
 									$match: {
 										$expr: {
-											$eq: ['$_id', '$$recipientId'],
+											$eq: ["$_id", "$$recipientId"],
 										},
 									},
 								},
@@ -68,36 +69,36 @@ const getUser = async (req, res) => {
 									},
 								},
 							],
-							as: 'recipientInfo',
+							as: "recipientInfo",
 						},
 					},
-					{ $unwind: '$recipientInfo' },
+					{ $unwind: "$recipientInfo" },
 				],
-				as: 'userFriends',
+				as: "userFriends",
 			},
 		},
 	]);
 	// if (!user) throw new NotFound('User not found');
 
-	res.json({...user[0]});
+	res.json({ ...user[0] });
 };
 
 const updateUser = async (req, res) => {
-	console.log(req.body)
+	console.log(req.body);
 	const user = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
-		fields: {password: 0, friends: 0},
+		fields: { password: 0, friends: 0 },
 		new: true,
 		runValidators: true,
 	});
-	if (!user) throw new NotFound('No User Found with given id');
-	res.send({user});
+	if (!user) throw new NotFound("No User Found with given id");
+	res.send({ user });
 };
 
 const deleteUser = async (req, res) => {
 	const result = await User.deleteOne({ _id: req.params.id });
 	res.send({
 		...result,
-		status: result.deletedCount === 0 ? 'fail' : 'success',
+		status: result.deletedCount === 0 ? "fail" : "success",
 	});
 };
 
@@ -111,13 +112,22 @@ const uploadCover = async (req, res) => {
 	const url = req.file.path;
 	const port = process.env.PORT || 8000;
 
-	if (!req.file) throw new BadRequest('Please provide an image');
+	if (!req.file) throw new BadRequest("Please provide an image");
 
-	const fullpath = `${protocol}://${host}:${port}/uploads/${req.file.filename}`;
+	const thumbnail = await generateThumb(req.file);
+
+	const photoObj = {
+		path: `${protocol}://${host}:${port}/uploads/${req.file.filename}`,
+		name: req.file.originalname,
+		thumbnail: `${protocol}://${host}:${port}/uploads/${thumbnail}`,
+	}
 
 	const user = await User.findOneAndUpdate(
 		{ _id: req.user._id },
-		{ $set: { coverImage: fullpath } },
+		{
+			$set: { coverImage: photoObj.path },
+			$push: { photos: photoObj },
+		},
 		{ new: true }
 	);
 	res.json({ user, success: true });
@@ -129,16 +139,26 @@ const uploadProfile = async (req, res) => {
 	const url = req.file.path;
 	const port = process.env.PORT || 8000;
 
-	if (!req.file) throw new BadRequest('Please provide an image');
+	if (!req.file) throw new BadRequest("Please provide an image");
 
-	const fullpath = `${protocol}://${host}:${port}/uploads/${req.file.filename}`;
+	const thumbnail = await generateThumb(req.file);
+
+	const photoObj = {
+		path: `${protocol}://${host}:${port}/uploads/${req.file.filename}`,
+		name: req.file.originalname,
+		thumbnail: `${protocol}://${host}:${port}/uploads/${thumbnail}`,
+	}
 
 	const user = await User.findOneAndUpdate(
 		{ _id: req.user._id },
-		{ $set: { profileImage: fullpath } },
+		{ 
+			$set: { profileImage: photoObj.path },
+			$push: { photos: photoObj }
+		},
 		{ new: true }
 	);
-	res.json({ user, success: true });
+
+	res.json({ user });
 };
 
 const getFriends = async (req, res) => {
@@ -147,13 +167,13 @@ const getFriends = async (req, res) => {
 		{ $project: { friends: 1 } },
 		{
 			$lookup: {
-				from: 'friends',
+				from: "friends",
 				pipeline: [
 					{
 						$match: {
 							$expr: {
 								$eq: [
-									'$requester',
+									"$requester",
 									mongoose.Types.ObjectId(req.params.userId),
 								],
 							},
@@ -161,13 +181,13 @@ const getFriends = async (req, res) => {
 					},
 					{
 						$lookup: {
-							from: 'users',
-							let: { recipientId: '$recipient' },
+							from: "users",
+							let: { recipientId: "$recipient" },
 							pipeline: [
 								{
 									$match: {
 										$expr: {
-											$eq: ['$_id', '$$recipientId'],
+											$eq: ["$_id", "$$recipientId"],
 										},
 									},
 								},
@@ -179,19 +199,19 @@ const getFriends = async (req, res) => {
 									},
 								},
 							],
-							as: 'recipientInfo',
+							as: "recipientInfo",
 						},
 					},
-					{ $unwind: '$recipientInfo' },
+					{ $unwind: "$recipientInfo" },
 				],
-				as: 'userFriends',
+				as: "userFriends",
 			},
 		},
 		{ $project: { _id: 0, userFriends: 1 } },
 	]);
 
 	res.send({
-		friends: friends[0].userFriends.map(friend => ({
+		friends: friends[0].userFriends.map((friend) => ({
 			status: friend.status,
 			createdAt: friend.createdAt,
 			...friend.recipientInfo,
@@ -219,7 +239,10 @@ const addNewFriend = async (req, res) => {
 		{ $push: { friends: recipient._id } }
 	);
 
-	res.json({ requester: updateRequesterUser, recipient: updateRecipientUser });
+	res.json({
+		requester: updateRequesterUser,
+		recipient: updateRecipientUser,
+	});
 };
 
 const acceptRequest = async (req, res) => {
