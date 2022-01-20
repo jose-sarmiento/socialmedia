@@ -202,7 +202,7 @@ const userReducer = (state, action) => {
         case users.addFriendSuccess:
             return {
                 ...state,
-                addFriendSuccess: true,
+                addFriendId: action.payload,
                 addFriendLoading: false,
             };
         case users.addFriendFailed:

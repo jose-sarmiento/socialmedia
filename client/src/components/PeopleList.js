@@ -10,7 +10,6 @@ const PeopleList = ({ people }) => {
 	const {dispatch} = useUsersContext()
 
 	const addFriend = (recipientId) => {
-		console.log(recipientId)
 		addNewFriend({recipientId: recipientId, token: auth.token})(dispatch)
 	}
 

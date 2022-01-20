@@ -183,8 +183,7 @@ export const addNewFriend = ({recipientId, token}) => async dispatch => {
 				headers: { Authorization: `Bearer ${token}` },
 			} 
 		);
-		console.log(data)
-		dispatch({type: users.addFriendSuccess, payload: data})
+		dispatch({type: users.addFriendSuccess, payload: recipientId})
 	} catch (error) {
 		dispatch({
 			type: users.addFriendFailed,

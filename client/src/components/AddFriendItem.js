@@ -5,13 +5,13 @@ import { useUsersContext } from '../contexts';
 
 const AddFriendItem = ({ user, add }) => {
 	const [btnText, setBtnText] = useState('add friendd');
-	const { addFriendSuccess } = useUsersContext();
+	const { addFriendId } = useUsersContext();
 
 	useEffect(() => {
-		if (addFriendSuccess) {
+		if (addFriendId === user._id) {
 			setBtnText('request sent');
 		}
-	}, [addFriendSuccess]);
+	}, [addFriendId, user._id]);
 
 	const handleBtnClick = () => {
 		add(user._id);
@@ -28,7 +28,7 @@ const AddFriendItem = ({ user, add }) => {
 			<div className='btn-wrapper'>
 				<button
 					className={
-						addFriendSuccess ? 'btn btn--white' : 'btn btn--primary'
+						(addFriendId === user._id) ? 'btn btn--white' : 'btn btn--primary'
 					}
 					style={{ textTransform: 'capitalize' }}
 					onClick={handleBtnClick}
