@@ -264,7 +264,7 @@ const userReducer = (state, action) => {
                 ...state,
                 rejectFriendLoading: false,
                 rejectFriendError: action.payload,
-            };
+            };     
 
         default:
             throw new Error("Invalid action type");

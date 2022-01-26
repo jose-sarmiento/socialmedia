@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import img1 from '../assets/img/profiles/d1.jpg';
 import { FaFacebookMessenger } from 'react-icons/fa';
-import { useUsersContext } from '../contexts';
 
 const AddFriendItem = ({ user, add }) => {
-	const [btnText, setBtnText] = useState('add friendd');
-	const { addFriendId } = useUsersContext();
-
-	useEffect(() => {
-		if (addFriendId === user._id) {
-			setBtnText('request sent');
-		}
-	}, [addFriendId, user._id]);
+	const [isRequested, setIsRequested] = useState(false);
 
 	const handleBtnClick = () => {
+		setIsRequested(true)
 		add(user._id);
 	};
 
@@ -28,12 +21,11 @@ const AddFriendItem = ({ user, add }) => {
 			<div className='btn-wrapper'>
 				<button
 					className={
-						(addFriendId === user._id) ? 'btn btn--white' : 'btn btn--primary'
+						isRequested ? 'btn btn--white' : 'btn btn--primary'
 					}
-					style={{ textTransform: 'capitalize' }}
 					onClick={handleBtnClick}
 				>
-					{btnText}
+					{isRequested ? 'Request sent' : 'Add friend'}
 				</button>
 			</div>
 		</li>

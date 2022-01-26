@@ -3,9 +3,9 @@
 	align-items: center;
 	justify-content: space-between;
 	text-decoration: none;
-	padding: .2rem 1rem;
-	margin-top: .5rem;
+	padding: .5rem 1rem;
 	color: $light-3;
+	cursor: pointer;
 
 	&:hover {
 		background: $gradient-reverse;
@@ -45,6 +45,11 @@
 		flex: 1;
 		margin-left: 1rem;
 		margin-right: 1rem;
+	}
+
+	&__message {
+		font-size: 1.1rem;
+		margin-top: 3px;
 	}
 
 	// &__username {

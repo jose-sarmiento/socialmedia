@@ -237,7 +237,3 @@ export const rejectRequest = ({userId, token}) => async dispatch => {
 		});
 	}
 }
-
-
-
-

@@ -12,7 +12,7 @@ const PeopleList = ({ people }) => {
 	const addFriend = (recipientId) => {
 		addNewFriend({recipientId: recipientId, token: auth.token})(dispatch)
 	}
-
+ 
 	return (
 		<section className='list'>
 			<div className='list__heading'>

@@ -6,7 +6,6 @@ import { useUsersContext } from '../contexts';
 
 const NewsFeed = () => {
 	const [recentPhotos, setRecentPhotos] =  useState([])
-
 	const { profile } = useUsersContext();
 
 	useEffect(() => {
@@ -14,7 +13,6 @@ const NewsFeed = () => {
 		  return new Date(b.createdAt) - new Date(a.createdAt);
 		});
 		setRecentPhotos(sorted.slice(0,6))
-		console.log(recentPhotos)
 	},[profile.photos])
 
 	return (
@@ -31,10 +29,9 @@ const NewsFeed = () => {
 						<div className='card__body'>
 							<div className='flex__images'>
 								{profile.friends.map((friend, idx) => (
-
-								<figure className={`flex__image flex__image--${idx + 1}`}>
-									<img src={friend.profileImage} key={friend._id} />
-								</figure>
+									<figure className={`flex__image flex__image--${idx + 1}`} key={idx}>
+										<img src={friend.profileImage} key={friend._id} />
+									</figure>
 								))}
 							</div>
 						</div>

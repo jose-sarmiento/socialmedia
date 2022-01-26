@@ -18,6 +18,8 @@
     "react-spinners": "^0.11.0",
     "slate": "^0.66.5",
     "slate-react": "^0.69.0",
+    "socket.io-client": "^4.4.1",
+    "timeago.js": "^4.0.2",
     "uuid": "^8.3.2",
     "web-vitals": "^1.1.2"
   },

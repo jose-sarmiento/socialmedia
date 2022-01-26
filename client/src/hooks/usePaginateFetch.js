@@ -12,6 +12,7 @@ export default function usePaginateFetch(url, page, limit) {
    const { auth } = useAuthContext();
 
    useEffect(() => {
+      let isMounted = true;
       setLoading(true);
       setError(false);
 
@@ -24,18 +25,23 @@ export default function usePaginateFetch(url, page, limit) {
          },
       })
          .then(res => {
-            setResults(prevResults => {
-               return [...new Set([...results, ...res.data.docs])];
-            });
-            setHasNext(res.data.next);
-            setHasPrevious(res.data.previous);
-            setLoading(false);
+            if(isMounted) {
+               setResults(prevResults => {
+                  return [...new Set([...results, ...res.data.docs])];
+               });
+               setHasNext(res.data.next);
+               setHasPrevious(res.data.previous);
+               setLoading(false);
+            }
          })
          .catch(e => {
-            setLoading(false);
-            setError(true);
+            if(isMounted) {
+               setLoading(false);
+               setError(true);
+            }
          });
       // eslint-disable-next-line react-hooks/exhaustive-deps
+      return () => { isMounted = false }
    }, [url, page, limit]);
 
    return { loading, error, results, hasNext, hasPrevious };

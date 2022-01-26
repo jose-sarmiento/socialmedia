@@ -2,10 +2,13 @@
 	grid-column: 3/4;
 	// grid-row: 1/-1;
 	height: 100vh;
-  position: sticky;
+  	position: sticky;
 	top: 0;
 	border-left: 1px solid $light-3;
 	background-image: $gradient;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
 
 	&__header {
 		background-image: $gradient-reverse;
@@ -38,12 +41,105 @@
 		cursor: pointer;
 
 		&--active {
+			box-shadow: $shadow-light;
 			background: $gradient;
+		}
+	}
+
+	&__body {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		height: calc(100vh - (55px + 27px));
+	}
+
+	&__empty {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+
+		h2 {
+			color: darken($primary-color, 8%);
+		}
+
+		button {
+			border: none;
+			font-size: 1.1rem;
+			color: $light-1;
+			outline: none;
+			background: transparent;
+			padding: .2rem;
+			border-bottom: 1px solid $light-1;
+			cursor: pointer;
+
+			&:active {
+				outline: none;
+			}
+
+			&:hover {
+				color: lighten($primary-color-light, 10%);
+			}
 		}
 	}
 
 	&__chats {
 		// padding: 0 1rem;
+		flex: 1;
+	}
+
+	.active-people {
+		flex: 1;
+		overflow-y: auto;
+		padding: .5rem 1rem;
+
+		&__item {
+			display: flex;
+			align-items: center;
+			padding: .6rem 1rem;
+			cursor: pointer;
+			border-radius: 5px;
+
+			&:not(:last-child) {
+				margin-bottom: .5rem;
+			}
+
+			&:hover {
+				background: $gradient;
+			}
+		}
+
+		&__profile {
+			margin-right: 1rem;
+			width: 2.5rem;
+			height: 2.5rem;
+			border-radius: 50%;
+			position: relative;
+		}
+
+		&__profile-img {
+			height: 100%;
+			width: 100%;
+			border-radius: 50%;
+		}
+
+		&__green-dot {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			height: .6rem;
+			width: .6rem;
+			border-radius: 50%;
+			background: green;
+		}
+
+		&__name {
+			display: inline-block;
+			flex: 1;
+			color: $light-1;
+			font-weight: 500;
+		}
 	}
 
 	&__footer {
@@ -51,10 +147,10 @@
 		@include flex-center;
 		height: 5.5rem;
 		width: 100%;
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
+		// position: absolute;
+		// bottom: 0;
+		// left: 0;
+		// right: 0;
 		padding: 1rem auto;
 	}
 
@@ -85,7 +181,173 @@
 	}
 }
 
+.conversation {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	height: 100%;
+	width: 0;
+	background: $gradient;
+	backdrop-filter: blur(50px);
+	z-index: 1500;
+	display: flex;
+	flex-direction: column;
+	// transform: translateX(100%);
+	transition: width ease .4s;
 
+	&--active {
+		// transform: translateX(0);
+		width: 100%;
+	}
 
+	&__header {
+		background-image: $gradient-reverse;
+		height: 5.5rem;
+		width: 100%;
+		box-shadow: $shadow-light;
+		padding-left: 2rem;
+		color: $light-1;
+		@include flex-center-y;
+	}
 
+	&__back-icon {
+		font-size: 1.6rem;
+		cursor: pointer;
+		transition: all ease .1s;
 
+		&:hover {
+			transform: scale(1.2);
+		}
+	}
+
+	&__body {
+		// background: rgba($primary-color, .5);
+		flex: 1;
+		overflow: auto;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		overflow-y: scroll;
+		  mask-image: linear-gradient(to top, transparent, black),
+		    linear-gradient(to left, transparent 17px, black 17px);
+		  mask-size: 100% 20000px;
+		  mask-position: left bottom;
+		  -webkit-mask-image: linear-gradient(to top, transparent, black),
+		    linear-gradient(to left, transparent 17px, black 17px);
+		  -webkit-mask-size: 100% 20000px;
+		  -webkit-mask-position: left bottom;
+		  transition: mask-position 0.3s, -webkit-mask-position 0.3s;
+
+  		&:hover {
+  -webkit-mask-position: left top;
+}
+
+		&::-webkit-scrollbar {
+		  width: .7em;
+		}
+		 
+		&::-webkit-scrollbar-track {
+		  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+		}
+		 
+		&::-webkit-scrollbar-thumb {
+		  background-color: darken($primary-color, 5%);
+		  outline: 1px solid darken($primary-color, 8%);
+		}
+	}
+
+	&__footer {
+		background-image: $gradient;
+		height: 5.5rem;
+		width: 100%;
+		padding: 1rem auto;
+	}
+}
+
+.message {
+	display: flex;
+	align-items: flex-end;
+	padding: 1rem 2rem;
+
+	&--me {
+		align-self: flex-end;
+	}
+
+	&__image {
+		height: 2.2rem;
+
+		img {
+			height: 2.2rem;
+			width: 2.2rem;
+			border-radius: 50%;
+			margin: 0;
+		}
+	}
+
+	&__body {
+		border-radius: 1rem;
+		margin-left: .6rem;
+		background: $light-1;
+		padding: .5rem .8rem;
+		color: $grey-2;
+		box-shadow: $shadow-light;
+
+		&--me {
+			background-image: $gradient;
+			color: $light-1;
+		}
+	}
+
+}
+.conversation__footer {
+	display: flex;
+	align-items: center;
+}
+
+.chat-form {
+	margin: 0 auto;
+	display: flex;
+	align-items: flex-end;
+	width: 95%;
+
+	&__input {
+		background: $primary-color;
+		border: none;
+		outline: none;
+		display: inline-block;
+		flex: 1;
+		height: 4rem;
+		font-family: inherit;
+		font-size: 1.2rem;
+		padding: .5rem .8rem;
+		color: $light-1;
+		resize: none;
+
+		&::placeholder {
+			color: $light-grey;
+			font-family: inherit;
+		}
+	}
+
+	&__submit {
+		background: $primary-color;
+		border: none;
+		margin-left: .8rem;
+		height: 3rem;
+		width: 3rem;
+		border-radius: 50%;
+		cursor: pointer;
+		box-shadow: $shadow-light;
+
+		&:active {
+			outline: none;
+		}
+	}
+
+	&__submit-icon {
+		font-size: 1.2rem;
+		color: $light-1;
+		transform: rotate(45deg);
+	}
+}

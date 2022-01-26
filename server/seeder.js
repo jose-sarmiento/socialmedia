@@ -8,10 +8,10 @@ const connectDB = require("./db/connect");
 
 dotenv.config();
 
-connectDB(process.env.DATABASE_URI);
 
 const importData = async () => {
   try {
+  await connectDB(process.env.DATABASE_URI);
     await User.deleteMany({});
     await Post.deleteMany({});
 
@@ -62,8 +62,6 @@ const importData = async () => {
         { $push: { photos: images } },
         {new: true}
       )
-
-      console.log(res)
     }
 
 

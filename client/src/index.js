@@ -8,15 +8,18 @@ import { AppProvider } from './contexts/appContext';
 import { AuthProvider } from './contexts/authContext';
 import { UsersProvider } from './contexts/usersContext';
 import { PostsProvider } from './contexts/postsContext';
+import { MessengerProvider } from './contexts/messengerContext';
 
 ReactDOM.render(
 	<AppProvider>
 		<AuthProvider>
 			<UsersProvider>
 				<PostsProvider>
-					<Router>
-						<App />
-					</Router>
+					<MessengerProvider>
+						<Router>
+							<App />
+						</Router>
+					</MessengerProvider>
 				</PostsProvider>
 			</UsersProvider>
 		</AuthProvider>
