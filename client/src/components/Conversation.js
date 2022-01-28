@@ -6,14 +6,14 @@ import {
 	createMessage,
 } from "../contexts/actions/messengerActions";
 
-import { useMessengerContext, useAuthContext } from "../contexts";
+import { useMessengerContext, useAuthContext, useSocketContext } from "../contexts";
 
 const Conversation = ({ close }) => {
 	const [message, setMessage] = useState("");
 
+	const socket = useSocketContext()
 	const { auth } = useAuthContext();
 	const { 
-		socket,
 		activeConversation, 
 		messages, 
 		createMessageSuccess, 
@@ -28,12 +28,12 @@ const Conversation = ({ close }) => {
 		getMessagesInConversation({
 			convoId: activeConversation._id,
 			token: auth.token,
-		})(dispatch);
+		})(dispatch); 
 	}, [activeConversation]);
 
 	useEffect(() => {
 		if (!activeConversation) return;
-		socket.current?.emit("sendMessage", {
+		socket.current.emit("sendMessage", {
 			receiverId: activeConversation.friend._id,
 			chat: createMessageSuccess,
 		});

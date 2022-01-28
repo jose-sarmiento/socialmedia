@@ -5,15 +5,21 @@ import { useAuthContext, useMessengerContext } from "../contexts";
 
 const Chat = ({ convo, open, seen }) => {
 	const [recentMessage, setRecentMessage] = useState();
+	const [isOnline, setIsOnline] = useState(false);
 	const { auth } = useAuthContext();
-	const { conversations } = useMessengerContext();
+	const { conversations, onlines } = useMessengerContext();
 
 	useEffect(() => {
 		const recent = convo.messages.sort(function(a,b){
-		  return new Date(b.date) - new Date(a.date);
-		})[0]
-		setRecentMessage(recent);
+		  return new Date(b.createdAt) - new Date(a.createdAt);
+		})
+
+		setRecentMessage(recent[0]);
 	}, [convo, conversations]);
+
+	useEffect(() => {
+		setIsOnline(onlines.map(x => x._id).includes(convo.friend._id))
+	}, [convo, onlines])
 
 	return (
 		<div
@@ -26,7 +32,7 @@ const Chat = ({ convo, open, seen }) => {
 					src={convo.friend.profileImage}
 					alt="user"
 				/>
-				<span className="chat__active-dot"></span>
+				{isOnline && <span className="chat__active-dot"></span>}
 			</div>
 			<div className="chat__content">
 				<span

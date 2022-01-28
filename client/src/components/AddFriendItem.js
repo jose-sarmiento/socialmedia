@@ -7,7 +7,7 @@ const AddFriendItem = ({ user, add }) => {
 
 	const handleBtnClick = () => {
 		setIsRequested(true)
-		add(user._id);
+		add(user);
 	};
 
 	return (

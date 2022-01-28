@@ -1,16 +1,40 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import AddFriendItem from './AddFriendItem';
 import { FaUsers } from 'react-icons/fa';
 import { addNewFriend } from '../contexts/actions/userActions'
 
-import {useAuthContext, useUsersContext} from '../contexts'
+import {useAuthContext, useUsersContext, useSocketContext} from '../contexts'
 
 const PeopleList = ({ people }) => {
-	const {auth} = useAuthContext()
-	const {dispatch} = useUsersContext()
+	const { auth } = useAuthContext()
+	const socket = useSocketContext()
+	const { addFriendSuccess, dispatch } = useUsersContext()
 
-	const addFriend = (recipientId) => {
-		addNewFriend({recipientId: recipientId, token: auth.token})(dispatch)
+	// add friend
+	 // push in friend requests
+	 // add in notification
+
+	// useEffect(() => {
+	// 	console.log("recieving")
+	// 	socket.current?.on("receiveNotification", payload => {
+	// 		console.log(payload)
+	// 	})
+	// 	console.log(socket)
+	// },[])
+
+	// useEffect(() => {
+	// 	if(!addFriendSuccess) return;
+	// 	socket.current.emit("friendRequestSent", {
+	// 		receiverId: addFriendSuccess.notification.to._id,
+	// 		payload: {
+	// 			...addFriendSuccess.notification
+	// 		}
+	// 	})
+	// 	console.log(addFriendSuccess)
+	// }, [addFriendSuccess])
+
+	const addFriend = (recipient) => {
+		addNewFriend({recipient, token: auth.token})(dispatch)
 	}
  
 	return (

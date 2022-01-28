@@ -14,5 +14,6 @@ export const createMessageSuccess =  'messenger/createMessageSuccess';
 export const createMessageFailed =  'messenger/createMessageFailed';
 
 export const addMessageToConversation =  'messenger/addMessageToConversation';
+export const addConversationWithMessage =  'messenger/addConversationWithMessage';
 
 export const setOnlineFriends =  'messenger/setOnlineFriends';

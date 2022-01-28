@@ -22,6 +22,7 @@ import Reply from './Reply';
 import About from './About';
 import Friends from './Friends';
 import Photos from './Photos';
+import Notifications from './Notifications';
 
 export {
    ActivePeople,
@@ -37,6 +38,7 @@ export {
    Login,
    Messenger,
    NewsFeed,
+   Notifications,
    Profile,
    Signup,
    Timeline,

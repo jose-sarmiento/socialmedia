@@ -221,8 +221,8 @@ const userReducer = (state, action) => {
         case users.addFriendSuccess:
             return {
                 ...state,
-                addFriendId: action.payload,
                 addFriendLoading: false,
+                addFriendSuccess: action.payload
             };
         case users.addFriendFailed:
             return {
@@ -240,6 +240,7 @@ const userReducer = (state, action) => {
                 friendRequests: state.friendRequests.filter(
                     (friend) => friend._id !== action.payload.friend._id
                 ),
+                confirmRequestSuccess: true,
                 confirmFriendLoading: false,
             };
         case users.confirmFriendFailed:

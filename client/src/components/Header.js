@@ -1,23 +1,23 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
    FaBell,
    FaFacebookSquare,
    FaCaretDown,
    FaSearch,
 } from 'react-icons/fa';
-import {logout} from '../contexts/actions/authActions'
+import Notifications from './Notifications';
+import { logout } from '../contexts/actions/authActions'
 
 import { useAuthContext, useUsersContext } from '../contexts';
 
 const Header = () => {
+   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+
    const { auth, dispatch } = useAuthContext();
    const { user } = useUsersContext();
 
-
-
    const handleUserLogout = () => logout()(dispatch);
 
-   // if (!auth || !user) return null;
    return (
       <header className='header'>
          <div className='navbar'>
@@ -48,18 +48,32 @@ const Header = () => {
                   <span className='navbar__fname'>{user.firstname}</span>
                </div>
 
-               <a href='/' className='navbar__link navbar__link--notification'>
+             {/*  <a 
+                  href='#' 
+                  className='navbar__link navbar__link--notification'
+                  onClick={(e) => {
+                     e.preventDefault()
+                     setIsNotificationOpen(prev => !prev)
+                  }}
+               >
                   <FaBell />
                   <span className='navbar__float-number'>12</span>
-               </a>
+               </a>*/}
 
-               <button
+              {/* <button
                   className='navbar__link navbar__link--caret'
                   onClick={handleUserLogout}
                >
                   <FaCaretDown />
+               </button>*/}
+               <button
+                  className='navbar__signout'
+                  onClick={handleUserLogout}
+               >
+                  Sign-out               
                </button>
             </div>
+            {/*<Notifications activeDropdown={isNotificationOpen} />*/}
          </div>
       </header>
    );

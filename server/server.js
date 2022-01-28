@@ -16,6 +16,7 @@ const posts = require('./routes/posts');
 const auth = require('./routes/auth');
 const conversations = require('./routes/conversations');
 const messages = require('./routes/messages');
+const notifications = require('./routes/notifications');
 const photos = require('./data/photos');
 
 const app = express();
@@ -42,6 +43,7 @@ app.use('/api/v1/users', users);
 app.use('/api/v1/posts', posts);
 app.use('/api/v1/conversations', conversations);
 app.use('/api/v1/messages', messages);
+app.use('/api/v1/notifications', notifications);
 
 app.use(notFound);
 app.use(errorHandler);
@@ -83,6 +85,15 @@ io.on("connection", (socket) => {
 		const user = getUser(receiverId);
 		if(user) {
 			io.to(user.socketId).emit("getMessage", {...chat})
+		}
+	})
+
+	socket.on("sendNotification", ({receiverId, payload}) => {
+		const user = getUser(receiverId);
+		console.log(user)
+		if(user) {
+			// io.to('socket#id').emit('hey')
+			io.to(user.socketId).emit("receiveNotification", {payload})
 		}
 	})
 

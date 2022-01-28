@@ -1,12 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import FriendRequestItem from './FriendRequestItem';
 import { FaUserPlus } from 'react-icons/fa';
 import { confirmRequest, rejectRequest } from '../contexts/actions/userActions';
-import { useAuthContext, useUsersContext } from '../contexts';
+import { useAuthContext, useUsersContext, useSocketContext } from '../contexts';
 
 const FriendRequestList = ({ friends }) => {
 	const { auth } = useAuthContext();
-	const { dispatch } = useUsersContext();
+	const socket = useSocketContext()
+	const { confirmRequestSuccess, dispatch } = useUsersContext();
+
+	useEffect(() => {
+		if(!confirmRequestSuccess) return;
+		// TODO send my data to requester
+		// socket.current.emit("friendRequestAccepted", {
+		// 	payload: {
+
+		// 	},
+		// 	receiverId:
+		// })
+	}, [confirmRequestSuccess])
 
 	const handleRequestConfirm = friend => {
 		confirmRequest({ friend, token: auth.token })(dispatch);

@@ -5,9 +5,16 @@
 	width: 28rem;
 	background-color: $light-1;
 	box-shadow: 0 2px 15px rgba(0,0,0,.2);
-	z-index: 	1000!important;
+	z-index: 5000;
 	padding: 0 .5rem;
-	background: $light-2;
+	background: $light-1;
+	height: 0;
+	overflow: hidden;
+	transition: all .4s ease-in;
+
+	&--active {
+		height: calc(100vh - 5.5rem);
+	}
 
 	&__header {
 		display: flex;
@@ -23,7 +30,7 @@
 	}
 
 	&--notification {
-		height: calc(100vh - 5.5rem);
+		height: calc(100vh - 5.4rem);
 		display: block;
 	}
 
@@ -35,9 +42,18 @@
 
 .notification {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	text-decoration: none;
-	padding: .8rem .4rem;
+	padding: .6rem .4rem;
+	background: $light-2;
+
+	&__img-wrapper {
+		height: 2.5rem;
+		width: 2.5rem;
+		border-radius: 50%;
+		position: relative;
+		background: $light-2;
+	}
 
 	&__img {
 		width: 2.5rem;
@@ -47,15 +63,33 @@
 		margin-right: 1rem;
 	}
 
+	&__icon {
+		position: absolute;
+		bottom: -.2rem;
+		right: -.2rem;
+		font-size: .8rem;
+		height: 1.4rem;
+		width: 1.4rem;
+		border-radius: 50%;
+		color: $light-1;
+		@include flex-center;
+
+		&--birthday {
+			background: $red;
+		}
+	}
+
 	&__details {
 		flex: 1;
 		line-height: 1.1rem;
+		margin-left: .5rem;
 	}
 
 	&__text {
-		font-size: 1.2rem;
-		color: $grey-2;
+		font-size: 1.1rem;
+		color: $grey-1;
 		letter-spacing: .3px;
+		margin-bottom: .5rem;
 
 		&--unseen {
 			color: $grey-1;
@@ -75,11 +109,12 @@
 		}
 	}
 
-	&__unseen {
-		height: 1rem;
-		width: 1rem;
-		border-radius: 50%;
-		background-color: $primary-color;
+	&--unseen {
+		// height: 1rem;
+		// width: 1rem;
+		// border-radius: 50%;
+		// background-color: $primary-color;
+		background: $light-3;	
 	}
 }
 

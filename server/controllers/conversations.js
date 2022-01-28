@@ -46,7 +46,7 @@ const getConversations = async (req, res) => {
 					{
 						$match: {$expr: {$eq: ["$conversationId", "$$userid"]}} 
 					},
-					{ $sort: { createdAt: 1 } },
+					{ $sort: { createdAt: -1 } },
 					{ $limit: 5 },
 					{
 						$lookup: {
