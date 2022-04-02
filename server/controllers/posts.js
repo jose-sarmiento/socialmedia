@@ -52,8 +52,8 @@ const createPost = async (req, res) => {
 
 				return {
 					type,
-					path: `${protocol}://${host}:${port}/uploads/${file.filename}`,
-					thumbnail: `${protocol}://${host}:${port}/uploads/${thumbnail}`,
+					path: file.filename,
+					thumbnail: thumbnail,
 					name: file.originalname,
 				};
 			})
@@ -161,11 +161,11 @@ async function generateThumb(file) {
 function createThumbFromVideo(video) {
 	let newFilename = "";
 	const filename = video.filename.split(".")[0];
-	const thumbnailName = "public/uploads/" + filename + "-thumb.png";
+	const thumbnailName = "uploads/" + filename + "-thumb.png";
 
 	ffmpeg({ source: video.path })
 		.on("filenames", (filenames) => {
-			newFilename = filenames[0].replace("public/uploads/", "");
+			newFilename = filenames[0].replace("uploads/", "");
 		})
 		.takeScreenshots(
 			{

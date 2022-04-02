@@ -41,7 +41,6 @@ const PostList = ({ onlyMe, userId, small = false }) => {
 
    return (
       <>
-         {loading && <Loader />}
          {results.map((post, index) => {
             if (results.length === index + 1) {
                return (
@@ -55,6 +54,7 @@ const PostList = ({ onlyMe, userId, small = false }) => {
             }
             return <Post post={post} key={uuidv4()} small={small} />;
          })}
+         {loading && <Loader />}
       </>
    );
 };

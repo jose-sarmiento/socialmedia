@@ -73,7 +73,7 @@ const LeftSide = () => {
 					<span className="tabs__count">{`(${birthdays.length})`}</span>
 				</h3>
 				<div className="birthdays mt-1">
-					{birthdays.length === 0 && <h3>No Birthdays Today</h3>}
+					{birthdays.length === 0 && <p className="birthdays__none">No Birthdays Today</p>}
 					{birthdays.slice(0, 6).map((celebrant) => (
 						<img
 							src={celebrant.profileImage}
@@ -86,26 +86,6 @@ const LeftSide = () => {
 							birthdays.length - 6
 						} more`}</span>
 					)}
-				</div>
-			</div>
-
-			<div className="tabs">
-				<h3 className="tabs__heading mt-2 mb-1">
-					Favorites<span className="tabs__count">(10)</span>
-				</h3>
-				<div className="page">
-					<img src={profile3} alt="profile" className="page__img" />
-					<span className="page__name">Node Js Developers</span>
-				</div>
-				<div className="page">
-					<img src={profile3} alt="profile" className="page__img" />
-					<span className="page__name">
-						Im a Programmer I Have no Life
-					</span>
-				</div>
-				<div className="page">
-					<img src={profile3} alt="profile" className="page__img" />
-					<span className="page__name">Programmers</span>
 				</div>
 			</div>
 		</div>

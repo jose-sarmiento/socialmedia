@@ -28,24 +28,26 @@
    &__search {
       display: flex;
       align-items: center;
-      width: 35rem;
+      width: 40rem;
    }
    
    &__search-input {
-      @include box-shadow;
+      // @include box-shadow;
       border: none;
       outline: none;
       border-radius: 3rem;
       display: block;
-      width: 27rem;
-      padding: .8rem 2rem;
+      width: 35rem;
+      padding: 1rem 2.5rem;
       transition: all .3s ease-in;
       background-color: $light-2;
+      font-family: inherit;
 
       &:focus {
          outline: none;
-         @include box-shadow-active;
-         width: 35rem;
+
+         // @include box-shadow-active;
+         width: 40rem;
       }
 
       &::placeholder {
@@ -56,7 +58,7 @@
    &__search-icon {
       color: #999;
       z-index: 10;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       margin-left: -3rem;
    }
 
@@ -155,13 +157,6 @@
       height: 100%;
       display: flex;
       align-items: center;
-   }
-
-   &__img {
-      width: 3rem;
-      display: block;
-      height: 3rem;
-      border-radius: 50%;
    }
 
    &__fname {

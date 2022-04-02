@@ -4,7 +4,7 @@ import { FaUserPlus } from 'react-icons/fa';
 import { confirmRequest, rejectRequest } from '../contexts/actions/userActions';
 import { useAuthContext, useUsersContext, useSocketContext } from '../contexts';
 
-const FriendRequestList = ({ friends }) => {
+const FriendRequestList = ({ friends = [] }) => {
 	const { auth } = useAuthContext();
 	const socket = useSocketContext()
 	const { confirmRequestSuccess, dispatch } = useUsersContext();

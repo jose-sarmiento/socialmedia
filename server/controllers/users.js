@@ -118,9 +118,9 @@ const uploadCover = async (req, res) => {
 	const thumbnail = await generateThumb(req.file);
 
 	const photoObj = {
-		path: `${protocol}://${host}:${port}/uploads/${req.file.filename}`,
+		path: process.env.BASE_URL + req.file.filename,
 		name: req.file.originalname,
-		thumbnail: `${protocol}://${host}:${port}/uploads/${thumbnail}`,
+		thumbnail: process.env.BASE_URL + thumbnail,
 	}
 
 	const user = await User.findOneAndUpdate(
@@ -145,9 +145,9 @@ const uploadProfile = async (req, res) => {
 	const thumbnail = await generateThumb(req.file);
 
 	const photoObj = {
-		path: `${protocol}://${host}:${port}/uploads/${req.file.filename}`,
+		path: process.env.BASE_URL + req.file.filename,
 		name: req.file.originalname,
-		thumbnail: `${protocol}://${host}:${port}/uploads/${thumbnail}`,
+		thumbnail: process.env.BASE_URL + thumbnail,
 	}
 
 	const user = await User.findOneAndUpdate(

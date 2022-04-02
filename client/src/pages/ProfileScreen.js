@@ -38,8 +38,10 @@ const ProfileScreen = () => {
 	const { path, url } = useRouteMatch();
 
 	useEffect(() => {
-		if (id) viewUserProfile({ userId: id, token: auth.token })(dispatch);
-	}, [auth, id]);
+		if (!id) return;
+		console.log(id)
+		viewUserProfile({ userId: id, token: auth.token })(dispatch);
+	}, [auth, id, useParams]);
 
 	const handleCoverChange = (e) => {
 		e.preventDefault();

@@ -18,6 +18,8 @@ const ViewPostScreen = () => {
   	getPost({postId: id, token: auth.token})(postsDispatch)
   }, [id, useParams])
 
+  console.log(post)
+
   if (!post) return null
 
   return (

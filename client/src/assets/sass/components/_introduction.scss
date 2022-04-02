@@ -4,7 +4,8 @@
 	border-radius: 3px;
 	background-color: $light-2;
 	position: relative;
-	box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+	// box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.1);
+	margin-top: 2rem;
 
 	&--small {
 		max-width: 50rem;
@@ -15,6 +16,7 @@
    	width: 4rem;
    	height: 4rem;
    	border-radius: 50%;
+   	overflow: hidden;
    	border: 2px solid $light-1;
    	box-sizing: content-box;
    	position: absolute;
@@ -45,7 +47,7 @@
 		border: 1px solid transparent;
 		background-color: $light-2;
 		resize: none;
-		font-family: Roboto;
+		font-family: inherit;
 
    		&:focus {
          outline: none;

@@ -6,6 +6,7 @@ import {
    FaSearch,
 } from 'react-icons/fa';
 import Notifications from './Notifications';
+import CircleImage from './CircleImage';
 import { logout } from '../contexts/actions/authActions'
 
 import { useAuthContext, useUsersContext } from '../contexts';
@@ -40,11 +41,12 @@ const Header = () => {
 
             <div className='navbar__right'>
                <div className='navbar__user'>
-                  <img
-                     src={user.profileImage}
-                     className='navbar__img'
-                     alt='test'
-                  />
+                  <CircleImage>
+                     <img
+                        src={user.profileImage}
+                        alt={user.firstname}
+                     />
+                  </CircleImage>
                   <span className='navbar__fname'>{user.firstname}</span>
                </div>
 

@@ -25,13 +25,13 @@ function App() {
           <RegisterScreen />
         </Route>
 
-        <PrivateRoute path="/profile">
+        <PrivateRoute path="/profile/:id">
           <ProfileScreen />
         </PrivateRoute>
 
-     {/*   <Route path="/profile/:id">
+        <PrivateRoute path="/profile">
           <ProfileScreen />
-        </Route>*/}
+        </PrivateRoute>
 
         <PrivateRoute path="/friends">
           <FriendsScreen />

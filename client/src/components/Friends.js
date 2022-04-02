@@ -4,7 +4,7 @@ import FriendRequestList from './FriendRequestList'
 import PeopleList from './PeopleList'
 import MyFriendsList from './MyFriendsList'
  
-const Friends = ({friends, friendRequests, people =[]}) => {
+const Friends = ({friends = [], friendRequests, people =[]}) => {
 
 	return (
 		<div className='friends'>

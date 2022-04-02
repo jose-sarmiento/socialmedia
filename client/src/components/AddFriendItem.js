@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import img1 from '../assets/img/profiles/d1.jpg';
-import { FaFacebookMessenger } from 'react-icons/fa';
+import React, { useState } from 'react';
+import {Link} from 'react-router-dom'
 
 const AddFriendItem = ({ user, add }) => {
 	const [isRequested, setIsRequested] = useState(false);
@@ -11,7 +10,7 @@ const AddFriendItem = ({ user, add }) => {
 	};
 
 	return (
-		<li href='/' className='friend-item friend-item--col3'>
+		<Link to={`/profile/${user._id}`} className='friend-item friend-item--col3'>
 			<img className='friend-item__img' src={user.profileImage} alt='test' />
 			<div className='mr-auto lh-0'>
 				<h4 className='friend-item__name'>{`${user.firstname} ${user.lastname}`}</h4>
@@ -28,7 +27,7 @@ const AddFriendItem = ({ user, add }) => {
 					{isRequested ? 'Request sent' : 'Add friend'}
 				</button>
 			</div>
-		</li>
+		</Link>
 	);
 };
 

@@ -78,11 +78,12 @@ const CreatePost = ({ variant = 'reg' }) => {
             }
          >
             {variant !== 'small' && (
-               <img
-                  src={user.profileImage}
-                  className='introduction__user'
-                  alt='profile'
-               />
+               <figure className="introduction__user">
+                  <img
+                     src={user.profileImage}
+                     alt={user.firstname}
+                  />
+               </figure>
             )}
             <form
                className='introduction__form'

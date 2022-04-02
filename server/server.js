@@ -36,7 +36,7 @@ app.use(
 
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
@@ -106,8 +106,7 @@ io.on("connection", (socket) => {
 const port = process.env.PORT || 8000;
 const start = async () => {
 	try {
-		console.log(process.env.DATABASE_URI)
-		await connectDB(process.env.DATABASE_URI);
+		await connectDB(process.env.DATABASE_URII);
 		server.listen(port, () =>
 			console.log(`Server is listening on port ${port}...`)
 		);

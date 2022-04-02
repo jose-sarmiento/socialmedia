@@ -1,26 +1,8 @@
-@font-face {
-	font-family: myFont;
-  	src: url(../../fonts/OpenSans-Regular.ttf);
-}
-
-@font-face {
-	font-family: Roboto;
-  	src: url('../../fonts/Roboto-Regular.ttf');
-}
-
-@font-face {
-	font-family: myFontBold;
-  	src: url('../../fonts/OpenSans-Bold.ttf');
-}
-
-@font-face {
-	font-family: myFontLight;
-  	src: url('../../fonts/OpenSans-Light.ttf');
-}
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
 
 body {
-   font-family: Roboto;
+   font-family: 'Poppins', sans-serif;
    font-weight: 400;
-   font-size: 1.2rem;
+   font-size: 1.6rem;
 	color: $grey-1;
 }

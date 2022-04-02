@@ -1,0 +1,73 @@
+.skeleton {
+	background: $light-3;
+	animation: skeleton .5s linear infinite alternate;
+}
+
+@keyframes skeleton {
+	to {
+		opacity: 0;
+	}
+}
+
+.post-skeleton {
+	// background: $light-2;
+
+	.post {
+
+		&__header {
+			height: 4rem;
+			background: transparent;
+		}
+
+		&__heading {
+			width: 60%;
+			height: 8px;
+			border-radius: 1rem;
+		}
+
+		&__time {
+			height: 6px;
+			width: 4rem;
+			border-radius: 1rem;
+		}
+
+		&__media {
+			height: 35rem;
+		}
+
+		&__title {
+			height: 8px;
+			width: 100%;
+			border-radius: 1rem;
+			margin-bottom: 1rem;
+		}
+
+		&__caption {
+			height: 6px;
+			width: 100%;
+			border-radius: 1rem;
+			margin-bottom: .5rem;
+
+			&:last-child {
+				width: 10%;
+				margin-bottom: 0;
+			}
+		}
+
+		&__people-react {
+			height: 6px;
+			width: 40%;
+			border-radius: 1rem;
+		}
+
+		&__comment-counts {
+			height: 6px;
+			width: 20%;
+			border-radius: 1rem;
+		}
+
+		&__comment-form {
+			height: 3rem;
+		}
+	}
+}
