@@ -4,18 +4,18 @@ import FriendRequestList from './FriendRequestList'
 import PeopleList from './PeopleList'
 import MyFriendsList from './MyFriendsList'
  
-const Friends = ({friends = [], friendRequests, people =[]}) => {
+const Friends = () => {
 
 	return (
 		<div className='friends'>
 			<div className='myFriends'>
 				<div className='friend-requests'>
-					<MyFriendsList friends={friends} />
+					<MyFriendsList />
 				</div>
 			</div>
 			<div className='peoples'>
-				<FriendRequestList friends={friendRequests}/>
-				<PeopleList people={people} />
+				<FriendRequestList />
+				<PeopleList />
 			</div>
 		</div>
 	)

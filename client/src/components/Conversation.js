@@ -5,14 +5,16 @@ import {
 	getMessagesInConversation,
 	createMessage,
 } from "../contexts/actions/messengerActions";
+import {useSelector} from "react-redux"
 
-import { useMessengerContext, useAuthContext, useSocketContext } from "../contexts";
+import { useMessengerContext, useSocketContext } from "../contexts";
 
 const Conversation = ({ close }) => {
 	const [message, setMessage] = useState("");
 
+	const auth = useSelector(state => state.auth);
+
 	const socket = useSocketContext()
-	const { auth } = useAuthContext();
 	const { 
 		activeConversation, 
 		messages, 
@@ -52,7 +54,7 @@ const Conversation = ({ close }) => {
 		e.preventDefault();
 		createMessage({
 			convoId: activeConversation._id,
-			senderId: auth._id,
+			senderId: auth.user._id,
 			receiverId: activeConversation.friend._id,
 			message,
 			token: auth.token,

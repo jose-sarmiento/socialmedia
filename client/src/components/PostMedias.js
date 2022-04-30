@@ -1,30 +1,36 @@
-import React from 'react'
-import { v4 as uuidv4 } from 'uuid'
-import ReactPlayer from 'react-player/lazy'
+import React from "react";
+import { v4 as uuidv4 } from "uuid";
+import ReactPlayer from "react-player/lazy";
 
-const PostMedias = ({posts, fullHeight}) => {
-	return (
-		<>
-      <div className={fullHeight ? "post__media post__media--full" : "post__media"}>
+const PostMedias = ({ posts, fullHeight }) => {
+  return (
+    <>
+      <div
+        className={fullHeight ? "post__media post__media--full" : "post__media"}
+      >
         {posts.map((media, index) => {
-          if (index > 2) return null
+          if (index > 2) return null;
 
           if (index === 0) {
             return (
               <div
                 className={
                   index === 0 && posts.length === 1
-                    ? 'post__image-wrapper col-1-7 row-1-3'
+                    ? "post__image-wrapper col-1-7 row-1-3"
                     : index === 0 && posts.length === 2
-                    ? 'post__image-wrapper col-1-4 row-1-3'
-                    : 'post__image-wrapper col-1-5 row-1-3'
+                    ? "post__image-wrapper col-1-4 row-1-3"
+                    : "post__image-wrapper col-1-5 row-1-3"
                 }
                 key={uuidv4()}
               >
-                {media.type === 'image' ? (
+                {media.type === "image" ? (
                   <img
                     className="post__image"
-                    src={media.thumbnail}
+                    src={
+                      media.thumbnail.substring(0, 4) == "http"
+                        ? media.thumbnail
+                        : `${process.env.REACT_APP_SERVER + media.thumbnail}`
+                    }
                     alt="test"
                   />
                 ) : (
@@ -36,7 +42,7 @@ const PostMedias = ({posts, fullHeight}) => {
                   />
                 )}
               </div>
-            )
+            );
           }
 
           if (index === 1) {
@@ -44,18 +50,14 @@ const PostMedias = ({posts, fullHeight}) => {
               <div
                 className={
                   index === 1 && posts.length === 2
-                    ? 'post__image-wrapper col-4-7 row-1-3'
-                    : 'post__image-wrapper col-5-7 row-1-2'
+                    ? "post__image-wrapper col-4-7 row-1-3"
+                    : "post__image-wrapper col-5-7 row-1-2"
                 }
                 key={uuidv4()}
               >
-                <img
-                  className="post__image"
-                  src={media.thumbnail}
-                  alt="test"
-                />
+                <img className="post__image" src={media.thumbnail} alt="test" />
               </div>
-            )
+            );
           }
 
           if (index === 2 && posts.length === 3) {
@@ -64,13 +66,9 @@ const PostMedias = ({posts, fullHeight}) => {
                 className="post__image-wrapper col-5-7 row-2-3"
                 key={uuidv4()}
               >
-                <img
-                  className="post__image"
-                  src={media.thumbnail}
-                  alt="test"
-                />
+                <img className="post__image" src={media.thumbnail} alt="test" />
               </div>
-            )
+            );
           }
 
           if (index === 2 && posts.length > 3) {
@@ -79,20 +77,16 @@ const PostMedias = ({posts, fullHeight}) => {
                 className="post__image-wrapper post__image-wrapper--more col-5-7 row-2-3"
                 key={uuidv4()}
               >
-                <img
-                  className="post__image"
-                  src={media.thumbnail}
-                  alt="test"
-                />
+                <img className="post__image" src={media.thumbnail} alt="test" />
                 <span className="post__more">+3 more images</span>
               </div>
-            )
+            );
           }
-          return null
+          return null;
         })}
       </div>
-		</>
-	)
-}
+    </>
+  );
+};
 
-export default PostMedias
+export default PostMedias;

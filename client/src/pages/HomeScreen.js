@@ -7,12 +7,12 @@ import {
 	Messenger,
 	Loader
 } from '../components'
-import { useUsersContext } from '../contexts'
+import {useSelector} from "react-redux"
 
 const HomeScreen = () => {
-	const { loadingUser } = useUsersContext()
+	const users = useSelector(state => state.entities.users)
 
-	if(loadingUser) {
+	if(users.loading.user) {
 		return <Loader />
 	}
 

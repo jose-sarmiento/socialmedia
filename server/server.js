@@ -106,7 +106,7 @@ io.on("connection", (socket) => {
 const port = process.env.PORT || 8000;
 const start = async () => {
 	try {
-		await connectDB(process.env.DATABASE_URII);
+		await connectDB(process.env.MONGODB_URI);
 		server.listen(port, () =>
 			console.log(`Server is listening on port ${port}...`)
 		);

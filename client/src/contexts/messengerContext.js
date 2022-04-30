@@ -3,8 +3,7 @@ import reducer from './reducers/messengerReducer';
 import { addMessageToConversation, setOnlineFriends, addConversationWithMessage } from "../contexts/constants/messengerConstants";
 import { getConversations } from './actions/messengerActions'
 import { useSocketContext } from './socketContext'
-import { useAuthContext } from './authContext'
-import { useUsersContext } from './usersContext'
+import {useSelector} from "react-redux"
 
 const MessengerContext = React.createContext();
    
@@ -18,9 +17,10 @@ const initialState = {
 export const MessengerProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
+	const auth = useSelector(state => state.auth);
+	const friends = useSelector(state => state.entities.users.friends)
+
 	const socket = useSocketContext()
-	const { auth } = useAuthContext()
-	const {friends} = useUsersContext()
 
 	useEffect(() => {
 		socket.current.on("getMessage", (data) => {
@@ -36,14 +36,14 @@ export const MessengerProvider = ({ children }) => {
 	}, []);
 
 	useEffect(() => {
-		if (!auth) return;
-		getConversations({_id: auth._id, token: auth.token})(dispatch)
-	},[auth])
+		if (!auth.user) return;
+		getConversations({_id: auth.user._id, token: auth.token})(dispatch)
+	},[auth.user])
 
 	useEffect(() => {
-		if(!auth) return;
+		if(!auth.user) return;
 
-		socket.current?.emit("addUser", auth._id);
+		socket.current?.emit("addUser", auth.user._id);
 		socket.current?.on("getUsers", (users) => {
 			if(users.length === 0 || friends.length === 0) return;
 			const ids = users.map(x => x.userId)

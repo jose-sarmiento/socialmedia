@@ -1,20 +1,20 @@
 import React from 'react';
-import { usePostsContext } from '../contexts';
+import { useSelector } from 'react-redux';
 
 const ProgressBar = () => {
-   const { uploadPercentage } = usePostsContext();
+   const posts = useSelector(state => state.entities.posts);
 
    return (
       <div className='meter animate'>
-         {uploadPercentage && uploadPercentage > 0 && (
+         {posts.uploadPercentage && posts.uploadPercentage > 0 && (
             <span
                style={{
-                  width: uploadPercentage ? `${uploadPercentage}%` : '0%',
+                  width: posts.uploadPercentage ? `${posts.uploadPercentage}%` : '0%',
                }}
             >
                <span
                   style={{
-                     width: uploadPercentage ? `${uploadPercentage}%` : '0%',
+                     width: posts.uploadPercentage ? `${posts.uploadPercentage}%` : '0%',
                   }}
                ></span>
             </span>

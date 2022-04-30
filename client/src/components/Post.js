@@ -10,13 +10,15 @@ import ReactionPreviews from "./ReactionPreviews";
 import Comment from "./Comment";
 import CircleImage from "./CircleImage";
 
-import { useAppContext, useAuthContext } from "../contexts";
+import {useAppContext} from "../contexts"
+
+import {useSelector} from "react-redux";
 
 const maxCount = 200;
 
 const Post = React.forwardRef(({ post, isFullscreen, small }, ref) => {
    const { toastIsShowing, toastType, toastMessage } = useAppContext();
-   const { auth } = useAuthContext();
+   const auth = useSelector(state => state.auth);
 
    const [showMore, setShowMore] = useState(false);
    const [reactions, setReactions] = useState([]);
@@ -154,7 +156,8 @@ const Post = React.forwardRef(({ post, isFullscreen, small }, ref) => {
                   {post.title && <h2 className="post__title">{post.title}</h2>}
                   {post.body && isFullscreen ? (
                      <p className="post__caption">{post.body}</p>
-                  ) : (
+                  ) : 
+                  post.body ? (
                      <p className="post__caption">
                         {showMore
                            ? post.body
@@ -170,15 +173,15 @@ const Post = React.forwardRef(({ post, isFullscreen, small }, ref) => {
                            </span>
                         )}
                      </p>
-                  )}
+                  ) : ''}
                </div>
 
                {(reactions.length > 0 || comments.length > 0) && (
                   <div className="post__stats">
-                     <ReactionPreviews
-                        reactionPreviews={reactionPreviews}
-                        reactions={reactions}
-                     />
+                     {reactions.length > 0 ? <ReactionPreviews
+                                             reactionPreviews={reactionPreviews}
+                                             reactions={reactions}
+                                          /> : <span>Be the first to react on this post</span>}
 
                      {comments.length > 0 && (
                         <span className="post__comment-counts">

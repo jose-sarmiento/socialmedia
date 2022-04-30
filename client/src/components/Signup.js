@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FaChevronRight, FaPlus } from 'react-icons/fa';
-import {register} from '../contexts/actions/authActions'
+import { useDispatch, useSelector } from "react-redux"
 
-import { useAuthContext } from '../contexts';
+import {register} from '../store/auth'
 
 const Signup = () => {
    const [fields, setFields] = useState({
@@ -15,11 +15,14 @@ const Signup = () => {
       birthdate: '',
    });
    const [error, setError] = useState(null);
-   const { auth, registerLoading, registerError, dispatch } = useAuthContext();
+
+   const auth = useSelector(state => state.auth);
+
+   const dispatch = useDispatch();
    const history = useHistory();
 
    useEffect(() => {
-      if (!auth) return;
+      if (!auth.user) return;
 
       setFields({
          firstname: '',
@@ -31,13 +34,7 @@ const Signup = () => {
       });
       setFields(null);
       history.push('/');
-   }, [history, auth]);
-
-   useEffect(() => {
-      if (registerError) {
-         setError(registerError);
-      }
-   }, [registerError]);
+   }, [history, auth.user]);
 
    function handleInputChange(e) {
       const name = e.target.name;
@@ -57,14 +54,15 @@ const Signup = () => {
       ) {
          return setError('All Fields are required');
       }
-      register(fields)(dispatch);
+      dispatch(register(fields));
    }
 
    return (
       <div className='signup'>
          <h2 className='signin__title mb-4'>Join Our Community</h2>
          <form className='form' onSubmit={handleSubmit}>
-            {(error || registerError) && <p className='form__error'>{error}</p>}
+            {error && <p className='form__error'>{error}</p>}
+            {auth.errors.register && <p className='form__error'>Something went wrong. Try again</p>}
             <div className='grid-2'>
                <div className='form__group'>
                   <input
@@ -192,9 +190,9 @@ const Signup = () => {
                <button
                   type='submit'
                   className='button button--primary'
-                  disabled={registerLoading}
+                  disabled={auth.loadings.register}
                >
-                  {registerLoading ? 'spinner' : 'Sign-up'}
+                  {auth.loadings.register ? 'spinner' : 'Sign-up'}
                   <figure className='button__icon-wrapper button__icon-wrapper--blue'>
                      <FaPlus />
                   </figure>

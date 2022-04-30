@@ -41,6 +41,8 @@
    }
 
    &__name {
+      display: block;
+      color: $black;
       font-size: 1.2rem;
       margin-right: auto;
       margin-left: 1rem;

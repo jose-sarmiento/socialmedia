@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { FaChevronRight, FaPlus } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux'
 import spinner from '../assets/img/spinner2.gif';
-import {login} from '../contexts/actions/authActions'
 
-import { useAuthContext } from '../contexts';
+import { login } from "../store/auth"
 
 const Login = () => {
    const [fields, setFields] = useState({ email: '', password: '' });
    const [error, setError] = useState();
 
+   const auth = useSelector(state => state.auth)
+
    const history = useHistory();
-   const location = useLocation();
+   const location = useLocation(); 
+   const dispatch = useDispatch();
 
    const { from } = location.state || { from: { pathname: "/" } };
 
-   const { auth, loginLoading, loginError, dispatch } = useAuthContext();
-
    useEffect(() => {
-      if (!auth) return;
+      if (!auth.user) return;
 
       setFields({
          email: '',
@@ -26,20 +27,14 @@ const Login = () => {
       });
       setError(null);
       history.replace(from)
-   }, [history, auth]);
-
-   useEffect(() => {
-      if (loginError) {
-         setError(loginError);
-      }
-   }, [loginError]);
+   }, [history, auth.user]);
 
    function handleSubmit(e) {
       e.preventDefault();
       if (fields.email === '' || fields.password === '')
          return setError('All fields are required');
 
-      login(fields)(dispatch);
+      dispatch(login(fields));
    }
 
    function handleInputChange(e) {
@@ -52,8 +47,11 @@ const Login = () => {
       <div className='signin'>
          <h2 className='signin__title mb-4'>This is not You?</h2>
          <form className='w-100 form' onSubmit={handleSubmit}>
-            {(error || loginError) && (
+            {error && (
                <p className='form__error'>{error}</p>
+            )}
+            {auth.errors?.login && (
+               <p className='form__error'>Invalid email or password</p>
             )}
             <div className='form__group'>
                <input
@@ -93,9 +91,9 @@ const Login = () => {
                <button
                   type='submit'
                   className='button button--primary'
-                  disabled={loginLoading}
+                  disabled={auth.loadings?.login}
                >
-                  {loginLoading ? <img src={spinner} alt='spinner' /> : 'Login'}
+                  {auth.loadings?.login ? <img src={spinner} alt='spinner' /> : 'Login'}
                   <figure className='button__icon-wrapper button__icon-wrapper--blue'>
                      <FaChevronRight />
                   </figure>

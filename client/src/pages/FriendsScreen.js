@@ -1,28 +1,21 @@
 import React from 'react'
-import { Header, LeftSide, Messenger, Loader, Friends }from '../components'
-
-import { useUsersContext } from '../contexts'
+import { Header, LeftSide, Messenger, Friends } from '../components'
 
 const FriendsScreen = () => {
-	const { friends, friendRequests, people } = useUsersContext()
 
-  return (
-  	<>
-  	<div className='main-container container'>
-			<Header />
-			<LeftSide />
-			<div className='middle-content'>
-		  	<Friends
-		  		friends={friends}
-		  		friendRequests={friendRequests}
-		  		people={people}
-		  	/> 
-		  </div>
+	return (
+		<>
+			<div className='main-container container'>
+				<Header />
+				<LeftSide />
+				<div className='middle-content'>
+					<Friends />
+				</div>
 
-			<Messenger />
-		</div>
-    </>
-  )
+				<Messenger />
+			</div>
+		</>
+	)
 }
 
 export default FriendsScreen

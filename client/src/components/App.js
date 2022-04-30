@@ -8,7 +8,24 @@ import ProfileScreen from '../pages/ProfileScreen'
 import ViewPostScreen from '../pages/ViewPostScreen' 
 import FriendsScreen from '../pages/FriendsScreen' 
 
+import {useDispatch, useSelector} from 'react-redux'
+import { getUserDetails, getFriends, getPeople } from "../store/users"
+
+
 function App() {
+  const dispatch = useDispatch();
+
+  const auth = useSelector(state => state.auth)
+
+  useEffect(() => {
+    if (!auth.user) return;
+    
+    dispatch(getUserDetails())
+    dispatch(getFriends(auth.user._id))
+    dispatch(getPeople())
+  },[auth])
+
+
 
   return (
     <>

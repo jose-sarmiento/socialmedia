@@ -22,7 +22,7 @@ const FriendRequestItem = ({ friend, confirm, reject }) => {
 				</button>
 				<button
 					className='btn btn--white'
-					onClick={() => reject(friend)}
+					onClick={() => reject(friend._id)}
 				>
 					Remove
 				</button>

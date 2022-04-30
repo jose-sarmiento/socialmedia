@@ -12,7 +12,12 @@ const userFromStorage = localStorage.getItem(USER_STORAGE_KEY)
 	: null;
    
 const initialState = {
-	user: userFromStorage,
+	me: {
+		profile: {
+
+		},
+		friends: [],
+	},
 	profile: null,
 	people: [],
 	friendRequests: [],
@@ -23,10 +28,11 @@ const initialState = {
 export const UsersProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
-	const { auth } = useAuthContext()
+	const auth = null;
 
 	useEffect(() => {
-		if (!auth) return;
+		if(!auth) return;
+		
 		getUserDetails({userId: auth._id, token: auth.token})(dispatch)
 		getUsers({token: auth.token})(dispatch)
 	},[auth])

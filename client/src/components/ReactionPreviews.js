@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactionPreview from './ReactionPreview';
-import { useAuthContext } from '../contexts';
+import { useSelector } from 'react-redux';
 
 const ReactionPreviews = props => {
 	const { reactionPreviews, reactions, inComment = false } = props;
-	const { auth } = useAuthContext();
+	const auth = useSelector(state => state.auth);
 
 	return (
 		<>
@@ -20,7 +20,7 @@ const ReactionPreviews = props => {
 
 			{!inComment && (
 				<span className='post__people-react'>
-					{reactions.length === 1 && reactions[0].id === auth._id
+					{reactions.length === 1 && reactions[0].id === auth.user?._id
 						? `you liked this post`
 						: reactions.length === 1
 						? `${reactions[0].name} likes the post`

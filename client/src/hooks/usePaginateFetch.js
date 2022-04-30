@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuthContext } from '../contexts';
+import { useSelector } from 'react-redux';
 
 export default function usePaginateFetch(url, page, limit) {
    const [loading, setLoading] = useState(false);
@@ -9,7 +9,7 @@ export default function usePaginateFetch(url, page, limit) {
    const [hasNext, setHasNext] = useState(false);
    const [hasPrevious, setHasPrevious] = useState(false);
 
-   const { auth } = useAuthContext();
+   const auth = useSelector(state => state.auth);
 
    useEffect(() => {
       let isMounted = true;

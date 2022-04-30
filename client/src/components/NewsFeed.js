@@ -2,18 +2,14 @@ import React, {useState, useEffect} from 'react';
 import { FaImage, FaUserFriends } from 'react-icons/fa';
 import { PostList, CreatePost, Loader } from '../components';
 
-import { useUsersContext } from '../contexts';
+import { useSelector, useDispatch } from 'react-redux';
+import {selectRecentPhotos} from '../store/users'
 
 const NewsFeed = () => {
-	const [recentPhotos, setRecentPhotos] =  useState([])
-	const { profile } = useUsersContext();
+	const users = useSelector(state => state.entities.users);
+	const {user, friends} = users;
 
-	useEffect(() => {
-		const sorted = profile.photos.sort(function(a,b){
-		  return new Date(b.createdAt) - new Date(a.createdAt);
-		});
-		setRecentPhotos(sorted.slice(0,6))
-	},[profile.photos])
+	const recentPhotos = selectRecentPhotos(users);
 
 	return (
 		<div className='profile__grid'>
@@ -24,11 +20,11 @@ const NewsFeed = () => {
 							<FaUserFriends className='card__icon' />
 							<span className='card__title'>Friends</span>
 							<span className='card__middot'>&#9679;</span>
-							<span className='count'>{profile.friends.length}</span>
+							<span className='count'>{friends.length}</span>
 						</div>
 						<div className='card__body'>
 							<div className='flex__images'>
-								{profile.friends.map((friend, idx) => (
+								{friends.map((friend, idx) => (
 									<figure className={`flex__image flex__image--${idx + 1}`} key={idx}>
 										<img src={friend.profileImage} key={friend._id} />
 									</figure>
@@ -41,7 +37,7 @@ const NewsFeed = () => {
 							<FaImage className='card__icon' />
 							<span className='card__title'>Photos</span>
 							<span className='card__middot'>&#9679;</span>
-							<span className='count'>{profile.photos.length}</span>
+							<span className='count'>{user.photos.length}</span>
 						</div>
 						<div className='card__body'>
 							<div className='grid__images'>
@@ -70,7 +66,7 @@ const NewsFeed = () => {
 			</div>
 			<div className='newsfeed'>
 				<CreatePost variant='small' />
-				<PostList onlyMe={true} userId={profile._id} small={true} />
+				<PostList onlyMe={true} userId={user._id} small={true} />
 			</div>
 		</div>
 	);

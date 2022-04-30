@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useUsersContext } from "../contexts";
+import {useSelector} from 'react-redux'
 
 const Photos = () => {
 	const [column1, setColumn1] = useState([]);
@@ -7,11 +7,12 @@ const Photos = () => {
 	const [column3, setColumn3] = useState([]);
 	const [column4, setColumn4] = useState([]);
 
-	const {
-		profile: { photos },
-	} = useUsersContext();
+	const users = useSelector(state => state.entities.users);
+	const {photos} = users;
 
 	useEffect(() => {
+		if (!photos) return;
+		
 		const numberPerColumn = photos.length / 4;
 
 		setColumn1(paginate(photos, numberPerColumn, 1));

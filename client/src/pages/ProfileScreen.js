@@ -17,43 +17,29 @@ import {
 	Photos,
 	Loader,
 } from "../components";
-import {
-	viewUserProfile,
-	uploadCover,
-	uploadProfile,
-} from "../contexts/actions/userActions";
 
-import { useAuthContext, useUsersContext } from "../contexts";
+import {useSelector, useDispatch} from "react-redux"
+import {viewUserProfile, uploadCover, uploadProfile} from "../store/users"
 
 const ProfileScreen = () => {
-	const { id } = useParams();
-	const { auth } = useAuthContext();
-	const {
-		people = [],
-		profile,
-		loadingUser,
-		loadingProfile,
-		dispatch,
-	} = useUsersContext();
 	const { path, url } = useRouteMatch();
+	const dispatch = useDispatch();
 
-	useEffect(() => {
-		if (!id) return;
-		console.log(id)
-		viewUserProfile({ userId: id, token: auth.token })(dispatch);
-	}, [auth, id, useParams]);
+	const auth = useSelector(state => state.auth);
+	const users = useSelector(state => state.entities.users);
+	const {user, friends, friendRequests, people, loading} = users;
 
 	const handleCoverChange = (e) => {
 		e.preventDefault();
 		const formData = new FormData();
 		formData.append("cover", e.target.files[0]);
-		uploadCover({ formData, token: auth.token })(dispatch);
+		dispatch(uploadCover(formData));
 	};
 
 	const handleProfileChange = (e) => {
 		const formData = new FormData();
 		formData.append("profile", e.target.files[0]);
-		uploadProfile({ formData, token: auth.token })(dispatch);
+		dispatch(uploadProfile(formData));
 	};
 
 	return (
@@ -63,43 +49,38 @@ const ProfileScreen = () => {
 			<LeftSide />
 
 			<div className="middle-content">
-				{loadingUser && <Loader />}
-				{profile && (
+				{loading.get && <Loader />}
+				{user && (
 					<>
 						<div className="profile mb-1">
 							<div className="cover">
-								{profile.coverImage && (
+								{user.coverImage && (
 									<img
-										src={profile.coverImage}
+										src={user.coverImage}
 										alt="cover"
 										className="cover__image"
 									/>
 								)}
 
 								<div className="cover__footer">
-									<h1 className="profile__name">{`${profile.firstname} ${profile.lastname}`}</h1>
-
-									{auth._id === profile._id && (
-										<>
-											<label
-												className="profile__edit-cover"
-												htmlFor="cover"
-											>
-												<i className="profile__edit-icon">
-													<FaCamera className="mr-1" />
-													Edit Cover
-												</i>
-											</label>
-											<input
-												type="file"
-												accept="image/png,image/jpeg"
-												name="cover"
-												id="cover"
-												onChange={handleCoverChange}
-												style={{ display: "none" }}
-											/>
-										</>
-									)}
+									<h1 className="profile__name">{`${user.firstname} ${user.lastname}`}</h1>
+										<label
+											className="profile__edit-cover"
+											htmlFor="cover"
+										>
+											<i className="profile__edit-icon">
+												<FaCamera className="mr-1" />
+												Edit Cover
+											</i>
+										</label>
+										<input
+											type="file"
+											accept="image/png,image/jpeg"
+											name="cover"
+											id="cover"
+											onChange={handleCoverChange}
+											style={{ display: "none" }}
+										/>
 								</div>
 							</div>
 
@@ -107,33 +88,28 @@ const ProfileScreen = () => {
 								<figure className="profile__image-wrapper">
 									<div className="profile__container">
 										<img
-											src={profile.profileImage}
+											src={user.profileImage}
 											alt="profile"
 											className="profile__image"
 										/>
-
-										{auth._id === profile._id && (
-											<>
-												<label
-													className="profile__edit-profile"
-													htmlFor="profile"
-												>
-													<i className="profile__edit-icon">
-														<FaCamera className="mr-1" />
-													</i>
-												</label>
-												<input
-													type="file"
-													accept="image/png,image/jpeg"
-													name="profile"
-													id="profile"
-													onChange={
-														handleProfileChange
-													}
-													style={{ display: "none" }}
-												/>
-											</>
-										)}
+										<label
+											className="profile__edit-profile"
+											htmlFor="profile"
+										>
+											<i className="profile__edit-icon">
+												<FaCamera className="mr-1" />
+											</i>
+										</label>
+										<input
+											type="file"
+											accept="image/png,image/jpeg"
+											name="profile"
+											id="profile"
+											onChange={
+												handleProfileChange
+											}
+											style={{ display: "none" }}
+										/>
 									</div>
 								</figure>
 
@@ -198,12 +174,12 @@ const ProfileScreen = () => {
 								<NewsFeed />
 							</Route>
 							<Route path={`${path}/about`}>
-								<About profile={profile} />
+								<About profile={user} />
 							</Route>
 							<Route path={`${path}/friends`}>
 								<Friends
-									friends={profile.friends}
-									friendRequests={profile.friendRequests}
+									friends={friends}
+									friendRequests={friendRequests}
 									people={people}
 								/>
 							</Route>

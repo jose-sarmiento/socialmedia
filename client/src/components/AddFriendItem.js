@@ -10,10 +10,10 @@ const AddFriendItem = ({ user, add }) => {
 	};
 
 	return (
-		<Link to={`/profile/${user._id}`} className='friend-item friend-item--col3'>
+		<div className='friend-item friend-item--col3'>
 			<img className='friend-item__img' src={user.profileImage} alt='test' />
 			<div className='mr-auto lh-0'>
-				<h4 className='friend-item__name'>{`${user.firstname} ${user.lastname}`}</h4>
+				<Link to={`/profile/${user._id}`} className='friend-item__name'>{`${user.firstname} ${user.lastname}`}</Link>
 				<span className='friend-item__subtitle'>7 mutual friends</span>
 			</div>
 
@@ -27,7 +27,7 @@ const AddFriendItem = ({ user, add }) => {
 					{isRequested ? 'Request sent' : 'Add friend'}
 				</button>
 			</div>
-		</Link>
+		</div>
 	);
 };
 

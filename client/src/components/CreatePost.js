@@ -7,9 +7,9 @@ import {
    FaHeading,
 } from 'react-icons/fa';
 import ProgressBar from './ProgressBar';
-import { createPost } from '../contexts/actions/postActions';
 
-import { useAuthContext, usePostsContext, useUsersContext } from '../contexts';
+import {useSelector, useDispatch} from "react-redux";
+import { createPost } from '../store/posts';
 
 const CreatePost = ({ variant = 'reg' }) => {
    const [body, setBody] = useState('');
@@ -17,20 +17,18 @@ const CreatePost = ({ variant = 'reg' }) => {
    const [files, setFiles] = useState([]);
    const [isTitleOpen, setIsTitleOpen] = useState(false);
 
-   const { auth } = useAuthContext();
-   const { user } = useUsersContext();
-   const {
-      loadingCreate,
-      errorCreate,
-      successCreate,
-      dispatch: postsDispatch,
-   } = usePostsContext();
+   const dispatch = useDispatch()
+
+   const users = useSelector(state => state.entities.users);
+   const {user} = users
+   const posts = useSelector(state => state.entities.posts);
+   const {loading, success, error} = posts
 
    useEffect(() => {
-      if (!successCreate) return;
+      if (!success.create) return;
       clearFields();
       setIsTitleOpen(false);
-   }, [successCreate]);
+   }, [success.create]);
 
    function handleFileSelect(e) {
       setFiles([...files, ...e.target.files]);
@@ -38,7 +36,7 @@ const CreatePost = ({ variant = 'reg' }) => {
 
    function handleFormSubmit(e) {
       e.preventDefault();
-      if (loadingCreate) return;
+      if (loading.create) return;
       if (!body && files.length === 0) return;
 
       const formData = new FormData();
@@ -49,7 +47,7 @@ const CreatePost = ({ variant = 'reg' }) => {
          formData.append('files', file);
       });
 
-      createPost({ formData, token: auth.token })(postsDispatch);
+      dispatch(createPost(formData))
    }
 
    function handlePreviewDelete(name) {
@@ -66,7 +64,7 @@ const CreatePost = ({ variant = 'reg' }) => {
       setIsTitleOpen(prev => !prev);
    }
 
-   if (!user) return null
+   if (!user) return null;
 
    return (
       <>
@@ -90,7 +88,7 @@ const CreatePost = ({ variant = 'reg' }) => {
                onSubmit={handleFormSubmit}
                encType='multipart/form-data'
             >
-               {errorCreate && <div className='form__error'>{errorCreate}</div>}
+               {error.create && <div className='form__error'>{error.create}</div>}
                {isTitleOpen && (
                   <input
                      placeholder='Add Title ( Optional )'
@@ -160,7 +158,7 @@ const CreatePost = ({ variant = 'reg' }) => {
                            ? 'btn btn--circle btn--circle--small btn--primary ml-1 form__submit-btn'
                            : 'btn btn--circle btn--primary ml-1 form__submit-btn'
                      }
-                     disabled={loadingCreate}
+                     disabled={loading.create}
                   >
                      <FaPaperPlane className='btn__icon--paper-plane' />
                   </button>

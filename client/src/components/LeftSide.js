@@ -1,20 +1,12 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, NavLink } from "react-router-dom";
-import { navLinks } from "../data";
-import profile1 from "../assets/img/profiles/d3.jpg";
-import profile2 from "../assets/img/profiles/d2.jpg";
-import profile3 from "../assets/img/profiles/d1.jpg";
-import { changeActiveLink } from "../contexts/actions/appActions";
-
-import { useAppContext, useUsersContext } from "../contexts";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import {useSelector, useDispatch} from "react-redux"
 
 const LeftSide = () => {
-	const { activeLink, dispatch } = useAppContext();
-	const { friends, birthdays } = useUsersContext();
+	const dispatch = useDispatch();
 
-	const handleLinkChange = (id) => {
-		changeActiveLink(id)(dispatch);
-	};
+	const users = useSelector(state => state.entities.users);
+	const { friends, birthdays } = users;
 
 	return (
 		<div className="left-content">

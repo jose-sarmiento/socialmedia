@@ -34,7 +34,7 @@ const getUsers = async (req, res) => {
 const getUser = async (req, res) => {
 	const user = await User.aggregate([
 		{ $match: { _id: mongoose.Types.ObjectId(req.params.id) } },
-		// { $project: { password: 0 } },
+		{ $project: { password: 0 } },
 		{
 			$lookup: {
 				from: "friends",
@@ -75,17 +75,16 @@ const getUser = async (req, res) => {
 					},
 					{ $unwind: "$recipientInfo" },
 				],
-				as: "userFriends",
+				as: "friends",
 			},
 		},
 	]);
-	// if (!user) throw new NotFound('User not found');
+	if (!user) throw new NotFound('User not found');
 
-	res.json({ ...user[0] });
-};
+	res.json(user[0]);
+}
 
 const updateUser = async (req, res) => {
-	console.log(req.body);
 	const user = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
 		fields: { password: 0, friends: 0 },
 		new: true,
@@ -131,7 +130,7 @@ const uploadCover = async (req, res) => {
 		},
 		{ new: true }
 	);
-	res.json({ user, success: true });
+	res.json({ newCover: photoObj, success: true });
 };
 
 const uploadProfile = async (req, res) => {
@@ -159,7 +158,7 @@ const uploadProfile = async (req, res) => {
 		{ new: true }
 	);
 
-	res.json({ user });
+	res.json({ newProfile: photoObj, success: true });
 };
 
 const getFriends = async (req, res) => {

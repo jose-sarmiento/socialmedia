@@ -5,19 +5,17 @@ import {
    FaCaretDown,
    FaSearch,
 } from 'react-icons/fa';
+import {useSelector, useDispatch} from "react-redux";
 import Notifications from './Notifications';
 import CircleImage from './CircleImage';
-import { logout } from '../contexts/actions/authActions'
-
-import { useAuthContext, useUsersContext } from '../contexts';
+import { logout } from '../store/auth';
 
 const Header = () => {
-   const [isNotificationOpen, setIsNotificationOpen] = useState(false)
+   const dispatch = useDispatch();
 
-   const { auth, dispatch } = useAuthContext();
-   const { user } = useUsersContext();
+   const auth = useSelector(state => state.auth)
 
-   const handleUserLogout = () => logout()(dispatch);
+   const handleUserLogout = () => dispatch(logout());
 
    return (
       <header className='header'>
@@ -43,11 +41,11 @@ const Header = () => {
                <div className='navbar__user'>
                   <CircleImage>
                      <img
-                        src={user.profileImage}
-                        alt={user.firstname}
+                        src={auth.user?.profileImage}
+                        alt={auth.user?.firstname}
                      />
                   </CircleImage>
-                  <span className='navbar__fname'>{user.firstname}</span>
+                  <span className='navbar__fname'>{auth.user?.firstname}</span>
                </div>
 
              {/*  <a 
