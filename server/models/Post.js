@@ -41,7 +41,7 @@ const PostSchema = new Schema({
 				type: String,
 				enum: [ 'like', 'laugh', 'love', 'angry', 'wow' ]
 			},
-			createdAt: { type: Date, default: Date.now() }
+			createdAt: { type: Date, default: Date.now }
 		}
 	],
 	createdAt: { type: Date, default: Date.now }

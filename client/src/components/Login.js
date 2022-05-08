@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaChevronRight, FaPlus } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux'
 import spinner from '../assets/img/spinner2.gif';
@@ -12,7 +12,7 @@ const Login = () => {
 
    const auth = useSelector(state => state.auth)
 
-   const history = useHistory();
+   const navigate = useNavigate();
    const location = useLocation(); 
    const dispatch = useDispatch();
 
@@ -26,8 +26,8 @@ const Login = () => {
          password: '',
       });
       setError(null);
-      history.replace(from)
-   }, [history, auth.user]);
+      navigate(from, {replace: true})
+   }, [navigate, auth.user]);
 
    function handleSubmit(e) {
       e.preventDefault();

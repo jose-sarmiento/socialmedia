@@ -13,7 +13,7 @@ const AddFriendItem = ({ user, add }) => {
 		<div className='friend-item friend-item--col3'>
 			<img className='friend-item__img' src={user.profileImage} alt='test' />
 			<div className='mr-auto lh-0'>
-				<Link to={`/profile/${user._id}`} className='friend-item__name'>{`${user.firstname} ${user.lastname}`}</Link>
+				<Link to={`/users/${user._id}`} className='friend-item__name'>{`${user.firstname} ${user.lastname}`}</Link>
 				<span className='friend-item__subtitle'>7 mutual friends</span>
 			</div>
 

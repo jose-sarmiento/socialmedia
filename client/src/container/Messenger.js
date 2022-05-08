@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaFacebookMessenger } from "react-icons/fa";
-import Chat from "./Chat";
-import ConversationList from "./ConversationList";
-import ActivePeopleList from "./ActivePeopleList";
-import Conversation from "./Conversation";
+import Chat from "../components/Chat";
+import ConversationList from "../components/ConversationList";
+import ActivePeopleList from "../components/ActivePeopleList";
+import Conversation from "../components/Conversation";
 import {
 	setActiveConversation,
 	unsetActiveConversation,

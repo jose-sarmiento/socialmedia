@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-export default function usePaginateFetch(url, page, limit) {
+import { listMyPostsSuccess } from "../store/posts";
+
+export default function usePaginateMyPosts(page, limit) {
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState(false);
-   const [results, setResults] = useState([]);
    const [hasNext, setHasNext] = useState(false);
    const [hasPrevious, setHasPrevious] = useState(false);
 
    const auth = useSelector(state => state.auth);
+   const dispatch = useDispatch();
 
    useEffect(() => {
       let isMounted = true;
@@ -17,8 +19,9 @@ export default function usePaginateFetch(url, page, limit) {
       setError(false);
 
       axios({
+         baseURL: process.env.REACT_APP_API_ENDPOINT,
          method: 'GET',
-         url: url,
+         url: `/users/${auth.user._id}/posts`,
          params: { page: page, limit: limit },
          headers: {
             Authorization: `Bearer ${auth.token}`,
@@ -26,9 +29,7 @@ export default function usePaginateFetch(url, page, limit) {
       })
          .then(res => {
             if(isMounted) {
-               setResults(prevResults => {
-                  return [...new Set([...results, ...res.data.docs])];
-               });
+               dispatch(listMyPostsSuccess({posts: res.data.docs}))
                setHasNext(res.data.next);
                setHasPrevious(res.data.previous);
                setLoading(false);
@@ -42,7 +43,7 @@ export default function usePaginateFetch(url, page, limit) {
          });
       // eslint-disable-next-line react-hooks/exhaustive-deps
       return () => { isMounted = false }
-   }, [url, page, limit]);
+   }, [page, limit]);
 
-   return { loading, error, results, hasNext, hasPrevious };
+   return { loading, error, hasNext, hasPrevious };
 }

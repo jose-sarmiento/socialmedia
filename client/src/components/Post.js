@@ -1,238 +1,225 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaCamera, FaPaperPlane } from "react-icons/fa";
+import { FaPaperPlane } from "react-icons/fa";
 import moment from "moment";
-import axios from "axios";
 import { Link } from "react-router-dom";
-import PostMedias from "./PostMedias";
+import PostMediasPreview from "./PostMediasPreview";
 import ReactButton from "./ReactButton";
 import Toast from "./Toast";
 import ReactionPreviews from "./ReactionPreviews";
 import Comment from "./Comment";
 import CircleImage from "./CircleImage";
+import Loader from "./Loader";
 
-import {useAppContext} from "../contexts"
-
-import {useSelector} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { createComment, reactPost } from "../store/posts";
+import { useAppContext } from "../contexts";
 
 const maxCount = 200;
 
-const Post = React.forwardRef(({ post, isFullscreen, small }, ref) => {
-   const { toastIsShowing, toastType, toastMessage } = useAppContext();
-   const auth = useSelector(state => state.auth);
+const Post = React.forwardRef((props, ref) => {
+    const { post, isFullscreen, small } = props;
 
-   const [showMore, setShowMore] = useState(false);
-   const [reactions, setReactions] = useState([]);
-   const [reactionPreviews, setReactionPreviews] = useState([]);
-   const [userReaction, setUserReaction] = useState();
-   const [comments, setComments] = useState([]);
-   const [loadingReact, setLoadingReact] = useState(false);
-   const [errorReact, setErrorReact] = useState(null);
-   const [loadingComment, setLoadingComment] = useState(false);
-   const [errorComment, setErrorComment] = useState(null);
+    const [inputType, setInputType] = useState("comment");
+    const [showMore, setShowMore] = useState(false);
+    const [reactionPreviews, setReactionPreviews] = useState([]);
+    const [userReaction, setUserReaction] = useState();
+    const [commentPageNo, seCommentPageNo] = useState(1);
+    const [comments, setComments] = useState([]);
 
-   const commentInputRef = useRef();
+    const { toastIsShowing, toastType, toastMessage } = useAppContext();
+    const auth = useSelector(state => state.auth);
+    const posts = useSelector(state => state.entities.posts);
 
-   useEffect(() => {
-      if (!post.reactions) return;
+    const commentInputRef = useRef();
+    const dispatch = useDispatch();
 
-      setReactions(
-         post.reactions.map((curr) => ({
-            id: curr.userId,
-            name: curr.userName,
-            reaction: curr.reaction,
-         }))
-      );
+    useEffect(() => {
+        if (post.comments?.length === 0) return;
+        const sortedArr = [...post.comments].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        const slice10 = paginate(sortedArr, commentPageNo);
+        setComments([...comments, ...slice10]);
+    }, [commentPageNo, post.comments]);
 
-      if (post.comments) setComments(post.comments);
-   }, []);
+    useEffect(() => {
+        setUserReaction(
+            post.reactions.find(curr => curr.userId === auth.user._id)
+        );
+        setReactionPreviews(() => getUniqueReactions(post.reactions));
+    }, [post.reactions]);
 
-   useEffect(() => {
-      setUserReaction(() => {
-         const _ = reactions.find((curr) => curr.id === auth._id);
-         return _ ? _.reaction : undefined;
-      });
-
-      setReactionPreviews(() => {
-         const allReactions = reactions.map((i) => i.reaction);
-         const distinct = [...new Set(allReactions)];
-         const newArr = distinct.map((react) => {
-            const count = allReactions.filter((item) => item === react).length;
+    const getUniqueReactions = reactions => {
+        const allReactions = reactions.map(i => i.reaction);
+        const distinct = [...new Set(allReactions)];
+        const newArr = distinct.map(react => {
+            const count = allReactions.filter(item => item === react).length;
             return { count, react };
-         });
-         return newArr.sort((a, b) => (a.count > b.count ? 1 : -1));
-      });
-   }, [reactions]);
+        });
+        return newArr.sort((a, b) => (a.count > b.count ? 1 : -1));
+    };
 
-   const handleCommentAdd = async (e) => {
-      e.preventDefault();
-      setLoadingComment(true);
-      try {
-         const { data } = await axios.post(
-            `${process.env.REACT_APP_API_ENDPOINT}/posts/${post._id}/comments`,
-            { comment: commentInputRef.current.value },
-            {
-               headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${auth.token}`,
-               },
-            }
-         );
-         setComments(data.comments);
-         console.log(data.comments)
-         setLoadingComment(false);
-         commentInputRef.current.value = "";
-      } catch (error) {
-         setLoadingComment(false);
-         setErrorComment(
-            error.response && error.response.data.message
-               ? error.response.data.message
-               : error.message
-         );
-      }
-   };
+    const paginate = (array, page_number, page_size = 10) => {
+        return array.slice(
+            (page_number - 1) * page_size,
+            page_number * page_size
+        );
+    };
 
-   const handlePostReact = async (value) => {
-      setLoadingReact(true);
-      try {
-         const { data } = await axios.put(
-            `${process.env.REACT_APP_API_ENDPOINT}/posts/${post._id}/likes`,
-            { reaction: value },
-            {
-               headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${auth.token}`,
-               },
-            }
-         );
-         setReactions(() =>
-            data.result.reactions.map((idx) => ({
-               id: idx.userId,
-               name: idx.userName,
-               reaction: idx.reaction,
-            }))
-         );
-         setLoadingReact(false);
-      } catch (error) {
-         setLoadingReact(false);
-         setErrorReact(
-            error.response && error.response.data.message
-               ? error.response.data.message
-               : error.message
-         );
-      }
-   };
+    const handleCommentAdd = async e => {
+        e.preventDefault();
+        dispatch(createComment(post._id, commentInputRef.current.value));
+        commentInputRef.current.value = "";
+    };
 
-   return (
-      <>
-         {toastIsShowing && <Toast />}
-         <div className={small ? "post post--small": isFullscreen ? "post post--big" : "post"} ref={ref}>
-            <Link to={`/posts/${post._id}`}>
-               <div className="post__header mb-_5">
-                  <figure className="post__user-img">
-                     <img
-                        src={post.author.profileImage}
-                        alt={`${post.author.firstname} ${post.author.lastname}`}
-                     />
-                  </figure>
+    const handlePostReact = async value => dispatch(reactPost(post._id, value));
 
-                  <h2 className="post__heading">
-                     {`${post.author.firstname} ${post.author.lastname} Shared a Story`}
-                     <span className="middot">&#9679;</span>
-                     <span className="post__follow">Following</span>
-                  </h2>
+    if (posts.loading.get) return <Loader />;
 
-                  <span className="post__time">
-                     {moment(post.createdAt).fromNow(true)}
-                  </span>
-               </div>
-            </Link>
+    return (
+        <>
+            {toastIsShowing && <Toast />}
+            <div
+                className={
+                    small
+                        ? "post post--small"
+                        : isFullscreen
+                            ? "post post--big"
+                            : "post"
+                }
+                ref={ref}
+            >
+                <Link to={`/posts/${post._id}`}>
+                    <div className="post__header mb-_5">
+                        <figure className="post__user-img">
+                            <img
+                                src={post.author.profileImage}
+                                alt={`${post.author.firstname} ${post.author.lastname}`}
+                            />
+                        </figure>
 
-            <div className="post__body">
-               {post.multimedia && post.multimedia.length > 0 && (
-                  <PostMedias posts={post.multimedia} fullHeight={isFullscreen} />
-               )}
+                        <h2 className="post__heading">
+                            {`${post.author.firstname} ${post.author.lastname} Shared a Story`}
+                            <span className="middot">&#9679;</span>
+                            <span className="post__follow">Following</span>
+                        </h2>
 
-               <div className="post__description">
-                  {post.title && <h2 className="post__title">{post.title}</h2>}
-                  {post.body && isFullscreen ? (
-                     <p className="post__caption">{post.body}</p>
-                  ) : 
-                  post.body ? (
-                     <p className="post__caption">
-                        {showMore
-                           ? post.body
-                           : post.body.split("").length <= maxCount
-                           ? post.body
-                           : `${post.body.substring(0, maxCount)}... `}
-                        {post.body.split("").length >= maxCount && (
-                           <span
-                              className="post_show-more"
-                              onClick={() => setShowMore(!showMore)}
-                           >
-                              {showMore ? " show less" : " show more"}
-                           </span>
-                        )}
-                     </p>
-                  ) : ''}
-               </div>
-
-               {(reactions.length > 0 || comments.length > 0) && (
-                  <div className="post__stats">
-                     {reactions.length > 0 ? <ReactionPreviews
-                                             reactionPreviews={reactionPreviews}
-                                             reactions={reactions}
-                                          /> : <span>Be the first to react on this post</span>}
-
-                     {comments.length > 0 && (
-                        <span className="post__comment-counts">
-                           {`${comments.length} ${
-                              comments.length === 1 ? "comment" : "comments"
-                           }`}
+                        <span className="post__time">
+                            {moment(post.createdAt).fromNow(true)}
                         </span>
-                     )}
-                  </div>
-               )}
-            </div>
+                    </div>
+                </Link>
 
-            {isFullscreen && (
-               <div className="post__comments">
-                  {comments.length === 0 ? <p className="post__no-comment">Be first to comment</p> : (
-                     comments.map((comment) => (
-                        <Comment
-                           key={comment._id}
-                           comment={comment}
-                           postId={post._id}
+                <div className="post__body">
+                    {!isFullscreen && post.multimedia && post.multimedia.length > 0 && (
+                        <PostMediasPreview
+                            medias={post.multimedia}
+                            fullHeight={isFullscreen}
                         />
-                     ))
-                  )}
-               </div>
-            )}
+                    )}
+                    
+                    {isFullscreen && post.multimedia && post.multimedia.map(post => (
+                        <div className="post__image-wrapper post__image-wrapper--full" key={post._id}>
+                            <img className="post__image" src={post.path} alt="test" />
+                        </div>
+                    ))}
 
-            <div className="post__footer">
-               <form className="post__comment-form" onSubmit={handleCommentAdd}>
-                  <input
-                     ref={commentInputRef}
-                     type="text"
-                     placeholder="Write a comment"
-                     className="post__comment-input"
-                     required
-                  />
-               {/*   <FaCamera className="post__comment-icon" />*/}
-                  <button type="submit" className="post__action post__action--plane">
-                     <FaPaperPlane className="post__action-icon post__action--plane" />
-                  </button>
-               </form>
+                    <div className="post__description">
+                        {post.title && (
+                            <h2 className="post__title">{post.title}</h2>
+                        )}
+                        {post.body && isFullscreen ? (
+                            <p className="post__caption">{post.body}</p>
+                        ) : post.body ? (
+                            <p className="post__caption">
+                                {showMore
+                                    ? post.body
+                                    : post.body.split("").length <= maxCount
+                                        ? post.body
+                                        : `${post.body.substring(0, maxCount)}... `}
+                                {post.body.split("").length >= maxCount && (
+                                    <span
+                                        className="post_show-more"
+                                        onClick={() => setShowMore(!showMore)}
+                                    >
+                                        {showMore ? " show less" : " show more"}
+                                    </span>
+                                )}
+                            </p>
+                        ) : (
+                            ""
+                        )}
+                    </div>
 
+                    {(post.reactions.length > 0 ||
+                        post.comments.length > 0) && (
+                            <div className="post__stats">
+                                {post.reactions.length > 0 ? (
+                                    <ReactionPreviews
+                                        reactionPreviews={reactionPreviews}
+                                        reactions={post.reactions}
+                                    />
+                                ) : (
+                                    <span>Be the first to react on this post</span>
+                                )}
 
-               <ReactButton
-                  userReaction={userReaction}
-                  react={handlePostReact}
-                  loading={loadingReact}
-               />
+                                {post.comments.length > 0 && (
+                                    <span className="post__comment-counts">
+                                        {`${post.comments.length} ${post.comments.length === 1
+                                                ? "comment"
+                                                : "comments"
+                                            }`}
+                                    </span>
+                                )}
+                            </div>
+                        )}
+                </div>
+
+                {isFullscreen && (
+                    <div className="post__comments">
+                        {post.comments.length === 0 ? (
+                            <p className="post__no-comment">
+                                Be first to comment
+                            </p>
+                        ) : (
+                            post.comments.map(comment => (
+                                <Comment
+                                    key={comment._id}
+                                    comment={comment}
+                                    postId={post._id}
+                                />
+                            ))
+                        )}
+                    </div>
+                )}
+
+                <div className="post__footer">
+                    <form
+                        className="post__comment-form"
+                        onSubmit={handleCommentAdd}
+                    >
+                        <input
+                            ref={commentInputRef}
+                            type="text"
+                            placeholder="Write a comment"
+                            className="post__comment-input"
+                            required
+                        />
+                        <button
+                            type="submit"
+                            className="post__action post__action--plane"
+                        >
+                            <FaPaperPlane className="post__action-icon post__action--plane" />
+                        </button>
+                    </form>
+
+                    <ReactButton
+                        userReaction={userReaction?.reaction}
+                        react={handlePostReact}
+                        loading={posts.loading.reactPost}
+                    />
+                </div>
             </div>
-         </div>
-      </>
-   );
+        </>
+    );
 });
 
 export default Post;

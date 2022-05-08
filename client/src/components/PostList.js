@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Post from "./Post";
 import Loader from "./Loader";
-import usePaginateFetch from "../hooks/usePaginateFetch";
+import usePaginatePosts from "../hooks/usePaginatePosts";
 
 const PostList = ({ onlyMe, userId, small = false }) => {
    const [page, setPage] = useState(1);
@@ -11,7 +11,7 @@ const PostList = ({ onlyMe, userId, small = false }) => {
       `${process.env.REACT_APP_API_ENDPOINT}/posts/`
    );
 
-   const { results, loading, hasNext } = usePaginateFetch(url, page, limit);
+   const { results, loading, hasNext } = usePaginatePosts(url, page, limit);
 
    useEffect(() => {
       let isMounted = true;

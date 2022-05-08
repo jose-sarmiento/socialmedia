@@ -1,21 +1,19 @@
-import React, {useEffect} from 'react';
-import AddFriendItem from './AddFriendItem';
+import React from 'react';
 import { FaUsers } from 'react-icons/fa';
+import { AddFriendItem } from '../components';
+import { useSelector, useDispatch } from "react-redux"
 
 import { addFriend } from '../store/users'
-import { useSelector, useDispatch } from "react-redux"
-import {useSocketContext} from '../contexts'
 
-const PeopleList = ({ people }) => {
-	const socket = useSocketContext()
+const PeopleList = ({ list=[] }) => {
 
 	const dispatch = useDispatch();
 
 	const users = useSelector(state => state.entities.users);
 
 	// add friend
-	 // push in friend requests
-	 // add in notification
+	// push in friend requests
+	// add in notification
 
 	// useEffect(() => {
 	// 	console.log("recieving")
@@ -37,7 +35,7 @@ const PeopleList = ({ people }) => {
 	// }, [addFriendSuccess])
 
 	const add = (recipient) => dispatch(addFriend(recipient))
- 
+
 	return (
 		<section className='list'>
 			<div className='list__heading'>
@@ -48,7 +46,7 @@ const PeopleList = ({ people }) => {
 			</div>
 			<div className='list__group'>
 				<ul className='list__body'>
-					{users.people.map(user => (
+					{list.map(user => (
 						<AddFriendItem add={add} user={user} key={user._id} />
 					))}
 				</ul>

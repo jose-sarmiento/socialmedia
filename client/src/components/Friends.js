@@ -1,8 +1,7 @@
-import React, {useEffect} from 'react'
-import {useParams} from 'react-router-dom'
-import FriendRequestList from './FriendRequestList'
-import PeopleList from './PeopleList'
-import MyFriendsList from './MyFriendsList'
+import React from 'react'
+import FriendRequestList from '../container/FriendRequestList'
+import PeopleList from '../container/PeopleList'
+import MyFriendsList from '../container/MyFriendsList'
  
 const Friends = () => {
 

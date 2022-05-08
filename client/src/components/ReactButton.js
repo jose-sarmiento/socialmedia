@@ -12,6 +12,8 @@ import snake from '../assets/img/snake.gif'
 const ReactButton = ({ userReaction = 'unlike', react, loading }) => {
 	const [isShowing, setIsShowing] = useState(false);
 
+	
+
 	function toggleIsShowing() {
 		setIsShowing((prev) => !prev);
 	}

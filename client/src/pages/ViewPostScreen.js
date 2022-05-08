@@ -1,41 +1,32 @@
 import React, { useEffect } from 'react'
-import ReactPlayer from 'react-player/lazy'
-import moment from 'moment'
 import { useParams } from 'react-router-dom'
-import { FaCamera, FaHeart, FaLaugh, FaThumbsUp, FaPaperPlane } from 'react-icons/fa'
-import { Header, LeftSide, Messenger, Loader, Post }from '../components'
-import { getPost } from '../contexts/actions/postActions'
+import { Loader, Post } from '../components'
 
-import { usePostsContext, useAuthContext } from '../contexts'
+import { useDispatch, useSelector } from "react-redux";
+import { getPost } from '../store/posts'
+import { AppLayout } from '../container';
 
 const ViewPostScreen = () => {
-  const { id } = useParams()
+    const { id } = useParams()
+    const dispatch = useDispatch()
 
-  const { auth } = useAuthContext()
-  const { post, loadingGet, dispatch: postsDispatch } = usePostsContext()
+    const posts = useSelector(state => state.entities.posts);
+    const { post, loading } = posts;
 
-  useEffect(() => {
-  	getPost({postId: id, token: auth.token})(postsDispatch)
-  }, [id, useParams])
+    useEffect(() => {
+        dispatch(getPost(id))
+    }, [id, useParams])
 
-  console.log(post)
+    console.log(post)
 
-  if (!post) return null
+    if (!post) return null
 
-  return (
-  	<>
-  	<div className='main-container container'>
-			<Header />
-			<LeftSide />
-			<div className='middle-content'>
-		  	{ loadingGet && <Loader /> }
-		    { post && <Post post={post} isFullscreen={true}/> }
-		  </div>
-
-			<Messenger />
-		</div>
-    </>
-  )
+    return (
+        <AppLayout>
+            {loading.get && <Loader />}
+            {post && <Post post={post} isFullscreen={true} />}
+        </AppLayout>
+    )
 }
 
 export default ViewPostScreen

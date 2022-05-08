@@ -1,10 +1,8 @@
 import React from 'react'
-import ListItem from './ListItem'
 import { FaUserFriends } from 'react-icons/fa'
-import {useSelector} from "react-redux";
+import { ListItem } from '../components'
 
-const MyFriendsList = () => {
-	const users = useSelector(state => state.entities.users);
+const MyFriendsList = ({ list = [] }) => {
 
 	return (
 		<section className="list">
@@ -12,13 +10,13 @@ const MyFriendsList = () => {
 				<div className="list__icon-wrapper">
 					<FaUserFriends className="list__icon" />
 				</div>
-				<h3 className="list__title">My Friends <span>({users.friends.length})</span></h3>
+				<h3 className="list__title">My Friends <span>({list.length})</span></h3>
 			</div>
 			<div className="list__group">
 				<div className="list__body">
-					{users.friends.map(friend => (
+					{list.map(friend => (
 						<ListItem key={friend._id} friend={friend} />
-					))}				
+					))}
 				</div>
 			</div>
 		</section>

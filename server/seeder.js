@@ -11,7 +11,7 @@ dotenv.config();
 
 const importData = async () => {
   try {
-  await connectDB(process.env.DATABASE_URII);
+  await connectDB(process.env.MONGODB_URI);
     await User.deleteMany({});
     await Post.deleteMany({});
 

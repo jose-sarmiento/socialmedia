@@ -43,10 +43,10 @@ const ReplySchema = Schema({
         enum: ['like', 'laugh', 'love', 'angry', 'wow'],
         required: true
       },
-      createdAt: { type: Date, default: Date.now() },
+      createdAt: { type: Date, default: Date.now },
     },
   ],
-  createdAt: { type: Date, default: Date.now() },
+  createdAt: { type: Date, default: Date.now },
 })
 
 const CommentSchema = Schema({
@@ -94,11 +94,11 @@ const CommentSchema = Schema({
         type: String,
         enum: ['like', 'laugh', 'love', 'angry', 'wow'],
       },
-      createdAt: { type: Date, default: Date.now() },
+      createdAt: { type: Date, default: Date.now },
     },
   ],
   replies: [ReplySchema],
-  createdAt: { type: Date, default: Date.now() },
+  createdAt: { type: Date, default: Date.now },
 })
 
 const validateComment = (body) => {

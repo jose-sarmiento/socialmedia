@@ -1,13 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
-   FaBell,
    FaFacebookSquare,
-   FaCaretDown,
    FaSearch,
 } from 'react-icons/fa';
-import {useSelector, useDispatch} from "react-redux";
-import Notifications from './Notifications';
-import CircleImage from './CircleImage';
+import { useSelector, useDispatch } from "react-redux";
+import { CircleImage } from '../components';
 import { logout } from '../store/auth';
 
 const Header = () => {
@@ -48,32 +45,13 @@ const Header = () => {
                   <span className='navbar__fname'>{auth.user?.firstname}</span>
                </div>
 
-             {/*  <a 
-                  href='#' 
-                  className='navbar__link navbar__link--notification'
-                  onClick={(e) => {
-                     e.preventDefault()
-                     setIsNotificationOpen(prev => !prev)
-                  }}
-               >
-                  <FaBell />
-                  <span className='navbar__float-number'>12</span>
-               </a>*/}
-
-              {/* <button
-                  className='navbar__link navbar__link--caret'
-                  onClick={handleUserLogout}
-               >
-                  <FaCaretDown />
-               </button>*/}
                <button
                   className='navbar__signout'
                   onClick={handleUserLogout}
                >
-                  Sign-out               
+                  Sign-out
                </button>
             </div>
-            {/*<Notifications activeDropdown={isNotificationOpen} />*/}
          </div>
       </header>
    );

@@ -1,12 +1,12 @@
 import React from 'react';
-import { useRouteMatch, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FaCamera } from 'react-icons/fa';
 import { profileLinks } from '../data';
 import { useAuthContext } from '../contexts';
 
 const Profile = ({ user, uploadCover, uploadProfile }) => {
 	const { auth } = useAuthContext();
-	let { path, url } = useRouteMatch();
+	// let { path, url } = useRouteMatch();
 
 	const handleCoverChange = e => {
 		e.preventDefault();
@@ -88,7 +88,7 @@ const Profile = ({ user, uploadCover, uploadProfile }) => {
 					</div>
 				</figure>
 
-				<div className='profile__links'>
+				{/* <div className='profile__links'>
 					<ul className='full-h-nav'>
 						<li className='full-h-nav__item'>
 							<Link to={`${url}/timeline`} className='full-h-nav__link'>
@@ -111,7 +111,7 @@ const Profile = ({ user, uploadCover, uploadProfile }) => {
 							</Link>
 						</li>
 					</ul>
-				</div>
+				</div> */}
 
 			</div>
 		</div>

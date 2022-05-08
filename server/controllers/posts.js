@@ -41,7 +41,7 @@ const createPost = async (req, res) => {
 
 	if (files) {
 		reqBody.multimedia = await Promise.all(
-			files.map(async (file) => {
+			files.map(async file => {
 				const type = file.mimetype.split("/")[0];
 				let thumbnail;
 				if (type === "image") {
@@ -59,8 +59,8 @@ const createPost = async (req, res) => {
 			})
 		);
 		reqBody.photos = reqBody.multimedia
-			.filter((media) => media.type === "image")
-			.map((media) => ({
+			.filter(media => media.type === "image")
+			.map(media => ({
 				name: media.name,
 				path: media.path,
 				thumbnail: media.thumbnail,
@@ -145,7 +145,15 @@ const reactPost = async (req, res) => {
 		);
 	}
 
-	res.status(StatusCodes.OK).json({ result, created: true });
+	res.status(StatusCodes.OK).json({
+		result,
+		reaction: {
+			userId: req.user._id,
+			userName: req.user.firstname,
+			reaction: req.body.reaction,
+		},
+		created: true,
+	});
 };
 
 async function generateThumb(file) {
@@ -164,7 +172,7 @@ function createThumbFromVideo(video) {
 	const thumbnailName = "uploads/" + filename + "-thumb.png";
 
 	ffmpeg({ source: video.path })
-		.on("filenames", (filenames) => {
+		.on("filenames", filenames => {
 			newFilename = filenames[0].replace("uploads/", "");
 		})
 		.takeScreenshots(
@@ -185,6 +193,5 @@ module.exports = {
 	updatePost,
 	deletePost,
 	reactPost,
-	generateThumb
+	generateThumb,
 };
-

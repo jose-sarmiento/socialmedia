@@ -5,6 +5,13 @@ import {useSelector, useDispatch} from "react-redux"
 const LeftSide = () => {
 	const dispatch = useDispatch();
 
+	const links = [
+		{ text: "Home", url: "/"},
+		{ text: "Profile", url: "/users/me" },
+		{ text: "Friends", url: "/friends" },
+		{ text: "Pages", url: "/pages" },
+	];
+
 	const users = useSelector(state => state.entities.users);
 	const { friends, birthdays } = users;
 
@@ -13,49 +20,19 @@ const LeftSide = () => {
 			<div className="tabs">
 				<h3 className="tabs__heading mt-1">Menu</h3>
 				<div className="tabs__group">
-					<NavLink
-						exact={true}
-						to="/"
-						className={(isActive) =>
-							isActive
-								? "tabs__tab tabs__tab--active"
-								: "tabs__tab"
-						}
-					>
-						Home
-					</NavLink>
-					<NavLink
-						to="/profile"
-						className={(isActive) =>
-							isActive
-								? "tabs__tab tabs__tab--active"
-								: "tabs__tab"
-						}
-					>
-						Profile
-					</NavLink>
-					<NavLink
-						to="/friends"
-						className={(isActive) =>
-							isActive
-								? "tabs__tab tabs__tab--active"
-								: "tabs__tab"
-						}
-					>
-						Friends
-						<span className="tabs__count">{`(${friends.length})`}</span>
-					</NavLink>
-					<NavLink
-						to="/pages"
-						className={(isActive) =>
-							isActive
-								? "tabs__tab tabs__tab--active"
-								: "tabs__tab"
-						}
-					>
-						Pages
-						<span className="tabs__count">(12)</span>
-					</NavLink>
+					{links.map((link, idx) => (
+						<NavLink
+							key={idx}
+							to={link.url}
+							className={({isActive}) =>
+								isActive
+									? "tabs__tab tabs__tab--active"
+									: "tabs__tab"
+							}
+						>
+							{link.text}
+						</NavLink>
+					))}
 				</div>
 			</div>
 

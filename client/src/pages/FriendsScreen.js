@@ -1,20 +1,24 @@
 import React from 'react'
-import { Header, LeftSide, Messenger, Friends } from '../components'
+import { useSelector } from 'react-redux';
+import { AppLayout, MyFriendsList, FriendRequestList, PeopleList } from '../container'
 
 const FriendsScreen = () => {
+	const users = useSelector(state => state.entities.users);
 
 	return (
-		<>
-			<div className='main-container container'>
-				<Header />
-				<LeftSide />
-				<div className='middle-content'>
-					<Friends />
+		<AppLayout>
+			<div className='friends'>
+				<div className='myFriends'>
+					<div className='friend-requests'>
+						<MyFriendsList list={users.friends} />
+					</div>
 				</div>
-
-				<Messenger />
+				<div className='peoples'>
+					<FriendRequestList list={users.friendRequests} />
+					<PeopleList list={users.people} />
+				</div>
 			</div>
-		</>
+		</AppLayout>
 	)
 }
 

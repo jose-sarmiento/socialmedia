@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaChevronRight, FaPlus } from 'react-icons/fa';
 import { useDispatch, useSelector } from "react-redux"
 
@@ -19,7 +19,7 @@ const Signup = () => {
    const auth = useSelector(state => state.auth);
 
    const dispatch = useDispatch();
-   const history = useHistory();
+   const navigate = useNavigate();
 
    useEffect(() => {
       if (!auth.user) return;
@@ -33,8 +33,8 @@ const Signup = () => {
          birthdate: '',
       });
       setFields(null);
-      history.push('/');
-   }, [history, auth.user]);
+      navigate('/');
+   }, [navigate, auth.user]);
 
    function handleInputChange(e) {
       const name = e.target.name;
