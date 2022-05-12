@@ -142,15 +142,15 @@ const Post = React.forwardRef((props, ref) => {
                     <div className="post__footer">
                         <div className="reactions">
                             <IoHeart />
-                            <span>256</span>
+                            <span>256 likes</span>
                         </div>
                         <div className="comments">
                             <IoChatbubble className="active" />
-                            <span>543</span>
+                            <span>543 comments</span>
                         </div>
                         <div className="readmore">
                             <IoIosShareAlt />
-                            <span>123</span>
+                            <span>123 shares</span>
                         </div>
                     </div>
                    
