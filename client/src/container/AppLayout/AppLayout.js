@@ -1,7 +1,8 @@
 import React from "react"
-import Header from "./Header"
-import LeftSide from "./LeftSide"
-import Messenger from "./Messenger"
+import Header from "../Header/Header"
+import Sidebar from "../Sidebar/Sidebar"
+
+import "./AppLayout.scss"
 
 const AppLayout = ({children}) => {
 
@@ -9,13 +10,11 @@ const AppLayout = ({children}) => {
         <div className="main-container container">
 			<Header />
 
-			<LeftSide />
+			<Sidebar />
 
 			<div className="middle-content">
 				{children}
 			</div>
-
-			<Messenger />
 		</div>
     )
 }

@@ -13,7 +13,6 @@
 @import "components/buttons"; 
 @import "components/side-profile"; 
 @import "components/introduction";
-@import "components/post";
 @import "components/chat";
 @import "components/dropdown";
 @import "components/welcome";
@@ -29,11 +28,7 @@
 @import "components/circle-image";
 @import "components/skeleton";
 
-@import "layout/header";  
-@import "layout/leftsidebar"; 
 @import "layout/messenger"; 
-@import "layout/timeline"; 
  
-@import "pages/home"; 
 @import "pages/login";
 @import "pages/profile";

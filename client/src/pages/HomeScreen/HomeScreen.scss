@@ -1,0 +1,144 @@
+.timeline {
+	grid-column: 2/8;
+    margin-top: 4rem;
+    background: var(--white-color);
+    border-radius: .7rem;
+    box-shadow: 0px 0px 10px rgba($color: #000000, $alpha: .08);
+}
+
+.others {
+    grid-column: 8/12;
+    margin-top: 4rem;
+}
+
+.section-container {
+    background: var(--white-color);
+    border-radius: .7rem;
+    box-shadow: 0px 0px 10px rgba($color: #000000, $alpha: .08);
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 1.5rem;
+        border-bottom: 1px solid var(--light-3);
+        margin-bottom: 1.5rem;
+    }
+
+    h4 {
+        font-size: 1.6rem;
+        font-weight: 500;
+        color: var(--grey-1);
+    }
+
+    svg {
+        font-size: 1.6rem;
+        color: var(--gray-color);
+    }
+}
+
+.trending {
+
+    &__post {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--light-3);
+    }
+
+    &__user {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    &__img-wrapper {
+        height: 3rem;
+        width: 3rem;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    .name {
+        font-size: 1.4rem;
+        margin-left: 1rem;
+        font-weight: 500;
+    }
+
+    .username {
+        margin-left: 1rem;
+        font-size: 1.3rem;
+        color: var(--gray-color);
+    }
+
+    .time {
+        margin-left: auto;
+    }
+
+    &__body {
+        padding: 1rem 0;
+        font-size: 1.3rem;
+        line-height: 1.8rem;
+        color: var(--grey-4);
+        font-family: 'Helvetica';
+    }
+
+    &__footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        font-family: 'Helvetica';
+
+        svg {
+            margin-right: .7rem;
+            font-size: 1.8rem!important;
+        }
+
+        svg.active {
+            fill: var(--red);
+        }
+
+        a {
+            color: var(--primary-color);
+            display: inline-block;
+            padding: .8rem 1.5rem;
+            border-radius: 3rem;
+            background: var(--bg-light);
+        }
+
+        span {
+            color: var(--grey-4);
+        }
+
+        div {
+            padding: .5rem 0;
+        }
+
+        div:hover {
+            background: var(--bg-light);
+        }
+
+    }
+
+    .reactions {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .comments {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .readmore {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    
+}

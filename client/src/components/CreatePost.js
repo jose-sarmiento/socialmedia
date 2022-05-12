@@ -75,14 +75,14 @@ const CreatePost = ({ variant = 'reg' }) => {
                   : 'introduction mx-auto mb-4'
             }
          >
-            {variant !== 'small' && (
-               <figure className="introduction__user">
-                  <img
-                     src={user.profileImage}
-                     alt={user.firstname}
-                  />
-               </figure>
-            )}
+               {/* {variant !== 'small' && (
+                  <figure className="introduction__user">
+                     <img
+                        src={user.profileImage}
+                        alt={user.firstname}
+                     />
+                  </figure>
+               )} */}
             <form
                className='introduction__form'
                onSubmit={handleFormSubmit}
@@ -152,7 +152,7 @@ const CreatePost = ({ variant = 'reg' }) => {
                   />
                   <button
                      type='submit'
-                     className='btn btn--circle btn--primary ml-1 form__submit-btn'
+                     // className='btn btn--circle btn--primary ml-1 form__submit-btn'
                      className={
                         variant === 'small'
                            ? 'btn btn--circle btn--circle--small btn--primary ml-1 form__submit-btn'

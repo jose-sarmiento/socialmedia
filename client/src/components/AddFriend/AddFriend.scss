@@ -1,0 +1,38 @@
+.add-friend {
+	display: flex;
+	align-items: center;
+	padding: .4rem 1.5rem;
+
+	&__img-wrapper {
+		height: 3.6rem;
+		width: 3.6rem;
+		border-radius: 50%;
+		overflow: hidden;
+	}
+
+	&__name-wrapper {
+		display: flex;
+		flex-direction: column;
+		margin-left: 1.5rem;
+	}
+
+	&__name {
+		font-size: 1.3rem;
+		font-weight: 500;
+	}
+
+	&__username {
+		font-size: 1.2rem;
+		color: var(--dark-gray-color);
+	}
+
+	button {
+		border: none;
+		margin-left: auto;
+		padding: .8rem 1.5rem;
+		font-size: 1.2rem;
+		color: var(--primary-color);
+		background-color: var(--bg-light);
+		border-radius: 3rem;
+	}
+}

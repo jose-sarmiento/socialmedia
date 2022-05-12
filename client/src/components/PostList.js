@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
-import Post from "./Post";
+import Post from "./Post/Post";
 import Loader from "./Loader";
 import usePaginatePosts from "../hooks/usePaginatePosts";
 

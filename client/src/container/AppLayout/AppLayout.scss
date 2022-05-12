@@ -1,0 +1,17 @@
+.main-container {
+	display: grid;
+	grid-template-columns: 22rem 1fr;
+	grid-template-rows: 6rem auto;
+	position: relative;
+}
+
+
+.middle-content {
+	grid-column: 2/3;
+	grid-row: 2/3;
+	background-color: var(--bg-light);
+
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	grid-column-gap: 2rem;
+}
