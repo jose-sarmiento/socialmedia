@@ -1,5 +1,6 @@
 import axios from "axios";
 import { createSlice, createSelector } from "@reduxjs/toolkit";
+import { toast } from 'react-toastify';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT;
 
@@ -86,52 +87,45 @@ const slice = createSlice({
 			posts.success.reactPost = false;
 		},
 		reactPostSuccess: (posts, action) => {
+			const { postId, reactorId } = action.payload;
 			posts.loading.reactPost = false;
 			posts.success.reactPost = true;
 
-			// if being viewed
-			if (posts.post && posts.post._id === action.payload.postId) {
-				const ridx = posts.post.reactions.findIndex(
-					item => item.userId === action.payload.reaction.userId
-				);
+			let idx;
+			let ridx;
 
-				if (ridx < 0) {
-					posts.post.reactions.push(action.payload.reaction);
+			if (posts.post && posts.post._id === postId) {
+				ridx = posts.post.reactors.findIndex(id => id === reactorId);
+
+				if (ridx === -1) {
+					posts.post.reactors.push(reactorId);
+					posts.post.meta.likes += 1;
 				} else {
-					posts.post.reactions[ridx].reaction =
-						action.payload.reaction.reaction;
+					posts.post.reactors.splice(ridx, 1);
+					posts.post.meta.likes -= 1;
 				}
 			}
 
-			let idx = posts.list.findIndex(
-				item => item._id === action.payload.postId
-			);
+			idx = posts.list.findIndex(x => x._id === postId);
 
+			// update if in posts list
 			if (idx >= 0) {
-				const ridx = posts.list[idx].reactions.findIndex(
-					item => item.userId === action.payload.reaction.userId
-				);
+				ridx = posts.list[idx].reactors.findIndex(id => id === reactorId);
 				if (ridx < 0)
-					posts.list[idx].reactions.push(action.payload.reaction);
+					posts.list[idx].reactors.push(reactorId);
 				else
-					posts.list[idx].reactions[ridx].reaction =
-						action.payload.reaction.reaction;
+					posts.list[idx].reactors.splice(ridx, 1);
 			}
 
 			// check if post is in myPosts
-			idx = posts.myPosts.findIndex(
-				item => item._id === action.payload.postId
-			);
+			idx = posts.myPosts.findIndex(item => item._id === postId);
 
 			if (idx >= 0) {
-				const ridx = posts.myPosts[idx].reactions.findIndex(
-					item => item.userId === action.payload.reaction.userId
-				);
+				ridx = posts.myPosts[idx].reactors.findIndex(id => id === reactorId);
 				if (ridx < 0)
-					posts.myPosts[idx].reactions.push(action.payload.reaction);
+					posts.myPosts[idx].reactors.push(reactorId);
 				else
-					posts.myPosts[idx].reactions[ridx].reaction =
-						action.payload.reaction.reaction;
+					posts.myPosts[idx].reactors.splice(ridx, 1);
 			}
 		},
 		reactPostFailed: (posts, action) => {
@@ -175,8 +169,22 @@ const slice = createSlice({
 			posts.loading.updateReactComment = false;
 			posts.error.updateReactComment = action.payload.error;
 		},
+		updateAuthorImage: (posts, action) => {
+			posts.myPosts = posts.myPosts.map(x => {
+				return {
+					...x,
+					author: {
+						...x.author,
+						profileImage: action.payload.profileImage.path
+					}
+				}
+			})
+		},
 	},
 });
+
+const findIndex = (haystack, needle) => haystack.findIndex(x => x === needle);
+const find = (list, key, value) => list.find(x => x[key] === value);
 
 export const {
 	createPostRequested,
@@ -200,6 +208,7 @@ export const {
 	updateReactCommentRequested,
 	updateReactCommentSuccess,
 	updateReactCommentFailed,
+	updateAuthorImage
 } = slice.actions;
 
 export default slice.reducer;
@@ -300,27 +309,37 @@ export const createComment =
 		}
 	};
 
-export const reactPost = (postId, reaction) => async (dispatch, getState) => {
+export const reactPost = (postId, authorName) => async (dispatch, getState) => {
 	try {
 		dispatch(reactPostRequested());
 		const { auth } = getState();
 
 		const response = await axios({
-			method: "put",
+			method: "patch",
 			url: `/posts/${postId}/likes`,
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: `Bearer ${auth.token}`,
-			},
-			data: { reaction: reaction },
+			}
 		});
 
 		dispatch(
 			reactPostSuccess({
-				reaction: response.data.reaction,
+				...response.data,
 				postId: postId,
+				reactorId: auth.user._id
 			})
 		);
+		if (response.data.deleted) {
+			return toast.success(`You unlike  ${authorName}'s post`, {
+				autoClose: 3000,
+				hideProgressBar: true,
+			});
+		}
+		toast.success(`You like ${authorName}'s post`, {
+			autoClose: 3000,
+			hideProgressBar: true,
+		});
 	} catch (error) {
 		dispatch(
 			reactPostFailed({
@@ -330,6 +349,10 @@ export const reactPost = (postId, reaction) => async (dispatch, getState) => {
 						: error.message,
 			})
 		);
+		toast.warn("Something wen't wrong", {
+			autoClose: 3000,
+			hideProgressBar: true,
+		});
 	}
 };
 

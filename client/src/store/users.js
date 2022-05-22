@@ -1,5 +1,8 @@
 import axios from "axios";
 import { createSlice, createSelector } from "@reduxjs/toolkit";
+import { toast } from 'react-toastify';
+
+import { updateAuthorImage } from "./posts";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT;
 
@@ -48,9 +51,19 @@ const slice = createSlice({
         updateUserRequested: (users, action) => {
             users.loading.update = true;
             users.error.update = null;
+            users.success.update = false;
         },
         updateUserSuccess: (users, action) => {
             users.loading.update = false;
+            users.success.update = true;
+            users.user = {
+                ...users.user, 
+                ...action.payload.fields, 
+                school: {
+                    ...users.user.school, 
+                    ...action.payload.fields.school,
+                } 
+            };
         },
         updateUserFailed: (users, action) => {
             users.loading.update = false;
@@ -66,7 +79,7 @@ const slice = createSlice({
             users.user.photos.push(action.payload.coverImage);
         },
         uploadCoverFailed: (users, action) => {
-            users.loading.cover = false;
+            users.loading.cover = false; 
             users.error.cover = action.payload.error;
         },
         uploadProfileRequested: (users, action) => {
@@ -81,6 +94,18 @@ const slice = createSlice({
         uploadProfileFailed: (users, action) => {
             users.loading.profile = false;
             users.error.profile = action.payload.error;
+        },
+        deletePhotoRequested: (users, action) => {
+            users.loading.photo = true;
+            users.error.photo = null;
+        },
+        deletePhotoSuccess: (users, action) => {
+            users.loading.photo = false;
+            users.user.photos = users.user.photos.filter(x => x._id !== action.payload._id);
+        },
+        deletePhotoFailed: (users, action) => {
+            users.loading.photo = false;
+            users.error.photo = action.payload.error;
         },
         getPeopleRequested: (users, action) => {
             users.loading.people = true;
@@ -192,6 +217,8 @@ export const getUserDetails = () => async (dispatch, getState) => {
                     _id: data._id,
                     firstname: data.firstname,
                     lastname: data.lastname,
+                    username: data.username,
+                    middlename: data.middlename,
                     email: data.email,
                     profileImage: data.profileImage,
                     coverImage: data.coverImage,
@@ -201,6 +228,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
                     phone: data.phone,
                     bio: data.bio,
                     photos: data.photos,
+                    school: data.school,
                 },
                 friends: data.friends
                     .filter(el => el.status === 3)
@@ -244,23 +272,31 @@ export const viewUserProfile = id => async (dispatch, getState) => {
 };
 
 export const updateUser =
-    ({ userId, fields }) =>
+    (fields) =>
     async (dispatch, getState) => {
         try {
             dispatch(actions.updateUserRequested());
             const { auth } = getState();
             const { data } = await axios({
                 method: "patch",
-                url: `/users/${userId}`,
+                url: `/users/${auth.user._id}`,
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${auth.token}`,
                 },
                 data: fields,
             });
-            dispatch(actions.updateUserSuccess({ user: data }));
+            dispatch(actions.updateUserSuccess({ fields: fields }));
+            toast.success(`Profile updated successfully!`, {
+                autoClose: 3000,
+                hideProgressBar: true,
+            });
         } catch (error) {
             dispatchError(dispatch, actions.updateUserFailed, error);
+            toast.warn(`Something wen't wrong!`, {
+                autoClose: 3000,
+                hideProgressBar: true,
+            });
         }
     };
 
@@ -268,7 +304,7 @@ export const uploadCover = formData => async (dispatch, getState) => {
     try {
         dispatch(actions.uploadCoverRequested());
         const { auth } = getState();
-        const { data } = await axios.post({
+        const { data } = await axios({
             method: "post",
             url: `/users/cover`,
             headers: {
@@ -278,8 +314,16 @@ export const uploadCover = formData => async (dispatch, getState) => {
             data: formData,
         });
         dispatch(actions.uploadCoverSuccess({ coverImage: data.newCover }));
+        toast.success(`Cover photo changed!`, {
+            autoClose: 3000,
+            hideProgressBar: true,
+        });
     } catch (error) {
         dispatchError(dispatch, actions.uploadCoverFailed, error);
+        toast.warn(`Something wen't wrong!`, {
+            autoClose: 3000,
+            hideProgressBar: true,
+        });
     }
 };
 
@@ -287,7 +331,7 @@ export const uploadProfile = formData => async (dispatch, getState) => {
     try {
         dispatch(actions.uploadProfileRequested());
         const { auth } = getState();
-        const { data } = await axios.post({
+        const { data } = await axios({
             method: "post",
             url: `/users/profile`,
             headers: {
@@ -301,8 +345,42 @@ export const uploadProfile = formData => async (dispatch, getState) => {
                 profileImage: data.newProfile,
             })
         );
+        toast.success(`Profile photo changed!`, {
+            autoClose: 3000,
+            hideProgressBar: true,
+        });
+        dispatch(updateAuthorImage({profileImage: data.newProfile}))
     } catch (error) {
         dispatchError(dispatch, actions.uploadProfileFailed, error);
+        toast.warn(`Something wen't wrong!`, {
+            autoClose: 3000,
+            hideProgressBar: true,
+        });
+    }
+};
+
+export const deletePhoto = photoId => async (dispatch, getState) => {
+    try {
+        dispatch(actions.deletePhotoRequested());
+        const { auth } = getState();
+        const { data } = await axios({
+            method: "delete",
+            url: `/users/photos/${photoId}`,
+            headers: {
+                Authorization: `Bearer ${auth.token}`,
+            },
+        });
+        dispatch(actions.deletePhotoSuccess({_id: photoId}));
+        toast.success(`Photo deleted successfully!`, {
+            autoClose: 3000,
+            hideProgressBar: true,
+        });
+    } catch (error) {
+        dispatchError(dispatch, actions.deletePhotoFailed, error);
+        toast.warn(`Something wen't wrong!`, {
+            autoClose: 3000,
+            hideProgressBar: true,
+        });
     }
 };
 

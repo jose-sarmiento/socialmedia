@@ -8,10 +8,9 @@ const {
   getPosts,
   createPost,
   getPost,
-  getNewPosts,
   updatePost,
   deletePost,
-  reactPost,
+  likePost,
 } = require("../controllers/posts");
 const {
   createComment,
@@ -22,7 +21,6 @@ const {
   updateReply,
   deleteReply,
   likeReply,
-  updateCommentReaction,
 } = require("../controllers/comments");
 
 router.use(auth);
@@ -31,7 +29,7 @@ router
   .get(paginate(Post), getPosts)
   .post(upload.array("files"), createPost);
 router.route("/:id").get(getPost).patch(updatePost).delete(deletePost);
-router.route("/:id/likes").put(reactPost);
+router.route("/:id/likes").patch(likePost);
 
 router.route("/:postId/comments").post(createComment);
 router
@@ -41,7 +39,6 @@ router
 
 router.route("/:postId/comments/:commentId/likes")
   .post(likeComment)
-  .put(updateCommentReaction);
 
 router.route("/:postId/comments/:commentId/replies").post(createReply);
 router

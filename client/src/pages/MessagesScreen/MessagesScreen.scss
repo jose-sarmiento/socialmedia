@@ -1,0 +1,154 @@
+@import "../../variables.scss";
+
+.messages {
+	grid-column: 2/12;
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	height: calc(100vh - 6rem);
+	overflow: hidden;
+	padding: 2rem 0;
+
+	&__left {
+		background: rgba($white-color, .8);
+		grid-column: 1/5;
+		height: 100%;
+		border-radius: .7rem 0 0 .7rem;
+		// padding: 1.5rem;
+	}
+
+	&__search-container {
+		padding: 1rem;
+	}
+
+	.search {
+		// border: 1px solid var(--light-2);
+
+		input {
+			border: 1px solid transparent;
+			background: var(--white-color);
+		}
+
+		input:focus {
+			// background: var(--white-color);
+		}
+	}
+
+	&__chat-list {
+		// margin-top: 1.5rem;
+		padding: 0 1rem;
+		border-radius: .7rem;
+	}
+
+	&__right {
+		background: rgba(white, .5);
+		backdrop-filter: blur(5px);
+		grid-column: 5/13;
+		display: flex;
+		flex-direction: column;
+		padding: 2rem;
+	}
+
+	&__list {
+		flex: 1;
+		grid-column: 5/13;
+		border-radius: 0 .7rem .7rem 0;
+		overflow-x: hidden;
+		overflow-y: hidden;
+	}
+
+	.message {
+		display: flex;
+		align-items: flex-start;
+
+		&__user-image {
+
+			height: 3.8rem;
+			width: 3.8rem;
+			border-radius: 50%;
+			overflow: hidden;
+			margin-right: 2rem;
+		}
+
+		&__content-wrapper {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+		}
+
+		&__box {
+			padding: 2rem 1.5rem;
+			font-family: 'Helvetica';
+			font-size: 1.3rem;
+			font-weight: 400;
+			// background: rgba(white, .6);
+			background: var(--bg-light);
+			// backdrop-filter: blur(8px);
+			display: inline-block;
+			align-self: flex-start;
+			border-radius: 0 1rem 1rem 1rem;
+			margin-bottom: 1rem;
+			position: relative;
+		}
+
+		&__time {
+			font-size: 1rem;
+			position: absolute;
+			bottom: .2rem;
+			right: 1rem;
+			color: $grey-2;
+		}
+
+		&--me .message__box {
+			align-self: flex-end;
+			color: var(--white-color);
+			background: rgba($primary-color, .7);
+			border-radius: 1rem 0 1rem 1rem;
+		}
+	}
+
+	.chat-form {
+		width: 100%;
+		display: flex;
+
+		&__left {
+			flex: 1;
+			display: flex;
+			align-items: center;
+			height: 4.6rem;
+			background: var(--white-color);
+			border-radius: 4rem;
+			padding: 0 2rem;
+			margin-right: 2rem;
+
+			svg {
+				font-size: 2.2rem;
+				color: $grey-2;
+			}
+
+			input {
+				flex: 1;
+				margin: 0 2rem;
+				border: none;
+				font-family: 'Helvetica';
+				font-size: 1.4rem;
+
+				&:focus {
+					outline: none;
+				}
+			}
+		}
+
+		button {
+			height: 4.6rem;
+			width: 4.6rem;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border: none;
+			font-size: 2.2rem;
+			color: var(--white-color);
+			background: var(--primary-color);
+		}
+	}
+}

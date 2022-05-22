@@ -1,0 +1,81 @@
+@import "../../variables";
+
+.friend {
+	display: flex;
+	align-items: center;
+	width: 28rem;
+	border: none;
+	// background: var(--bg-light);
+	border-radius: .5rem;
+	padding: 1rem 1rem;
+
+	&:not(:last-child) {
+		border-bottom: 1px solid var(--bg-light);
+	}
+
+	figure {
+		height: 3.6rem;
+		width: 3.6rem;
+		border-radius: 50%;
+		overflow: hidden;
+		margin-right: 1.5rem;
+	}
+
+	div {
+		display: flex;
+		flex-direction: column;
+	}
+
+	a {
+		font-size: 1.3rem;
+		font-weight: 500;
+		color: var(--grey-1);
+		display: inline-block;
+		font-family: 'Helvetica';
+	}
+
+	a:hover {
+		text-decoration: underline;
+	}
+
+	span:nth-child(2) {
+		font-family: 'Helvetica';
+		font-size: 1.1rem;
+		font-weight: 300;
+		color: var(--gray-color);
+	}
+
+	svg {
+		margin-left: auto;
+		transition: all .3s ease;
+	}
+
+	svg:hover {
+		cursor: pointer;
+		color: var(--primary-color);
+	}
+
+	button {
+		margin-left: auto;
+		border: none;
+		background: none;
+		font-family: 'Helvetica';
+		font-size: 1.2rem;
+		padding: .6rem 1rem;
+		border-radius: 5rem;
+		background: var(--bg-light);
+		color: $primary-color;
+		text-transform: capitalize;
+		cursor: pointer;
+		transition: all .3s ease;
+	}
+
+	button:active {
+		transform: scale(.94);
+	}
+
+	button.sent {
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+}

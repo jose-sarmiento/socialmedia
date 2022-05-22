@@ -1,0 +1,41 @@
+.photos {
+
+	&__body {
+		column-count: 3;
+		column-gap: .8rem;
+	}
+
+	&__img-wrapper {
+		position: relative;
+		transition: all .25s ease-in;
+		// overflow: hidden;
+
+		&:hover {
+			filter: brightness(.8);
+		}
+	}
+
+	svg {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		transform: translateX(10px);
+		opacity: 0;
+		transition: all .6s ease;
+		cursor: pointer;
+	}
+
+	&__img-wrapper:hover {
+		svg {
+			transform: translateX(0);
+			opacity: 1;
+		}
+	}
+
+	img {
+		cursor: pointer;
+		display: block;
+		margin-bottom: .8rem;
+	}
+}
+

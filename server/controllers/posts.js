@@ -12,7 +12,7 @@ const getPosts = async (req, res) => {
 const getPost = async (req, res) => {
 	const post = await Post.findById(req.params.id).populate(
 		"author",
-		"firstname lastname profileImage"
+		"firstname lastname username profileImage"
 	);
 	if (!post) {
 		throw new NotFound("Post not found");
@@ -33,10 +33,6 @@ const createPost = async (req, res) => {
 	const reqBody = {};
 	if (text) {
 		reqBody.body = text;
-	}
-
-	if (title) {
-		reqBody.title = title;
 	}
 
 	if (files) {
@@ -71,17 +67,6 @@ const createPost = async (req, res) => {
 	res.status(StatusCodes.CREATED).json(post);
 };
 
-const getNewPosts = async (req, res, next) => {
-	if (!req.body.date) throw new BadRequest("Date is required");
-	const posts = await Post.find({
-		createdAt: {
-			$gte: req.body.date,
-			$lt: "2013-11-19T20:00:00Z",
-		},
-	});
-	res.status(StatusCodes.OK).json(posts);
-};
-
 const updatePost = async (req, res) => {
 	const {
 		user,
@@ -105,54 +90,28 @@ const deletePost = async (req, res) => {
 	});
 };
 
-const reactPost = async (req, res) => {
+const likePost = async (req, res) => {
 	let post = await Post.findById({ _id: req.params.id });
 	if (!post) throw new NotFound("Post not found with the given id");
 
-	const alreadyReact = await Post.findOne({
-		_id: req.params.id,
-		"reactions.userId": req.user._id,
-	});
+	let reactor = post.reactors.findIndex(x => x.equals(req.user._id));
 
-	let result;
-	if (alreadyReact) {
-		result = await Post.findOneAndUpdate(
-			{
-				_id: req.params.id,
-				reactions: {
-					$elemMatch: { userId: req.user._id },
-				},
-			},
-			{
-				$set: { "reactions.$.reaction": req.body.reaction },
-			},
-			{ new: true }
-		);
-	} else {
-		result = await Post.findOneAndUpdate(
-			{ _id: req.params.id },
-			{
-				$push: {
-					reactions: {
-						userId: req.user._id,
-						userName: req.user.firstname,
-						reaction: req.body.reaction,
-					},
-				},
-				$inc: { "meta.likes": 1 },
-			},
-			{ new: true }
-		);
+	if (reactor < 0) {
+		post.reactors.push(req.user._id);
+		post.meta.likes += 1;
+		await post.save();
+		return res.status(StatusCodes.OK).json({
+			created: true,
+			message: "Successfully like the post"
+		});
 	}
 
+	post.reactors.pull(req.user._id);
+	post.meta.likes -= 1;
+	await post.save();
 	res.status(StatusCodes.OK).json({
-		result,
-		reaction: {
-			userId: req.user._id,
-			userName: req.user.firstname,
-			reaction: req.body.reaction,
-		},
-		created: true,
+		deleted: true,
+		message: "Successfully unlike the post"
 	});
 };
 
@@ -188,10 +147,9 @@ function createThumbFromVideo(video) {
 module.exports = {
 	getPosts,
 	getPost,
-	getNewPosts,
 	createPost,
 	updatePost,
 	deletePost,
-	reactPost,
+	likePost,
 	generateThumb,
 };

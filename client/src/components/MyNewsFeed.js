@@ -35,61 +35,9 @@ const MyNewsFeed = () => {
 	);
 
 	return (
-		<div className="profile__grid">
-			<div className="personal-info">
-				<div className="overview">
-					<div className="card">
-						<div className="card__header">
-							<FaUserFriends className="card__icon" />
-							<span className="card__title">Friends</span>
-							<span className="card__middot">&#9679;</span>
-							<span className="count">
-								{friends.length}
-							</span>
-						</div>
-						{friends.length > 0 && (
-							<div className="card__body">
-								<div className="flex__images">
-									{friends.map((friend, idx) => (
-										<figure
-											className={`flex__image flex__image--${
-												idx + 1
-											}`}
-											key={idx}
-										>
-											<img
-												src={friend.profileImage}
-												key={friend._id}
-											/>
-										</figure>
-									))}
-								</div>
-							</div>
-						)}
-					</div>
-					<div className="card">
-						<div className="card__header">
-							<FaImage className="card__icon" />
-							<span className="card__title">Photos</span>
-							<span className="card__middot">&#9679;</span>
-							<span className="count">
-								{user.photos.length}
-							</span>
-						</div>
-						<div className="card__body">
-							<div className="grid__images">
-								{recentPhotos.map((photo, idx) => (
-									<div className={`grid__image grid__image--${idx + 1}`}>
-										<img src={photo.thumbnail} />
-									</div>
-								))}
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+
 			<div className="newsfeed">
-				<CreatePost variant="small" />
+				{/*<CreatePost variant="small" />*/}
 
 				{posts.myPosts.map((post, index) => {
 					let ref = null;
@@ -101,7 +49,6 @@ const MyNewsFeed = () => {
 
 				{loading && <Loader />}
 			</div>
-		</div>
 	);
 };
 

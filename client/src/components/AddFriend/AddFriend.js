@@ -1,21 +1,32 @@
-import React from 'react'
+import React from "react";
+import { Link } from "react-router-dom";
+import "./AddFriend.scss";
+import dp from "../../assets/img/profiles/d1.jpg";
 
-import "./AddFriend.scss"
-import dp from "../../assets/img/profiles/d1.jpg"
+const AddFriend = ({ friend, addFriend }) => {
 
-const AddFriend = () => {
 	return (
-		<div className="add-friend">
-			<div className="add-friend__img-wrapper">
-				<img src={dp} alt="trend" />
+		<li className="friend">
+			<figure>
+				<img src={friend?.profileImage} alt="imgz" />
+			</figure>
+			<div>
+				<Link to={`/users/${friend?._id}`}>
+					{friend?.firstname + " " + friend?.lastname}
+				</Link>
+				<span>@{friend?.username}</span>
 			</div>
-			<div className="add-friend__name-wrapper">
-				<span className="add-friend__name">Jane Smith</span>
-				<span className="add-friend__username">@jane_smith</span>
-			</div>
-			<button className="add-friend__button">Add Friend</button>
-		</div>
-	)
-}
+			{friend.isPending ? (
+				<button className="sent">
+					sent
+				</button>
+			) : (
+				<button onClick={() => addFriend(friend._id)}>
+					add friend
+				</button>
+			)}
+		</li>
+	);
+};
 
-export default AddFriend
+export default AddFriend;

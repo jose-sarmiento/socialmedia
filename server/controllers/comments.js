@@ -11,235 +11,159 @@ const createComment = async (req, res) => {
     let post = await Post.findById(req.params.postId);
     if (!post) throw new NotFound("Post not found with the given id");
 
-    const commentId = new mongoose.Types.ObjectId();
-    console.log(commentId);
+    const commentObj = {
+        _id: new mongoose.Types.ObjectId(),
+        userId: req.user._id,
+        userName: req.user.fullname,
+        userProfileImage: req.user.profileImage,
+        comment: req.body.comment,
+    }
 
-    post = await Post.findOneAndUpdate(
-        { _id: req.params.postId },
-        {
-            $push: {
-                comments: {
-                    _id: commentId,
-                    userId: req.user._id,
-                    userName: req.user.fullname,
-                    userProfileImage: req.user.profileImage,
-                    comment: req.body.comment,
-                },
-            },
-            $inc: { "meta.comments": 1 },
-        },
-        { new: true }
-    );
+    post.comments.push(commentObj);
+    post.meta.comments += 1;
+    await post.save();
 
-    const createdComment = post.comments.find(x => x._id.equals(commentId));
-
-    res.status(StatusCodes.OK).json({ comment: createdComment, success: true });
+    res.status(StatusCodes.OK).json({ 
+        comment: commentObj, 
+        created: true 
+    });
 };
 
 const updateComment = async (req, res) => {
-    let post = await Post.findOne({
-        _id: req.params.postId,
-        "comments._id": req.params.commentId,
-    });
+    let post = await Post.findById(req.params.postId);
     if (!post) throw new NotFound("Post not found");
 
-    const result = await Post.updateOne(
-        {
-            _id: req.params.postId,
-            comments: {
-                $elemMatch: { _id: req.params.commentId },
-            },
-        },
-        {
-            $set: { "comments.$.comment": req.body.comment },
-        }
-    );
+    let comment = post.comments.id(req.params.commentId);
+    comment.comment = req.body.comment;
+    await post.save();
 
-    res.status(StatusCodes.OK).json({ result, updated: true });
+    res.status(StatusCodes.OK).json({ comment, updated: true });
 };
 
 const deleteComment = async (req, res) => {
-    let post = await Post.findOne({ _id: req.params.postId });
+    let post = await Post.findById(req.params.postId);
     if (!post) throw new NotFound("Post not found");
 
-    const result = await Post.updateOne(
-        { _id: req.params.postId },
-        {
-            $pull: { comments: { _id: req.params.commentId } },
-            $inc: { "meta.comments": -1 },
-        }
-    );
+    post.comments.id(req.params.commentId).remove();
+    post.meta.comments -= 1;
+    await post.save();
 
-    res.status(StatusCodes.OK).json({ result, deleted: true });
+    res.status(StatusCodes.OK).json({ deleted: true, message: "Comment deleted successfully" });
 };
 
 const likeComment = async (req, res) => {
-    let post = await Post.findById({ _id: req.params.postId });
+    let post = await Post.findById(req.params.postId);
     if (!post) throw new NotFound("Post not found with the given id");
 
-    post = await Post.findOneAndUpdate(
-        { _id: req.params.postId },
-        {
-            $push: {
-                "comments.$[x].reactions": {
-                    userId: req.user._id,
-                    userName: req.user.fullname,
-                    reaction: req.body.reaction,
-                },
-            },
-            $inc: { "comments.$[x].meta.likes": 1 },
-        },
-        {
-            arrayFilters: [
-                { "x.userId": req.user._id, "x._id": req.params.commentId },
-            ],
-            new: true,
-        }
-    );
-    res.status(StatusCodes.CREATED).json({
-        reaction: {
-            userId: req.user._id,
-            userName: req.user.fullname,
-            reaction: req.body.reaction,
-        },
-        created: true,
-    });
-};
+    let comment = post.comments.id(req.params.commentId);
+    if (!comment) throw new NotFound("Comment not found in the given post id");
 
-const updateCommentReaction = async (req, res) => {
-    let post = await Post.findById({ _id: req.params.postId });
-    if (!post) throw new NotFound("Post not found with the given id");
+    let reactor = comment.reactors.findIndex(x => x.equals(req.user._id));
 
-    post = await Post.findOneAndUpdate(
-        { _id: req.params.postId },
-        {
-            $set: {
-                "comments.$[idx].reactions.$[x].reaction": req.body.reaction,
-            },
-        },
-        {
-            arrayFilters: [
-                { "idx._id": req.params.commentId },
-                { "x.userId": req.user._id },
-            ],
-            new: true,
-        }
-    );
+	if (reactor < 0) {
+		comment.reactors.push(req.user._id);
+		comment.meta.likes += 1;
+		await post.save();
+		return res.status(StatusCodes.OK).json({
+			created: true,
+			message: "Successfully like the comment"
+		});
+	}
 
-    const comment = post.comments.find(x => x._id.equals(req.params.commentId));
-    const reaction = comment.reactions.find(x => x.userId.equals(req.user._id));
-
-    res.status(StatusCodes.CREATED).json({ reaction, updated: true });
+	comment.reactors.pull(req.user._id);
+	comment.meta.likes -= 1;
+	await post.save();
+	res.status(StatusCodes.OK).json({
+		deleted: true,
+		message: "Successfully unlike the comment"
+	});
 };
 
 const createReply = async (req, res) => {
-    let post = await Post.findById({ _id: req.params.postId });
+    let post = await Post.findById(req.params.postId);
     if (!post) throw new NotFound("Post not found with the given id");
 
-    const result = await Post.updateOne(
-        {
-            _id: req.params.postId,
-            comments: {
-                $elemMatch: {
-                    _id: req.params.commentId,
-                },
-            },
-        },
-        {
-            $push: {
-                "comments.$.replies": {
-                    userId: req.user._id,
-                    userName: req.user.fullname,
-                    userProfileImage: req.user.profileImage,
-                    reply: req.body.reply,
-                },
-            },
-            $inc: { "comments.$.meta.replies": 1 },
-        }
-    );
+    let comment = post.comments.id(req.params.commentId);
+    if (!comment) throw new NotFound("Comment not found in the given post id");
 
-    res.status(StatusCodes.CREATED).json({ result, created: true });
+    const replyObj = {
+        _id: new mongoose.Types.ObjectId(),
+        userId: req.user._id,
+        userName: req.user.fullname,
+        userProfileImage: req.user.profileImage,
+        reply: req.body.reply,
+    }
+    comment.replies.push(replyObj);
+    comment.meta.replies += 1;
+    await post.save();
+
+    res.status(StatusCodes.CREATED).json({ 
+        reply: replyObj, 
+        created: true 
+    });
 };
 
 const updateReply = async (req, res) => {
-    let post = await Post.findById({ _id: req.params.postId });
+    let post = await Post.findById(req.params.postId);
     if (!post) throw new NotFound("Post not found with the given id");
 
-    const result = await Post.updateOne(
-        {
-            _id: req.params.postId,
-            "comments.replies": {
-                $elemMatch: {
-                    _id: req.params.replyId,
-                },
-            },
-        },
-        {
-            $set: {
-                "comments.replies.$.reply": req.body.reply,
-            },
-        }
-    );
+    let comment = post.comments.id(req.params.commentId);
+    if (!comment) throw new NotFound("Comment not found in the given post id");
 
-    res.status(StatusCodes.OK).json({ post, updated: true });
+    let reply = comment.replies.id(req.params.replyId);
+    if (!reply) throw new NotFound("Reply not found in the given post comment");
+    
+    reply.reply = req.body.reply;
+    await post.save();
+
+    res.status(StatusCodes.OK).json({ updated: true });
 };
 
 const deleteReply = async (req, res) => {
-    let post = await Post.findById({ _id: req.params.postId });
+    let post = await Post.findById(req.params.postId);
     if (!post) throw new NotFound("Post not found with the given id");
 
-    const result = await Post.updateOne(
-        { _id: req.params.postId },
-        {
-            $pull: { "comments.$[].replies": { _id: req.params.replyId } },
-            $inc: { "comments.$[].meta.replies": -1 },
-        }
-    );
+    let comment = post.comments.id(req.params.commentId);
+    if (!comment) throw new NotFound("Comment not found in the given post id");
 
-    res.status(StatusCodes.OK).json({ result, deleted: true });
+    comment.replies.id(req.params.replyId).remove();
+    comment.meta.replies -= 1;
+    await post.save();
+
+    res.status(StatusCodes.OK).json({ deleted: true });
 };
 
 const likeReply = async (req, res) => {
-    let post = await Post.findById({ _id: req.params.postId });
+    let post = await Post.findById(req.params.postId);
     if (!post) throw new NotFound("Post not found with the given id");
 
-    const alreadyLiked = await Post.findOne({
-        _id: req.params.postId,
-        "comments.replies.reactions": { $elemMatch: { userId: req.user._id } },
-    });
+    let comment = post.comments.id(req.params.commentId);
+    if (!comment) throw new NotFound("Comment not found in the given post id");
 
-    let result;
-    if (alreadyLiked) {
-        result = await Post.updateOne(
-            { _id: req.params.postId },
-            {
-                $set: {
-                    "comments.$[].replies.$[].reactions.$[idx].reaction":
-                        req.body.reaction,
-                },
-            },
-            { arrayFilters: [{ "idx.userId ": req.user._id }] }
-        );
-    } else {
-        result = await Post.updateOne(
-            {
-                _id: req.params.postId,
-            },
-            {
-                $push: {
-                    "comments.$[].replies.$[idx].reactions": {
-                        reaction: req.body.reaction,
-                    },
-                },
-            },
-            { arrayFilters: [{ "idx._id": req.params.replyId }] }
-        );
-    }
+    let reply = comment.replies.id(req.params.replyId);
+    if (!reply) throw new NotFound("Reply not found in the given comment id");
 
-    res.status(StatusCodes.CREATED).json({ result, created: true });
+    let reactor = reply.reactors.findIndex(x => x.equals(req.user._id));
+
+	if (reactor < 0) {
+		reply.reactors.push(req.user._id);
+		reply.meta.likes += 1;
+		await post.save();
+		return res.status(StatusCodes.OK).json({
+			created: true,
+			message: "Successfully like the reply"
+		});
+	}
+
+	reply.reactors.pull(req.user._id);
+	reply.meta.likes -= 1;
+	await post.save();
+	res.status(StatusCodes.OK).json({
+		deleted: true,
+		message: "Successfully unlike the reply"
+	});
 };
 
-// db.posts.updateOne({_id: ObjectId("61be89f82f17ebb64d6dd691")}, {$push: {"comments.$[].replies.$[idx]": {"reaction": "love"}}}, {arrayFilters:[{"idx._id":ObjectId("61bf08c93a583aacbc18df03")}]})
 module.exports = {
     createComment,
     updateComment,
@@ -249,5 +173,4 @@ module.exports = {
     updateReply,
     deleteReply,
     likeReply,
-    updateCommentReaction,
 };

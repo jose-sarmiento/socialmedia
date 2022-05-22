@@ -4,6 +4,8 @@ const { BadRequest } = require("../errors");
 const { StatusCodes } = require("http-status-codes");
 const { generateThumb } = require("./posts");
 const mongoose = require("mongoose");
+var flatten = require('flat')
+const formatURL = require("../utils/formatURL")
 
 const getUsers = async (req, res) => {
 	const people = await User.aggregate([
@@ -26,7 +28,7 @@ const getUsers = async (req, res) => {
 				},
 			},
 		},
-		{ $project: { firstname: 1, lastname: 1, profileImage: 1, birthdate: 1 } },
+		{ $project: { firstname: 1, lastname: 1, profileImage: 1, username: 1, birthdate: 1 } },
 	]);
 	res.send(people);
 };
@@ -83,10 +85,12 @@ const getUser = async (req, res) => {
 
 	res.json(user[0]);
 }
-
+ 
 const updateUser = async (req, res) => {
-	const user = await User.findOneAndUpdate({ _id: req.params.id }, req.body, {
+	const updateObj = flatten(req.body);
+	const user = await User.findOneAndUpdate({ _id: req.params.id }, {$set: updateObj}, {
 		fields: { password: 0, friends: 0 },
+		upsert: true, 
 		new: true,
 		runValidators: true,
 	});
@@ -107,58 +111,51 @@ const getUserPosts = async (req, res) => {
 };
 
 const uploadCover = async (req, res) => {
-	const protocol = req.protocol;
-	const host = req.hostname;
-	const url = req.file.path;
-	const port = process.env.PORT || 8000;
-
 	if (!req.file) throw new BadRequest("Please provide an image");
 
 	const thumbnail = await generateThumb(req.file);
 
 	const photoObj = {
-		path: process.env.BASE_URL + req.file.filename,
+		_id: new mongoose.Types.ObjectId(),
+		path: formatURL(req) + "/" + req.file.filename,
 		name: req.file.originalname,
-		thumbnail: process.env.BASE_URL + thumbnail,
+		thumbnail: formatURL(req) + "/" + thumbnail,
 	}
+	const user = await User.findById(req.user._id);
+	user.coverImage = photoObj.path;
+	user.photos.push(photoObj);
 
-	const user = await User.findOneAndUpdate(
-		{ _id: req.user._id },
-		{
-			$set: { coverImage: photoObj.path },
-			$push: { photos: photoObj },
-		},
-		{ new: true }
-	);
+	await user.save();
 	res.json({ newCover: photoObj, success: true });
 };
 
 const uploadProfile = async (req, res) => {
-	const protocol = req.protocol;
-	const host = req.hostname;
-	const url = req.file.path;
-	const port = process.env.PORT || 8000;
-
 	if (!req.file) throw new BadRequest("Please provide an image");
 
 	const thumbnail = await generateThumb(req.file);
 
 	const photoObj = {
-		path: process.env.BASE_URL + req.file.filename,
+		_id: new mongoose.Types.ObjectId(),
+		path: formatURL(req) + "/" + req.file.filename,
 		name: req.file.originalname,
-		thumbnail: process.env.BASE_URL + thumbnail,
+		thumbnail: formatURL(req) + "/" + thumbnail,
 	}
 
-	const user = await User.findOneAndUpdate(
-		{ _id: req.user._id },
-		{ 
-			$set: { profileImage: photoObj.path },
-			$push: { photos: photoObj }
-		},
-		{ new: true }
-	);
+	const user = await User.findById(req.user._id);
+	user.profileImage = photoObj.path;
+	user.photos.push(photoObj);
+
+	await user.save();
 
 	res.json({ newProfile: photoObj, success: true });
+};
+
+const deletePhoto = async (req, res) => {
+	const user = await User.findById(req.user._id);
+	user.photos.id(req.params.id).remove();
+
+	await user.save();
+	res.json({ success: true, message: "Photo remove successfully" });
 };
 
 const getFriends = async (req, res) => {
@@ -315,6 +312,7 @@ module.exports = {
 	getUserPosts,
 	uploadCover,
 	uploadProfile,
+	deletePhoto,
 	getFriends,
 	addNewFriend,
 	acceptRequest,

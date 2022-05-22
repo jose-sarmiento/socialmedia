@@ -35,7 +35,7 @@ const paginate = (model, specificOnly = false) => {
 
       response.docs = await result
          .sort({ createdAt: -1 })
-         .populate('author', 'firstname lastname profileImage');
+         .populate('author', 'firstname lastname username profileImage');
       response.nbDocs = response.docs.length;
 
       if (endIndex < (await model.countDocuments().exec())) {

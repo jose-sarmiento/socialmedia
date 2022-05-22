@@ -13,7 +13,7 @@ const MyFriendsList = ({ list = [] }) => {
 				<h3 className="list__title">My Friends <span>({list.length})</span></h3>
 			</div>
 			<div className="list__group">
-				<div className="list__body">
+				<div className="list__body"> 
 					{list.map(friend => (
 						<ListItem key={friend._id} friend={friend} />
 					))}

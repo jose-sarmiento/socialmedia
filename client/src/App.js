@@ -7,7 +7,8 @@ import {
     HomeScreen,
     ProfileScreen,
     ViewPostScreen,
-    FriendsScreen
+    FriendsScreen,
+    MessagesScreen
 } from "./pages"
 import { AppLayout } from "./container";
 import {
@@ -84,6 +85,14 @@ function App() {
                     element={
                         <PrivateRoute>
                             <ViewPostScreen />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/messages"
+                    element={
+                        <PrivateRoute>
+                            <MessagesScreen />
                         </PrivateRoute>
                     }
                 />

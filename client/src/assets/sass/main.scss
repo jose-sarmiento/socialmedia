@@ -9,11 +9,10 @@
 
 @import "components/navbar"; 
 @import "components/list"; 
-@import "components/friends-item"; 
 @import "components/buttons"; 
 @import "components/side-profile"; 
 @import "components/introduction";
-@import "components/chat";
+// @import "components/chat";
 @import "components/dropdown";
 @import "components/welcome";
 @import "components/signin";
@@ -24,11 +23,10 @@
 @import "components/progress";
 @import "components/toast";
 @import "components/about";
-@import "components/photos";
 @import "components/circle-image";
 @import "components/skeleton";
 
-@import "layout/messenger"; 
+// @import "layout/messenger"; 
  
 @import "pages/login";
 @import "pages/profile";

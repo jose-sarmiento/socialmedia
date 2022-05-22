@@ -10,6 +10,7 @@ const {
   getUserPosts,
   uploadCover,
   uploadProfile,
+  deletePhoto,
   addNewFriend,
   acceptRequest,
   deleteRequest,
@@ -26,6 +27,7 @@ router.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
 router.route('/:userId/posts').get(paginate(Post, true), getUserPosts);
 router.route('/cover').post(upload.single('cover'), uploadCover);
 router.route('/profile').post(upload.single('profile'), uploadProfile);
+router.route('/photos/:id').delete(deletePhoto);
 router
   .route('/:userId/friends')
   .get(getFriends)

@@ -1,0 +1,95 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjgxY2I2YjBhNDY3OTJjZjAyNDNlZGYiLCJpYXQiOjE2NTI2NzQwODF9._6IaHBlXWs71RJsgz-RdI_z8T_BvaEZUQNRoTga89Uk
+@postId = 6281cb780a46792cf0243f19
+
+### get posts
+GET http://localhost:8000/api/v1/posts
+Authorization: Bearer {{token}}
+
+
+### get post
+GET http://localhost:8000/api/v1/posts/{{postId}}
+Authorization: Bearer {{token}}
+
+### create post
+POST http://localhost:8000/api/v1/posts
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "body": "lorem ipsum dolor amit"
+}
+
+### update post
+PATCH  http://localhost:8000/api/v1/posts/{{postId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "body": "lorem ipsum dolor ami"
+}
+
+### delete post
+DELETE  http://localhost:8000/api/v1/posts/{{postId}}
+Authorization: Bearer {{token}}
+
+### react post
+PATCH  http://localhost:8000/api/v1/posts/{{postId}}/likes
+Authorization: Bearer {{token}}
+
+### add comment
+POST  http://localhost:8000/api/v1/posts/{{postId}}/comments
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "comment": "Beautifull"
+}
+
+### update comment
+PATCH  http://localhost:8000/api/v1/posts/{{postId}}/comments/627da91f7af01d7cd343bcd2
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "comment": "Not quite"
+}
+
+### delete comment
+DELETE  http://localhost:8000/api/v1/posts/{{postId}}/comments/627e07b8ddca69989cd874c9
+Authorization: Bearer {{token}}
+
+### like comment
+POST  http://localhost:8000/api/v1/posts/{{postId}}/comments/627da91f7af01d7cd343bcd2/likes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### reply comment
+POST  http://localhost:8000/api/v1/posts/{{postId}}/comments/627da91f7af01d7cd343bcd2/replies
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "reply": "second reply"
+}
+
+### update reply
+PATCH  http://localhost:8000/api/v1/posts/{{postId}}/comments/627da91f7af01d7cd343bcd2/replies/627e161c84f1a7ab9405dfda
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "reply": "updated reply"
+}
+
+### delete reply
+DELETE  http://localhost:8000/api/v1/posts/{{postId}}/comments/627da91f7af01d7cd343bcd2/replies/627e161c84f1a7ab9405dfda
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "reply": "updated reply"
+}
+
+### like reply
+PUT  http://localhost:8000/api/v1/posts/{{postId}}/comments/627da91f7af01d7cd343bcd2/replies/627e12d9d9413eaecd6a1f11/likes
+Authorization: Bearer {{token}}

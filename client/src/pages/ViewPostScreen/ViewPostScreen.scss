@@ -1,0 +1,20 @@
+.post-container {
+    grid-column: 4/10;
+    margin-top: 4rem;
+    padding: 1.5rem;
+    background: var(--white-color);
+    border-radius: .7rem;
+}
+
+.post-comments {
+    padding: 1.5rem;
+    background: var(--white-color);
+    border-radius: .7rem;
+    border: 1px solid #ddd;
+
+    &__heading {
+        font-size: 1.4rem;
+        font-weight: 500;
+        margin-bottom: 2rem;
+    }
+}

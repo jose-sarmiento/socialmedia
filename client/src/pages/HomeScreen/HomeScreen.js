@@ -7,7 +7,7 @@ import { IoIosShareAlt } from "react-icons/io"
 import { AppLayout } from "../../container";
 import {
 	Post,
-	Loader,
+	SkeletonLoading,
 	AddFriend
 } from "../../components";
 import usePaginatePosts from "../../hooks/usePaginatePosts";
@@ -38,7 +38,7 @@ const HomeScreen = () => {
 		[loading, hasNext]
 	);
 
-	if (users.loading.user) return <Loader />;
+	if (users.loading.user) return null;
 
 	return (
 		<AppLayout>
@@ -47,15 +47,17 @@ const HomeScreen = () => {
 					<h4>Your newsfeed</h4>
 				</div>
 
-				{posts.list.map((post, index) => {
-					let ref = null;
-					if (posts.list.length === index + 1) ref = lastElementRef;
-					return (
-						<Post ref={ref} post={post} key={uuidv4()} />
-					);
-				})}
+				<div className="section-container__body">
+					{posts.list.map((post, index) => {
+						let ref = null;
+						if (posts.list.length === index + 1) ref = lastElementRef;
+						return (
+							<Post ref={ref} post={post} key={uuidv4()} />
+						);
+					})}
 
-				{loading && <Loader />}
+					{loading && <SkeletonLoading count={3} />}
+				</div>
 			</div>
 
 			<div className="others">
