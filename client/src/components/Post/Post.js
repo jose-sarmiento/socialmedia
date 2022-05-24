@@ -30,7 +30,7 @@ const Post = React.forwardRef((props, ref) => {
         <motion.div 
             className={wide ? "post post--wide" : "post"} 
             ref={ref}
-            initial={{ opacity: 0, y: 20, scaleX: .95 }}
+            initial={{ opacity: .5, y: 20, scaleX: .95 }}
             whileInView={{ opacity: 1, y: 0, scaleX: 1 }}
         >
             {!wide && <div className="post__left">

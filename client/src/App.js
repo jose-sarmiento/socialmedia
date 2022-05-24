@@ -8,7 +8,8 @@ import {
     ProfileScreen,
     ViewPostScreen,
     FriendsScreen,
-    MessagesScreen
+    MessagesScreen,
+    ViewUserScreen
 } from "./pages"
 import { AppLayout } from "./container";
 import {
@@ -27,7 +28,7 @@ function App() {
         if (!auth.user) return;
 
         dispatch(getUserDetails());
-        dispatch(getFriends(auth.user._id));
+        // dispatch(getFriends(auth.user._id));
         dispatch(getPeople());
     }, [auth]);
 
@@ -70,7 +71,7 @@ function App() {
                     }
                 >
                     <Route path="me/*" element={<ProfileScreen />} />
-                    <Route path=":id" element={<h1>Other User Profile</h1>} />
+                    <Route path=":id/*" element={<ViewUserScreen />} />
                 </Route>
                 <Route
                     path="friends"

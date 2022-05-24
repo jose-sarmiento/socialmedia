@@ -25,5 +25,6 @@ export { default as Photos } from './Photos/Photos';
 export { default as Notifications } from './Notifications';
 export { default as CircleImage } from './CircleImage';
 export { default as AddFriend } from './AddFriend/AddFriend';
-export { default as ImageSlider } from './ImageSlider/ImageSlider';
+export { default as FriendRequest } from './FriendRequest/FriendRequest';
 export { default as Friend } from './Friend/Friend';
+export { default as ImageSlider } from './ImageSlider/ImageSlider';

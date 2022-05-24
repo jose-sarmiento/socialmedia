@@ -10,8 +10,9 @@ import {
 	SkeletonLoading,
 	AddFriend
 } from "../../components";
-import usePaginatePosts from "../../hooks/usePaginatePosts";
+import useFetch from "../../hooks/useFetch";
 import dp from "../../assets/img/profiles/d1.jpg"
+import { listPostsSuccess } from "../../store/posts";
 
 import "./HomeScreen.scss"
 
@@ -21,7 +22,7 @@ const HomeScreen = () => {
 	const users = useSelector(state => state.entities.users);
 	const posts = useSelector(state => state.entities.posts);
 
-	const { loading, hasNext } = usePaginatePosts(page, 10);
+	const { loading, hasNext } = useFetch('/posts', page, 10, listPostsSuccess);
 
 	const observer = useRef();
 	const lastElementRef = useCallback(

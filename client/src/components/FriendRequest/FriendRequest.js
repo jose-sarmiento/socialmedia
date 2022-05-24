@@ -2,17 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
-import { addFriend } from "../../store/users";
+import { acceptRequest } from "../../store/users";
 import dp from "../../assets/img/profiles/d1.jpg";
 
-import "./AddFriend.scss";
-
-const AddFriend = ({ friend }) => {
+const FriendRequest = ({ friend }) => {
 	const users = useSelector(state => state.entities.users);
 	const dispatch = useDispatch();
 
-	const handleAddFriend = () => {
-		dispatch(addFriend(
+	const handleAcceptFriend = () => {
+		dispatch(acceptRequest(
 			_.pick(friend, [
 				"_id",
 				"firstname",
@@ -22,11 +20,10 @@ const AddFriend = ({ friend }) => {
 			])
 		))
 	}
-
 	return (
 		<li className="friend">
 			<figure>
-				<img src={friend?.profileImage} alt={friend?.firstname + " picture"} />
+				<img src={friend?.profileImage} alt="imgz" />
 			</figure>
 			<div>
 				<Link to={`/users/${friend?._id}`}>
@@ -34,19 +31,16 @@ const AddFriend = ({ friend }) => {
 				</Link>
 				<span>@{friend?.username}</span>
 			</div>
-			{friend?.isPending ? (
-				<button className="sent">sent</button>
-			) : (
-				<button
-					disabled={users.loading.add}
-					className={users.loading.add && "loading"}
-					onClick={handleAddFriend}
-				>
-					add friend
-				</button>
-			)}
+	
+			<button
+				disabled={users.loading.accept}
+				className={users.loading.accept && "loading"}
+				onClick={handleAcceptFriend}
+			>
+				accept
+			</button>
 		</li>
 	);
 };
 
-export default AddFriend;
+export default FriendRequest;

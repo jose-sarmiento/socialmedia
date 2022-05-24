@@ -10,6 +10,7 @@ const slice = createSlice({
 		post: null,
 		list: [],
 		myPosts: [],
+		userPosts: [],
 		loading: {},
 		error: {},
 		success: {},
@@ -52,6 +53,13 @@ const slice = createSlice({
 		listMyPostsSuccess: (posts, action) => {
 			posts.loading.myPosts = false;
 			posts.myPosts = [...new Set([...posts.myPosts, ...action.payload.posts])];
+		},
+		listMyPostsReset: (posts, action) => {
+			posts.myPosts = [];
+		},
+		listUserPostsSuccess: (posts, action) => {
+			posts.loading.userPosts = false;
+			posts.userPosts = [...new Set([...posts.userPosts, ...action.payload.posts])];
 		},
 		createCommentRequested: (posts, action) => {
 			posts.loading.createComment = true;
@@ -196,6 +204,8 @@ export const {
 	getPostFailed,
 	listPostsSuccess,
 	listMyPostsSuccess,
+	listMyPostsReset,
+	listUserPostsSuccess,
 	createCommentRequested,
 	createCommentSuccess,
 	createCommentFailed,

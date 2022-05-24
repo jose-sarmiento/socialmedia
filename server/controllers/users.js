@@ -67,6 +67,7 @@ const getUser = async (req, res) => {
 									$project: {
 										firstname: 1,
 										lastname: 1,
+										username: 1,
 										profileImage: 1,
 										birthdate: 1
 									},

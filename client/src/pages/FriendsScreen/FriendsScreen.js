@@ -1,22 +1,18 @@
-import React, {useEffect} from "react";
-import { useSelector } from "react-redux";
+import React from "react";
 import { FiUsers, FiUserPlus } from "react-icons/fi";
+import { useSelector } from "react-redux";
 import {
 	AppLayout,
 	MyFriendsList,
 	FriendRequestList,
 	PeopleList,
 } from "../../container";
-import { Friend, AddFriend } from "../../components";
+import { Friend, AddFriend, FriendRequest } from "../../components";
 
 import "./FriendsScreen.scss";
 
 const FriendsScreen = () => {
 	const users = useSelector(state => state.entities.users);
-
-	function handleAddFriend(id) {
-
-	}
 
 	return (
 		<AppLayout>
@@ -43,6 +39,15 @@ const FriendsScreen = () => {
 						<h4>Friends Requests</h4>
 						<span>({users.friendRequests.length})</span>
 					</div>
+					<div className="_friends__body">
+						{users.friendRequests.map((friend, idx) => (
+							<FriendRequest
+								friend={friend}
+								idx={idx}
+								key={friend._id}
+							/>
+						))}
+					</div>
 				</div>
 				<div className="_friends__list _friends__list--people">
 					<div className="_friends__header">
@@ -54,7 +59,6 @@ const FriendsScreen = () => {
 							<AddFriend 
 								friend={friend} 
 								key={friend._id}
-								addFriend={handleAddFriend} 
 							/>
 						))}
 					</div>

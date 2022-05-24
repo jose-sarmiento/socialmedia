@@ -171,4 +171,8 @@
 			font-size: 1.6rem;
 		}
 	}
+
+	input:read-only, textarea:read-only {
+		pointer-events: none;
+	}
 }

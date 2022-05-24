@@ -12,66 +12,44 @@ import {
     Photos,
     Loader,
 } from "../../components";
-import { Newsfeed, Friends, EditProfile } from "../../container";
+import { Newsfeed, Friends, ViewProfile } from "../../container";
 
 import { useSelector, useDispatch } from "react-redux";
-import { uploadCover, uploadProfile } from "../../store/users";
+import { uploadCover, uploadProfile, viewUserProfile } from "../../store/users";
 
-import "./ProfileScreen.scss";
 
-const ProfileScreen = () => {
-    // const { path, url } = useRouteMatch();
+const ViewUserScreen = () => {
+    const { id } = useParams();
     const dispatch = useDispatch();
 
     let links = [
         { text: "Activity", url: "", icon: <FiEye /> },
         { text: "Photos", url: "photos", icon: <BsImages /> },
         { text: "Friends", url: "friends", icon: <FiUsers /> },
-        { text: "Edit profile", url: "edit", icon: <FaUserCog /> },
+        { text: "View profile", url: "view", icon: <FaUserCog /> },
     ];
 
     const auth = useSelector(state => state.auth);
     const users = useSelector(state => state.entities.users);
-    const { user, friends, friendRequests, people, loading } = users;
+    const { viewUser, loading } = users;
 
-    const handleCoverChange = e => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append("cover", e.target.files[0]);
-        dispatch(uploadCover(formData));
-    };
+    useEffect(() => {
+    	dispatch(viewUserProfile(id))
+    }, [id])
 
-    const handleProfileChange = e => {
-        const formData = new FormData();
-        formData.append("profile", e.target.files[0]);
-        dispatch(uploadProfile(formData));
-    };
-
-    if (!user) return null;
+    if (!viewUser) return null;
 
     return (
         <>
             <div className="profile mb-1">
                 <div className="profile__cover">
-                    {user.coverImage && (
+                    {viewUser.coverImage && (
                         <img
-                            src={user.coverImage || "https://www.freeiconspng.com/img/23480"}
+                            src={viewUser.coverImage || "https://www.freeiconspng.com/img/23480"}
                             alt="cover"
                             className="profile__cover-image"
                         />
                     )}
-
-                    <label htmlFor="edit-cover" className="profile__edit-cover">
-                        <FaCamera /> Edit cover
-                    </label>
-                    <input
-                        type="file"
-                        accept="image/png,image/jpeg"
-                        name="cover"
-                        id="edit-cover"
-                        onChange={handleCoverChange}
-                        style={{ display: "none" }}
-                    />
                 </div>
 
                 <div className="profile__container">
@@ -81,30 +59,19 @@ const ProfileScreen = () => {
                                 <figure>
                                     <img
                                         src={
-                                            user.profileImage.startsWith("http")
-                                                ? user.profileImage
+                                            viewUser.profileImage.startsWith("http")
+                                                ? viewUser.profileImage
                                                 : process.env.REACT_APP_SERVER +
-                                                  user.profileImage
+                                                  viewUser.profileImage
                                         }
                                         alt="profile"
                                     />
-                                    <label htmlFor="edit-profile">
-                                        <FaCamera />
-                                    </label>
-                                    <input
-                                        type="file"
-                                        accept="image/png,image/jpeg"
-                                        name="profile"
-                                        id="edit-profile"
-                                        onChange={handleProfileChange}
-                                        style={{ display: "none" }}
-                                    />
                                 </figure>
-                                <h1>{`${user.firstname} ${user.lastname}`}</h1>
-                                <p className="userinfo__username">{user.username}</p>
+                                <h1>{`${viewUser.firstname} ${viewUser.lastname}`}</h1>
+                                <p className="userinfo__username">{viewUser.username}</p>
                                 <p className="userinfo__address">
                                     <TiLocation />
-                                    {user.address} <FiGlobe />
+                                    {viewUser.address} <FiGlobe />
                                 </p>
                                 <p className="userinfo__bio">
                                     Lorem ipsum, dolor, sit amet consectetur
@@ -123,7 +90,7 @@ const ProfileScreen = () => {
                                     <div>
                                         <span className="label">Photos</span>
                                         <span className="count">
-                                            {user.photos.length}
+                                            {viewUser.photos.length}
                                         </span>
                                     </div>
                                 </div>
@@ -162,17 +129,17 @@ const ProfileScreen = () => {
                         <Outlet />
 
                         <Routes>
-                            <Route index element={<Newsfeed userId={user._id} />} />
-                            <Route path="activity" element={<Newsfeed userId={user._id} />} />
+                            <Route index element={<Newsfeed userId={id} />} />
+                            <Route path="activity" element={<Newsfeed userId={id} />} />
                             <Route
                                 path="photos"
-                                element={<Photos photos={user.photos} />}
+                                element={<Photos photos={viewUser.photos} />}
                             />
                             <Route
-                                path="edit"
-                                element={<EditProfile />}
+                                path="view"
+                                element={<ViewProfile />}
                             />
-                            <Route path="friends" element={<Friends friends={friends} />} />
+                            <Route path="friends" element={<Friends friends={viewUser.friends} />} />
                         </Routes>
                     </div>
                 </div>
@@ -181,4 +148,4 @@ const ProfileScreen = () => {
     );
 };
 
-export default ProfileScreen;
+export default ViewUserScreen;

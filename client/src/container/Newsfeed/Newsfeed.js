@@ -10,23 +10,24 @@ import {
 	Post,
 	SkeletonLoading,
 } from "../../components";
-import usePaginateMyPosts from "../../hooks/usePaginateMyPosts";
-
-import { selectRecentPhotos } from "../../store/users";
+import useFetch from "../../hooks/useFetch";
+import { listMyPostsSuccess, listMyPostsReset } from "../../store/posts";
 
 import "./Newsfeed.scss";
 
-const Newsfeed = () => {
+const Newsfeed = ({userId}) => {
 	const [page, setPage] = useState(1);
 
-	const users = useSelector(state => state.entities.users);
-	const { user, friends } = users;
-
+	const auth = useSelector(state => state.auth);
 	const posts = useSelector(state => state.entities.posts);
 
-	const recentPhotos = selectRecentPhotos(users);
+	const dispatch = useDispatch();
 
-	const { loading, hasNext } = usePaginateMyPosts(page, 10);
+	useEffect(() => {
+		dispatch(listMyPostsReset())
+	},[])
+
+	const { loading, hasNext } = useFetch(`/users/${userId}/posts`, page, 10, listMyPostsSuccess);
 
 	const observer = useRef();
 	const lastElementRef = useCallback(

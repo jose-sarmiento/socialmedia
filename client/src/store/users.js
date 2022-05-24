@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createSlice, createSelector } from "@reduxjs/toolkit";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import _ from "lodash";
 
 import { updateAuthorImage } from "./posts";
 
@@ -42,7 +43,7 @@ const slice = createSlice({
         },
         viewUserSuccess: (users, action) => {
             users.loading.view = false;
-            users.viewUser = action.payload.user;
+            users.viewUser = action.payload;
         },
         viewUserFailed: (users, action) => {
             users.loading.view = false;
@@ -57,12 +58,12 @@ const slice = createSlice({
             users.loading.update = false;
             users.success.update = true;
             users.user = {
-                ...users.user, 
-                ...action.payload.fields, 
+                ...users.user,
+                ...action.payload.fields,
                 school: {
-                    ...users.user.school, 
+                    ...users.user.school,
                     ...action.payload.fields.school,
-                } 
+                },
             };
         },
         updateUserFailed: (users, action) => {
@@ -79,7 +80,7 @@ const slice = createSlice({
             users.user.photos.push(action.payload.coverImage);
         },
         uploadCoverFailed: (users, action) => {
-            users.loading.cover = false; 
+            users.loading.cover = false;
             users.error.cover = action.payload.error;
         },
         uploadProfileRequested: (users, action) => {
@@ -101,7 +102,9 @@ const slice = createSlice({
         },
         deletePhotoSuccess: (users, action) => {
             users.loading.photo = false;
-            users.user.photos = users.user.photos.filter(x => x._id !== action.payload._id);
+            users.user.photos = users.user.photos.filter(
+                x => x._id !== action.payload._id
+            );
         },
         deletePhotoFailed: (users, action) => {
             users.loading.photo = false;
@@ -139,6 +142,10 @@ const slice = createSlice({
         addFriendSuccess: (users, action) => {
             users.loading.add = false;
             users.success.add = true;
+            const idx = users.people.findIndex(
+                x => x._id === action.payload.friendId
+            );
+            users.people[idx].isPending = true;
         },
         addFriendFailed: (users, action) => {
             users.loading.add = false;
@@ -176,7 +183,41 @@ const slice = createSlice({
     },
 });
 
-const actions = slice.actions;
+export const {
+    getUserRequested,
+    getUserSuccess,
+    getUserFailed,
+    viewUserRequested,
+    viewUserSuccess,
+    viewUserFailed,
+    updateUserRequested,
+    updateUserSuccess,
+    updateUserFailed,
+    uploadCoverRequested,
+    uploadCoverSuccess,
+    uploadCoverFailed,
+    uploadProfileRequested,
+    uploadProfileSuccess,
+    uploadProfileFailed,
+    deletePhotoRequested,
+    deletePhotoSuccess,
+    deletePhotoFailed,
+    getPeopleRequested,
+    getPeopleSuccess,
+    getPeopleFailed,
+    getFriendsRequested,
+    getFriendsSuccess,
+    getFriendsFailed,
+    addFriendRequested,
+    addFriendSuccess,
+    addFriendFailed,
+    acceptFriendRequested,
+    acceptFriendSuccess,
+    acceptFriendFailed,
+    rejectFriendRequested,
+    rejectFriendSuccess,
+    rejectFriendFailed,
+} = slice.actions;
 export default slice.reducer;
 
 // Selectors
@@ -201,9 +242,18 @@ function dispatchError(dispatch, fn, error) {
     );
 }
 
+function filterByStatus(arr, status) {
+    return arr
+        .filter(el => el.status === status)
+        .map(el => ({
+            status: el.status,
+            ...el.recipientInfo,
+        }));
+}
+
 export const getUserDetails = () => async (dispatch, getState) => {
     try {
-        dispatch(actions.getUserRequested());
+        dispatch(getUserRequested());
         const { auth } = getState();
         const { data } = await axios({
             headers: {
@@ -212,52 +262,21 @@ export const getUserDetails = () => async (dispatch, getState) => {
             url: `/users/${auth.user._id}`,
         });
         dispatch(
-            actions.getUserSuccess({
-                user: {
-                    _id: data._id,
-                    firstname: data.firstname,
-                    lastname: data.lastname,
-                    username: data.username,
-                    middlename: data.middlename,
-                    email: data.email,
-                    profileImage: data.profileImage,
-                    coverImage: data.coverImage,
-                    birthdate: data.birthdate,
-                    sex: data.sex,
-                    address: data.address,
-                    phone: data.phone,
-                    bio: data.bio,
-                    photos: data.photos,
-                    school: data.school,
-                },
-                friends: data.friends
-                    .filter(el => el.status === 3)
-                    .map(el => ({
-                        status: el.status,
-                        ...el.recipientInfo,
-                    })),
-                friendRequests: data.friends
-                    .filter(el => el.status === 2)
-                    .map(el => ({
-                        status: el.status,
-                        ...el.recipientInfo,
-                    })),
-                pendingRequests: data.friends
-                    .filter(el => el.status === 1)
-                    .map(el => ({
-                        status: el.status,
-                        ...el.recipientInfo,
-                    })),
+            getUserSuccess({
+                user: _.omit(data, ["friends"]),
+                friends: filterByStatus(data.friends, 3),
+                friendRequests: filterByStatus(data.friends, 2),
+                pendingRequests: filterByStatus(data.friends, 1),
             })
         );
     } catch (error) {
-        dispatchError(dispatch, actions.getUserFailed, error);
+        dispatchError(dispatch, getUserFailed, error);
     }
 };
 
 export const viewUserProfile = id => async (dispatch, getState) => {
     try {
-        dispatch(actions.viewUserRequested());
+        dispatch(viewUserRequested());
         const { auth } = getState();
         const { data } = await axios({
             headers: {
@@ -265,44 +284,45 @@ export const viewUserProfile = id => async (dispatch, getState) => {
             },
             url: `/users/${id}`,
         });
-        dispatch(actions.viewUserSuccess({ user: data }));
+        dispatch(viewUserSuccess({ 
+            ...data,
+            friends: filterByStatus(data.friends, 3),
+        }));
     } catch (error) {
-        dispatchError(dispatch, actions.viewUserFailed, error);
+        dispatchError(dispatch, viewUserFailed, error);
     }
 };
 
-export const updateUser =
-    (fields) =>
-    async (dispatch, getState) => {
-        try {
-            dispatch(actions.updateUserRequested());
-            const { auth } = getState();
-            const { data } = await axios({
-                method: "patch",
-                url: `/users/${auth.user._id}`,
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${auth.token}`,
-                },
-                data: fields,
-            });
-            dispatch(actions.updateUserSuccess({ fields: fields }));
-            toast.success(`Profile updated successfully!`, {
-                autoClose: 3000,
-                hideProgressBar: true,
-            });
-        } catch (error) {
-            dispatchError(dispatch, actions.updateUserFailed, error);
-            toast.warn(`Something wen't wrong!`, {
-                autoClose: 3000,
-                hideProgressBar: true,
-            });
-        }
-    };
+export const updateUser = fields => async (dispatch, getState) => {
+    try {
+        dispatch(updateUserRequested());
+        const { auth } = getState();
+        const { data } = await axios({
+            method: "patch",
+            url: `/users/${auth.user._id}`,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.token}`,
+            },
+            data: fields,
+        });
+        dispatch(updateUserSuccess({ fields: fields }));
+        toast.success(`Profile updated successfully!`, {
+            autoClose: 3000,
+            hideProgressBar: true,
+        });
+    } catch (error) {
+        dispatchError(dispatch, updateUserFailed, error);
+        toast.warn(`Something wen't wrong!`, {
+            autoClose: 3000,
+            hideProgressBar: true,
+        });
+    }
+};
 
 export const uploadCover = formData => async (dispatch, getState) => {
     try {
-        dispatch(actions.uploadCoverRequested());
+        dispatch(uploadCoverRequested());
         const { auth } = getState();
         const { data } = await axios({
             method: "post",
@@ -313,13 +333,13 @@ export const uploadCover = formData => async (dispatch, getState) => {
             },
             data: formData,
         });
-        dispatch(actions.uploadCoverSuccess({ coverImage: data.newCover }));
+        dispatch(uploadCoverSuccess({ coverImage: data.newCover }));
         toast.success(`Cover photo changed!`, {
             autoClose: 3000,
             hideProgressBar: true,
         });
     } catch (error) {
-        dispatchError(dispatch, actions.uploadCoverFailed, error);
+        dispatchError(dispatch, uploadCoverFailed, error);
         toast.warn(`Something wen't wrong!`, {
             autoClose: 3000,
             hideProgressBar: true,
@@ -329,7 +349,7 @@ export const uploadCover = formData => async (dispatch, getState) => {
 
 export const uploadProfile = formData => async (dispatch, getState) => {
     try {
-        dispatch(actions.uploadProfileRequested());
+        dispatch(uploadProfileRequested());
         const { auth } = getState();
         const { data } = await axios({
             method: "post",
@@ -341,7 +361,7 @@ export const uploadProfile = formData => async (dispatch, getState) => {
             data: formData,
         });
         dispatch(
-            actions.uploadProfileSuccess({
+            uploadProfileSuccess({
                 profileImage: data.newProfile,
             })
         );
@@ -349,9 +369,9 @@ export const uploadProfile = formData => async (dispatch, getState) => {
             autoClose: 3000,
             hideProgressBar: true,
         });
-        dispatch(updateAuthorImage({profileImage: data.newProfile}))
+        dispatch(updateAuthorImage({ profileImage: data.newProfile }));
     } catch (error) {
-        dispatchError(dispatch, actions.uploadProfileFailed, error);
+        dispatchError(dispatch, uploadProfileFailed, error);
         toast.warn(`Something wen't wrong!`, {
             autoClose: 3000,
             hideProgressBar: true,
@@ -361,7 +381,7 @@ export const uploadProfile = formData => async (dispatch, getState) => {
 
 export const deletePhoto = photoId => async (dispatch, getState) => {
     try {
-        dispatch(actions.deletePhotoRequested());
+        dispatch(deletePhotoRequested());
         const { auth } = getState();
         const { data } = await axios({
             method: "delete",
@@ -370,13 +390,13 @@ export const deletePhoto = photoId => async (dispatch, getState) => {
                 Authorization: `Bearer ${auth.token}`,
             },
         });
-        dispatch(actions.deletePhotoSuccess({_id: photoId}));
+        dispatch(deletePhotoSuccess({ _id: photoId }));
         toast.success(`Photo deleted successfully!`, {
             autoClose: 3000,
             hideProgressBar: true,
         });
     } catch (error) {
-        dispatchError(dispatch, actions.deletePhotoFailed, error);
+        dispatchError(dispatch, deletePhotoFailed, error);
         toast.warn(`Something wen't wrong!`, {
             autoClose: 3000,
             hideProgressBar: true,
@@ -386,35 +406,35 @@ export const deletePhoto = photoId => async (dispatch, getState) => {
 
 export const getPeople = () => async (dispatch, getState) => {
     try {
-        dispatch(actions.getPeopleRequested());
+        dispatch(getPeopleRequested());
         const { auth } = getState();
         const { data } = await axios({
             url: "/users",
             headers: { Authorization: `Bearer ${auth.token}` },
         });
-        dispatch(actions.getPeopleSuccess({ people: data }));
+        dispatch(getPeopleSuccess({ people: data }));
     } catch (error) {
-        dispatchError(dispatch, actions.getPeopleFailed, error);
+        dispatchError(dispatch, getPeopleFailed, error);
     }
 };
 
 export const getFriends = userId => async (dispatch, getState) => {
     try {
-        dispatch(actions.getFriendsRequested());
+        dispatch(getFriendsRequested());
         const { auth } = getState();
         const { data } = await axios({
             url: `/users/${userId}/friends`,
             headers: { Authorization: `Bearer ${auth.token}` },
         });
-        dispatch(actions.getFriendsSuccess({ friends: data.friends }));
+        dispatch(getFriendsSuccess({ friends: data.friends }));
     } catch (error) {
-        dispatchError(dispatch, actions.getFriendsFailed, error);
+        dispatchError(dispatch, getFriendsFailed, error);
     }
 };
 
 export const addFriend = recipient => async (dispatch, getState) => {
     try {
-        dispatch(actions.addFriendRequested());
+        dispatch(addFriendRequested());
         const { auth } = getState();
         const { data } = await axios({
             method: "post",
@@ -435,42 +455,39 @@ export const addFriend = recipient => async (dispatch, getState) => {
                 type: "friendrequest",
             },
         });
-        dispatch(
-            actions.addFriendSuccess({ recipient: data.recipient })
-            // push notification
-        );
+        dispatch(addFriendSuccess({ friendId: data.recipient._id }));
     } catch (error) {
-        dispatchError(dispatch, actions.addFriendFailed, error);
+        dispatchError(dispatch, addFriendFailed, error);
     }
 };
 
 export const acceptRequest = friend => async (dispatch, getState) => {
     try {
-        dispatch(actions.acceptFriendRequested());
+        dispatch(acceptFriendRequested());
         const { auth } = getState();
         const { data } = await axios({
             method: "put",
             url: `/users/${friend._id}/friends`,
             headers: { Authorization: `Bearer ${auth.token}` },
         });
-        dispatch(actions.acceptFriendSuccess({ friend: friend }));
+        dispatch(acceptFriendSuccess({ friend: friend }));
     } catch (error) {
-        dispatchError(dispatch, actions.acceptFriendFailed, error);
+        dispatchError(dispatch, acceptFriendFailed, error);
     }
 };
 
 export const rejectRequest = id => async (dispatch, getState) => {
     try {
-        dispatch(actions.rejectFriendRequested());
+        dispatch(rejectFriendRequested());
         const { auth } = getState();
         const { data } = await axios({
             method: "delete",
             url: `/users/${id}/friends`,
             headers: { Authorization: `Bearer ${auth.token}` },
         });
-        dispatch(actions.rejectFriendSuccess({ _id: id }));
+        dispatch(rejectFriendSuccess({ _id: id }));
     } catch (error) {
-        dispatchError(dispatch, actions.rejectFriendFailed, error);
+        dispatchError(dispatch, rejectFriendFailed, error);
     }
 };
 
