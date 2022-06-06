@@ -1,4 +1,5 @@
 # client ignore files
+.env
 
 # dependencies
 client/node_modules
