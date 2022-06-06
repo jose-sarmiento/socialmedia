@@ -1,0 +1,71 @@
+
+.reply {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    border-radius: .7rem;
+    column-gap: 2rem;
+    margin-left: 1rem;
+
+    figure {
+        height: 3rem;
+        width: 3rem;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    &__right {
+        
+    }
+
+    &__content {
+        background: #f2f2f2;
+        padding: 1rem 1.6rem;
+        border-radius: .7rem;
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+    }
+
+    &__replier-name {
+        text-transform: capitalize;
+        color: var(--black-color);
+        font-weight: 500;
+        font-size: 1.2rem;
+    }
+    
+    &__body {
+        min-width: 5rem;
+        margin-top: .2rem;
+        font-size: 1.2rem;
+    }
+    
+    &__footer {
+        padding: 0 0.5rem;
+        margin-top: .5rem;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        justify-items: flex-end;
+    
+        div {
+            display: flex;
+            align-items: center;
+            margin-right: 1.5rem;
+        }
+    
+        svg {
+          font-size: 1.3rem;
+          fill: var(--gray-color);
+        }
+    
+        span {
+            margin-left: .8rem;
+        }
+    }
+
+    &__ago {
+        font-size: 1.1rem;
+    }
+}

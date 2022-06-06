@@ -4,6 +4,7 @@ const { User, validateUser } = require('../models/User')
 
 const login = async (req, res) => {
   const { email, password } = req.body
+
   const user = await User.findOne({ email: email })
   if (!user) throw new BadRequest('Invalid email or password')
 

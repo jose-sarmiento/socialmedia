@@ -9,7 +9,8 @@ import {
     ViewPostScreen,
     FriendsScreen,
     MessagesScreen,
-    ViewUserScreen
+    ViewUserScreen,
+    NotificationsScreen
 } from "./pages"
 import { AppLayout } from "./container";
 import {
@@ -17,7 +18,13 @@ import {
     GuestRoute
 } from "./components"
 
-import { getUserDetails, getFriends, getPeople } from "./store/users";
+import { getUserDetails, getPeople } from "./store/users";
+import {
+    getAllConversations,
+} from "./store/chats";
+import {
+    getAllNotifications,
+} from "./store/notifications";
 
 function App() {
     const dispatch = useDispatch();
@@ -28,8 +35,9 @@ function App() {
         if (!auth.user) return;
 
         dispatch(getUserDetails());
-        // dispatch(getFriends(auth.user._id));
         dispatch(getPeople());
+        dispatch(getAllConversations());
+        dispatch(getAllNotifications());
     }, [auth]);
 
     return (
@@ -94,6 +102,14 @@ function App() {
                     element={
                         <PrivateRoute>
                             <MessagesScreen />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/notifications"
+                    element={
+                        <PrivateRoute>
+                            <NotificationsScreen />
                         </PrivateRoute>
                     }
                 />

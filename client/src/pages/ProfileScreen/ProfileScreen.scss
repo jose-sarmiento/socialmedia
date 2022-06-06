@@ -1,3 +1,5 @@
+@import "../../variables.scss";
+
 .profile {
 	width: 100%;
 	background: var(--light-2);
@@ -114,6 +116,25 @@
 	align-items: center;
 	flex-direction: column;
 	text-align: center;
+	position: relative;
+
+	&__message {
+		position: absolute;
+		top: 1.5rem;
+		left: 1.5rem;
+		background: $primary-color;
+		height: 2.6rem;
+		width: 2.6rem;
+		border-radius: 50%;
+		border: none;
+		outline: none;
+		color: $white-color;
+		font-size: 1.2rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+	}
 
 
 	figure {

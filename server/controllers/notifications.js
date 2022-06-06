@@ -1,29 +1,54 @@
-const { BadRequest } = require('../errors')
-const Notification = require('../models/Notification')
+const _ = require("lodash");
+const { BadRequest } = require("../errors");
+const Notification = require("../models/Notification");
 
 const getNotifications = async (req, res) => {
-  res.json(req.paginatedResults)}
+    const notifications = await Notification.find({ to: req.user._id });
+    res.json(notifications);
+};
 
 const createNotification = async (req, res) => {
-  console.log(req.body.to)
-  let notif = new Notification({
-    from: {
-      _id: req.user._id,
-      fullname: `${req.user.firstname} ${req.user.lastname}`,
-      image: req.user.profileImage
-    },
-    to: {
-      _id: req.body.to._id,
-      fullname: `${req.body.to.fullname}`,
-      image: req.body.to.image
-    },
-    type: req.body.type
-  })
-  notif = await notif.save()
-  res.json(notif)
-}
+    let notif = new Notification({
+        to: req.body.to,
+        type: req.body.type,
+    });
+
+    if (req.body.from) {
+        notif.from = req.body.from;
+    }
+    notif = await notif.save();
+    res.json(notif);
+};
+
+const updateNotification = async (req, res) => {
+    let notification = await Notification.findOneAndUpdate(
+        {
+            _id: req.params.notificationId,
+        },
+        req.body,
+        { new: true }
+    );
+
+    res.json(notification);
+};
+
+const readAllNotifications = async (req, res) => {
+    await Notification.updateMany(
+        {
+            to: req.user._id,
+        },
+        {
+            $set: {
+               isRead: true 
+            }
+        });
+
+    res.json({success: true, message: "Successfully masked as read"});
+};
 
 module.exports = {
-  getNotifications,
-  createNotification
-}
+    getNotifications,
+    createNotification,
+    updateNotification,
+    readAllNotifications
+};

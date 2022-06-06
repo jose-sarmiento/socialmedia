@@ -4,7 +4,7 @@ const { BadRequest } = require("../errors");
 const { StatusCodes } = require("http-status-codes");
 const { generateThumb } = require("./posts");
 const mongoose = require("mongoose");
-var flatten = require('flat')
+var flatten = require('flat') 
 const formatURL = require("../utils/formatURL")
 
 const getUsers = async (req, res) => {
@@ -32,6 +32,17 @@ const getUsers = async (req, res) => {
 	]);
 	res.send(people);
 };
+
+const searchUsers = async (req, res) => {
+	const { q, limit, page } = req.query
+
+	const users = await User.aggregate([
+	  {$project: {profileImage: 1, username: 1, "name" : { $concat : [ "$firstname", " ", "$lastname" ] } }},
+	  {$match: {"_id": { $ne: req.user._id}, "name": {$regex: new RegExp(q, 'i')}}},
+	])
+
+	res.json(users)
+}
 
 const getUser = async (req, res) => {
 	const user = await User.aggregate([
@@ -216,7 +227,7 @@ const getFriends = async (req, res) => {
 		})),
 	});
 };
-
+ 
 const addNewFriend = async (req, res) => {
 	const requester = await Friend.findOneAndUpdate(
 		{ requester: req.user._id, recipient: req.params.userId },
@@ -238,8 +249,10 @@ const addNewFriend = async (req, res) => {
 	);
 
 	res.json({
-		requester: updateRequesterUser,
-		recipient: updateRecipientUser,
+		requester: requester,
+		requesterId: updateRequesterUser._id,
+		recipient: recipient,
+		recipientId: updateRecipientUser._id,
 	});
 };
 
@@ -304,9 +317,25 @@ const deleteRequest = async (req, res) => {
 		},
 	});
 };
+ 
+const getBirthdays = async () => {
+	return await User.aggregate([
+       {
+       	$match: {
+       		$expr: {
+       			$and: [
+       				{$eq: [{ $dayOfMonth: "$birthdate" }, {$dayOfMonth: new Date(2014, 3, 23)}]},
+       				{$eq: [{ $month: "$birthdate" }, {$month: new Date(2014, 3, 23)}]}
+       			]
+       		}
+       	}
+       }
+    ]);
+}
 
 module.exports = {
 	getUsers,
+	searchUsers,
 	getUser,
 	deleteUser,
 	updateUser,
@@ -318,4 +347,5 @@ module.exports = {
 	addNewFriend,
 	acceptRequest,
 	deleteRequest,
+	getBirthdays
 };

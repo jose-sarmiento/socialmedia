@@ -1,23 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { HiHome, HiUser, HiUsers, HiBell, HiChatAlt2 } from "react-icons/hi";
 import { logout } from '../../store/auth';
+import { useSocketContext } from "../../contexts/socketContext"
+import { showModal, closeModal } from "../../store/ui"
 
 import "./Sidebar.scss"
 
 const Sidebar = () => {
+    const [msgCount, setMsgCount] = useState();
+    const [notifCount, setNotifCount] = useState();
+
+	const auth = useSelector(state => state.auth)
+	const chats = useSelector(state => state.entities.chats)
+	const notifications = useSelector(state => state.notifications)
 
 	const dispatch = useDispatch(); 
+	const { disconnect } = useSocketContext();
 
-	const links = [
-		{ text: "Home", url: "/", icon: <HiHome /> },
-		{ text: "Profile", url: "/users/me", icon: <HiUser /> },
-		{ text: "Friends", url: "/friends", icon: <HiUsers /> },
-		{ text: "Notifications", url: "/notifications", icon: <HiBell /> },
-		{ text: "Messages", url: "/messages", icon: <HiChatAlt2 /> },
-	];
+    const links = [
+        { id: 1, text: "Home", url: "/", icon: <HiHome /> },
+        { id: 2, text: "Profile", url: "/users/me", icon: <HiUser /> },
+        { id: 3, text: "Friends", url: "/friends", icon: <HiUsers /> },
+        { id: 4, text: "Notifications", url: "/notifications", icon: <HiBell /> },
+        { id: 5, text: "Messages", url: "/messages", icon: <HiChatAlt2 /> },
+    ];
 
+	useEffect(() => {
+		const unreadNotifCount = notifications.list.filter(item => item.isRead === false).length;
+		const unreadMsgCount = chats.list.filter(
+			item => item.messages.some(x => !x.seenBy.includes(auth.user._id))).length;
+
+        setMsgCount(unreadMsgCount);
+        setNotifCount(unreadNotifCount)
+	}, [chats.list, notifications.list])
+
+	function handleLogout() {
+		disconnect(auth.user._id);
+		dispatch(logout())
+	}
+ 
 	return (
 		<div className="sidebar">
 			<ul className="sidebar__links">
@@ -35,14 +58,16 @@ const Sidebar = () => {
 							{link.icon}
 							{link.text}
 						</NavLink>
+						{(link.id === 4 &&  notifCount > 0) && <span className="sidebar__count">{notifCount}</span>}
+                        {(link.id === 5 &&  msgCount > 0) && <span className="sidebar__count">{msgCount}</span>}
 					</li>
 				))}
 
 			</ul>
 			
 			<div className="sidebar__btn-wrapper">
-				<button className="btn btn--primary">Create Post</button>
-				<button className="btn btn--outline mt-2" onClick={() => dispatch(logout())}>Log out</button>
+				<button className="btn btn--primary" onClick={() => dispatch(showModal())}>Create Post</button>
+				<button className="btn btn--outline mt-2" onClick={handleLogout}>Log out</button>
 			</div>
 		</div>
 	);

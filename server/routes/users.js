@@ -4,6 +4,7 @@ const { User } = require('../models/User');
 const { Post } = require('../models/Post');
 const {
   getUsers,
+  searchUsers,
   getUser,
   updateUser,
   deleteUser,
@@ -23,6 +24,7 @@ const upload = require('../middleware/upload');
 
 router.use(auth);
 router.route('/').get(getUsers);
+router.route('/search').get(searchUsers);
 router.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
 router.route('/:userId/posts').get(paginate(Post, true), getUserPosts);
 router.route('/cover').post(upload.single('cover'), uploadCover);

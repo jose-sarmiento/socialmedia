@@ -1,13 +1,21 @@
+@import "../../variables.scss";
+
 .chat {
 	display: flex;
 	align-items: center;
 	padding: 0 1rem;
-	background: rgba(white, .8);
+	background: transparent;
+	cursor: pointer;
 
+
+	&--active {
+		background: var(--white-color);
+		border-radius: .5rem;
+	}
 
 	&--unseen {
-		background: var(--bg-light);
-		border-radius: .7rem;
+		background: darken($bg-light, 5%);
+		border-radius: .5rem;
 	}
 
 

@@ -14,7 +14,6 @@ const PostSchema = new Schema({
 	body: {
 		type: String,
 		trim: true,
-		required: true
 	},
 	multimedia: [MediaSchema],
 	comments: [CommentSchema],
@@ -23,7 +22,8 @@ const PostSchema = new Schema({
 		likes: { type: Number, min: 0, default: 0 },
 		shares: { type: Number, min: 0, default: 0 },
 		comments: { type: Number, min: 0, default: 0 }
-	}
+	},
+	createdAt: { type: Date, default: Date.now },
 })
 
 const Post = mongoose.model('Post', PostSchema)

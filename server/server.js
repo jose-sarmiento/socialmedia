@@ -1,13 +1,14 @@
 require('dotenv').config();
 require('express-async-errors');
-
+ 
 const path = require('path');
 const http = require('http');
 const express = require('express');
 const { Server } = require('socket.io')
 const cors = require('cors');
 const morgan = require('morgan');
-const axios = require('axios');
+const schedule = require('node-schedule');
+const ObjectId = require('mongoose').Types.ObjectId;
 const connectDB = require('./db/connect');
 const notFound = require('./middleware/not-found');
 const errorHandler = require('./middleware/error-handler');
@@ -15,9 +16,8 @@ const users = require('./routes/users');
 const posts = require('./routes/posts');
 const auth = require('./routes/auth');
 const conversations = require('./routes/conversations');
-const messages = require('./routes/messages');
 const notifications = require('./routes/notifications');
-const photos = require('./data/photos');
+const { getBirthdays } = require('./controllers/users');
 
 const app = express();
 const server = http.createServer(app)
@@ -42,64 +42,77 @@ app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
 app.use('/api/v1/posts', posts);
 app.use('/api/v1/conversations', conversations);
-app.use('/api/v1/messages', messages);
 app.use('/api/v1/notifications', notifications);
 
 app.use(notFound);
 app.use(errorHandler);
 
+// add birthday notification evry midnight
+
+schedule.scheduleJob("birthdayJob", "0 0 * * *", async () => {
+	try {
+		const birthdays = await getBirthdays();
+		console.log(birthdays)
+
+	} catch(err) {
+		console.log(err)
+	}
+	schedule.cancelJob("birthdayJob")
+});
+
 const state = {
-	users: [] 
-}
-
-const addUser = (userId, socketId) => {
-	!state.users.some(user => user.userId === userId) 
-		&& state.users.push({userId, socketId})
-}
-
-const removeUser = socketId => {
-	state.users = state.users.filter(user => user.socketId !== socketId);
-}
-
-const getUser = userId => {
-	return state.users.find(user => user.userId === userId)
-}
-
+	users: [],
+};
 
 io.on("connection", (socket) => {
-	socket.on("addUser", userId => {
-		addUser(userId, socket.id);
-		io.emit("getUsers", state.users)
+	socket.on("event://setup", user => {
+		socket.join(user._id)
+		state.users.push({...user, socketId: socket.id});
+		io.emit("event://get-users", state.users)
+		console.log(state.users)
 	})
 
-	socket.on("disconnect", () => {
-		io.emit("getUsers", state.users)
+	socket.on("event://open-chat", room => {
+		socket.join(room)
 	})
 
-	socket.on("sendFriends", (friends) => {
-		const activeUsers = state.users.filter(user => friends.includes(user.userId))
-		io.emit("getActiveFriends", activeUsers)
+	socket.on("event://send-message", payload => {
+		socket.broadcast.emit("event://receive-message", payload)
 	})
 
-	socket.on("sendMessage", ({chat, receiverId}) => {
-		const user = getUser(receiverId);
-		if(user) {
-			io.to(user.socketId).emit("getMessage", {...chat})
+	socket.on("event://send-new-chat", payload => {
+		socket.join(payload.receiverId)
+		socket.broadcast.emit("event://receive-new-chat", payload)
+	})
+
+	socket.on("event://typing", (name) => {
+		socket.broadcast.emit("event://typing", name);
+	})
+
+	socket.on("event://stop-typing", () => {
+		socket.broadcast.emit("event://stop-typing");
+	})
+
+	socket.on("event://send-friend-request", ({notification, friendRequest}) => {
+		const receiver = state.users.find(x => x._id === notification.to)
+		if (receiver) {
+			io.to(receiver.socketId).emit("event://receive-friend-request", {notification, friendRequest});
 		}
 	})
 
-	socket.on("sendNotification", ({receiverId, payload}) => {
-		const user = getUser(receiverId);
-		console.log(user)
-		if(user) {
-			// io.to('socket#id').emit('hey')
-			io.to(user.socketId).emit("receiveNotification", {payload})
+	socket.on("event://accept-friend-request", ({notification, friend}) => {
+		const receiver = state.users.find(x => x._id === notification.to)
+		if (receiver) {
+			io.to(receiver.socketId).emit("event://receive-accept-friend-request", {notification, friend});
 		}
 	})
 
 	socket.on("disconnect", () => {
-		removeUser(socket.id)
-		io.emit("getUsers", state.users)
+		let idx = state.users.findIndex(x => x.socketId === socket.id)
+		if (idx !== -1) {
+			state.users.splice(idx, 1);
+			io.emit("event://get-users", state.users)
+		}
 	})
 })
 
@@ -116,3 +129,4 @@ const start = async () => {
 };
 
 start();
+

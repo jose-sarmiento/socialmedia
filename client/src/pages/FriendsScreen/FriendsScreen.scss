@@ -18,6 +18,8 @@
 	&__list--requests {
 		grid-column: 7/-1;
 		grid-row: 1/2;
+		overflow: hidden;
+		overflow-y: scroll;
 	}
 
 	&__list--people {

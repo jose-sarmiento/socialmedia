@@ -21,10 +21,10 @@ const createComment = async (req, res) => {
 
     post.comments.push(commentObj);
     post.meta.comments += 1;
-    await post.save();
+    post = await post.save();
 
     res.status(StatusCodes.OK).json({ 
-        comment: commentObj, 
+        comment: post.comments.id(commentObj._id), 
         created: true 
     });
 };
@@ -92,6 +92,7 @@ const createReply = async (req, res) => {
         userName: req.user.fullname,
         userProfileImage: req.user.profileImage,
         reply: req.body.reply,
+        createdAt: + new Date(),
     }
     comment.replies.push(replyObj);
     comment.meta.replies += 1;

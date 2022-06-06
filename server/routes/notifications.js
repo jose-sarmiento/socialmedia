@@ -3,15 +3,21 @@ const router = express.Router();
 const Notification = require('../models/Notification');
 const {
   getNotifications,
-  createNotification
+  createNotification,
+  updateNotification,
+  readAllNotifications
 } = require('../controllers/notifications');
-const paginateNotifications = require('../middleware/paginate-notifications');
 const auth = require('../middleware/auth');
 
 router.use(auth);
 router
   .route('/')
-  .get(paginateNotifications, getNotifications)
-  .post(createNotification);
+  .get(getNotifications)
+  .post(createNotification)
+router.route('/readall')
+  .patch(readAllNotifications);
+router
+  .route("/:notificationId")
+  .patch(updateNotification);
 
 module.exports = router;

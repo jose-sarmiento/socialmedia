@@ -7,6 +7,7 @@ const slice = createSlice({
 			list: [],
 			isOpen: false,
 			currentIndex: 0,
+			modalIsOpen: false
 		}
 	},
 	reducers: {
@@ -29,6 +30,12 @@ const slice = createSlice({
 			ui.slider.isOpen = false;
 			ui.slider.currentIndex = 0;
 		},
+		showModal: (ui, action) => {
+			ui.modalIsOpen = true;
+		},
+		closeModal: (ui, action) => {
+			ui.modalIsOpen = false;
+		},
 	},
 });
 
@@ -36,7 +43,9 @@ export const {
 	sliderDisplayed, 
 	slideToNext, 
 	slideToPrevious, 
-	sliderClosed 
+	sliderClosed,
+	showModal,
+	closeModal
 } = slice.actions;
 
 export default slice.reducer;

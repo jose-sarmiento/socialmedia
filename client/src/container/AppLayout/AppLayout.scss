@@ -15,10 +15,16 @@
 
 	display: grid;
 	grid-template-columns: repeat(12, 1fr);
+	grid-template-rows: minmax(0, 1fr);
 	grid-column-gap: 2rem;
 	background: url("../../assets/img/bgIMG.png");
 	background-size: contain;
 	background-repeat: repeat;
+	min-height: 0;
+
+	&--homepage {
+		grid-column-gap: 4rem;
+	}
 
 	.fixed-bg {
 		position: fixed;

@@ -1,11 +1,13 @@
 import {combineReducers} from "redux"
 import authReducer from "./auth"
 import entitiesReducer from "./entities"
+import notificationsReducer from "./notifications"
 import uiReducer from "./ui"
 
 const appReducer = combineReducers({
 	auth: authReducer,
 	entities: entitiesReducer,
+	notifications: notificationsReducer,
 	ui: uiReducer,
 })
 

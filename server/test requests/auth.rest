@@ -1,6 +1,6 @@
 ### login
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjdhMjE3ZjZjZGY2YzVhOTU5MDJjNmMiLCJpYXQiOjE2NTIzNDY1NzR9.eHnuJfqEhXgwvcocb-MmKJb5ymjlAPHhdlAiHHZqJm4
-
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjgxY2I2YjBhNDY3OTJjZjAyNDNlZGYiLCJpYXQiOjE2NTM0Nzg3NTZ9.d6mxpUZwsEp0LZjZoqTRny55Lpodh3UaJHohzGtipno
+@userId = 6281cb6b0a46792cf0243edf
 POST http://localhost:8000/api/v1/auth/login
 Content-Type: application/json
 

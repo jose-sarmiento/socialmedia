@@ -8,6 +8,10 @@
 		margin-bottom: 2rem;
 	}
 
+	&--wide {
+		margin-bottom: 0!important;
+	}
+
 	&__left {
 		margin-right: 1rem;
 	}
@@ -21,8 +25,8 @@
 	}
 
 	&--wide .post__user-img {
-		width: 4.2rem;
-		height: 4.2rem;
+		width: 4rem;
+		height: 4rem;
 		margin-right: 1.5rem;
 	}
 	
@@ -32,6 +36,12 @@
 		padding: 1.5rem;
 		padding-bottom: 0;
 		flex: 1;
+	}
+
+	&--wide {
+		.post__right {
+			border: 1px solid var(--light-3);
+		}
 	}
 
 	&--skeleton &__right {
@@ -48,6 +58,34 @@
 		align-items: center;
 	}
 
+	&__dots {
+		margin-left: 1rem;
+		position: relative;
+	}
+
+	&__options {
+		position: absolute;
+		left: 120%;
+		bottom: 1rem;
+		width: 12rem;
+		background: white;
+		box-shadow: 0px 3px 8px rgba(0, 0, 0, .1);
+		padding: 0 1rem;	
+		z-index: 1000;
+	}
+
+	&__options:focus {
+		background: red;
+	}
+
+	&__option {
+		display: grid;
+		grid-template-columns: 3rem 1fr;
+		padding: 1rem 0;
+		border-bottom: 1px solid var(--light-3);
+		cursor: pointer;
+	}
+
 	&__heading {
 		margin-right: auto;
 		font-size: 1.4rem;
@@ -56,7 +94,7 @@
 	}
 
 	&--wide .post__heading {
-		font-size: 1.6rem;
+		font-size: 1.4rem;
 	}
 	
 	&__name {
@@ -81,6 +119,8 @@
 		color: var(--dark-gray-color);
 		font-size: 1.1rem;
 	}
+
+
 
 	&--skeleton {
 		.post__name {
@@ -109,13 +149,13 @@
 
 	&__body {
 		width: 100%;
-
+		// margin-bottom: 1rem;
 	}
 
 	&__media {
-		height: 12rem;
+		height: 15rem;
 		overflow: hidden;
-		margin-top: 1rem;
+		margin-top: 1.5rem;
 
 		&--3 {
 			display: grid;
@@ -193,9 +233,10 @@
 		font-weight: 400;
 		color: var(--grey-4);
 		line-height: 2.2rem;
-		text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+		// text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
 		text-transform: capitalize;
 		font-family: 'Helvetica';
+		margin-bottom: 1rem;
 	}
 	&--skeleton {
 		.post__caption {

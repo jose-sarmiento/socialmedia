@@ -1,0 +1,81 @@
+@import "../../variables.scss";
+
+.message {
+	display: flex;
+	align-items: flex-start;
+	margin-bottom: 1rem;
+	position: relative;
+
+	&__sent-indicator {
+		color: var(--primary-color);
+		position: absolute;
+		bottom: 0;
+		right: -2rem;
+		font-size: 1.6rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	&__sent-indicator--sending {
+		animation: spin 1s linear infinite;
+	}
+
+	@keyframes spin {
+		from {
+			transform: rotate(0deg);
+		}
+		to {
+			transform: rotate(360deg);
+		}
+	}
+
+	&__user-image {
+		height: 3.8rem;
+		width: 3.8rem;
+		border-radius: 50%;
+		overflow: hidden;
+		margin-right: 2rem;
+	}
+
+	&__content-wrapper {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+	}
+
+	&__box {
+		padding: 1.2rem 2rem;
+		font-family: "Helvetica";
+		font-size: 1.4rem;
+		font-weight: 400;
+		// background: rgba(white, .6);
+		background: var(--bg-light);
+		// backdrop-filter: blur(8px);
+		display: inline-block;
+		align-self: flex-start;
+		border-radius: 0 1rem 1rem 1rem;
+		margin-bottom: 1rem;
+		position: relative;
+	}
+
+	&__box.bubble {
+		padding: 0;
+		background: transparent;
+	}
+
+	&__time {
+		font-size: 1rem;
+		position: absolute;
+		bottom: -1.4rem;
+		right: 1rem;
+		color: $grey-2;
+	}
+
+	&--me .message__box {
+		align-self: flex-end;
+		color: var(--white-color);
+		background: lighten($primary-color, 5%);
+		border-radius: 1rem 0 1rem 1rem;
+	}
+}

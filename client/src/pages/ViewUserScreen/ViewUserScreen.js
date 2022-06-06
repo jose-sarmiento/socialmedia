@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { Routes, Route, NavLink, useParams, Outlet } from "react-router-dom";
+import { Routes, Route, NavLink, useParams, Outlet, useNavigate } from "react-router-dom";
 import { FaCamera, FaUserCog } from "react-icons/fa";
 import { FiGlobe, FiEye, FiUsers } from "react-icons/fi";
-import { BsImages } from "react-icons/bs";
+import { BsImages, BsChat } from "react-icons/bs";
 import { TiLocation } from "react-icons/ti";
 import {
     Header,
@@ -16,11 +16,14 @@ import { Newsfeed, Friends, ViewProfile } from "../../container";
 
 import { useSelector, useDispatch } from "react-redux";
 import { uploadCover, uploadProfile, viewUserProfile } from "../../store/users";
+import { createNewConversation, createChatReset, activeChatSelected } from "../../store/chats";
+import { useSocketContext } from "../../contexts/socketContext"
 
 
 const ViewUserScreen = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     let links = [
         { text: "Activity", url: "", icon: <FiEye /> },
@@ -32,10 +35,32 @@ const ViewUserScreen = () => {
     const auth = useSelector(state => state.auth);
     const users = useSelector(state => state.entities.users);
     const { viewUser, loading } = users;
+    const chats = useSelector(state => state.entities.chats);
+    const { list, createdChat } = chats
+    const { emitChat } = useSocketContext();
 
     useEffect(() => {
     	dispatch(viewUserProfile(id))
     }, [id])
+
+    useEffect(() => {
+        if (!createdChat) return;
+ 
+        // emit
+        emitChat(createdChat, viewUser._id)
+        navigate("/messages");
+        dispatch(createChatReset())
+    }, [createdChat])
+
+    function messageHandler () {
+        const exists = chats.list.find(chat => chat.members.some(x => x._id === viewUser._id));
+        if (exists) {
+            dispatch(activeChatSelected({chatId: exists._id}));
+            navigate("/messages");
+        } else {
+            dispatch(createNewConversation(viewUser._id));
+        }
+    }
 
     if (!viewUser) return null;
 
@@ -56,6 +81,12 @@ const ViewUserScreen = () => {
                     <div className="profile__left">
                         <div className="profile__sticky">
                             <div className="userinfo">
+                                <button 
+                                    className="userinfo__message" 
+                                    onClick={messageHandler}
+                                >
+                                    <BsChat />
+                                </button>
                                 <figure>
                                     <img
                                         src={

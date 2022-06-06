@@ -1,0 +1,12 @@
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjgxY2I2YjBhNDY3OTJjZjAyNDNlZGYiLCJpYXQiOjE2NTM0Nzg3NTZ9.d6mxpUZwsEp0LZjZoqTRny55Lpodh3UaJHohzGtipno
+@userId = 6281cb6b0a46792cf0243edf
+@krsten = 6281cb6c0a46792cf0243ee2
+@jenette = 6281cb6d0a46792cf0243ee4
+
+### create conversation
+POST http://localhost:8000/api/v1/conversations
+Content-Type: application/json
+
+{
+    "receiverId": {{krsten}}
+}

@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { FaImage, FaUserFriends } from "react-icons/fa";
 import { HiRefresh } from "react-icons/hi";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom"
 import {
 	PostList,
 	CreatePost,
@@ -22,6 +23,7 @@ const Newsfeed = ({userId}) => {
 	const posts = useSelector(state => state.entities.posts);
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		dispatch(listMyPostsReset())
@@ -44,19 +46,28 @@ const Newsfeed = ({userId}) => {
 		[loading, hasNext]
 	);
 
+	function handleCommentClick(postId) {
+		navigate(`/posts/${postId}`, {state: {focusCommentInput: true}})
+	}
+
 	return (
 		<div className="section-container newsfeed">
 			<div className="section-container__header">
 				<h4>Newsfeed</h4>
 				<HiRefresh />
-			</div>
+			</div> 
 
 			<div className="section-container__body">
 				{posts.myPosts.map((post, index) => {
 					let ref = null;
 					if (posts.myPosts.length === index + 1)
 						ref = lastElementRef;
-					return <Post ref={ref} post={post} key={uuidv4()} />;
+					return <Post 
+						ref={ref} 
+						post={post} 
+						key={uuidv4()}
+						handleCommentClick={handleCommentClick} 
+					/>;
 				})}
 
 				{loading && <SkeletonLoading count={3} />}

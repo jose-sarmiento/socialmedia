@@ -22,10 +22,14 @@ const getPost = async (req, res) => {
 
 const createPost = async (req, res) => {
 	const {
-		body: { body: text, title },
+		body: { body: text },
 		files,
 	} = req;
 	req.body.author = req.user._id.toString();
+
+	if (!req.body.body && !req.files) {
+		throw new BadRequest("Post body or image is required");
+	}
 
 	const { error } = validatePost(req.body);
 	if (error) throw new BadRequest(error.details[0].message);
@@ -63,7 +67,11 @@ const createPost = async (req, res) => {
 			}));
 	}
 
-	const post = await Post.create({ author: req.user._id, ...reqBody });
+	let post = await Post.create({ author: req.user._id, ...reqBody });
+	post = await Post.populate(post, {
+		path: "author",
+		select: "firstname lastname profileImage username",
+	});
 	res.status(StatusCodes.CREATED).json(post);
 };
 

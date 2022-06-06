@@ -3,14 +3,16 @@ import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
 import { acceptRequest } from "../../store/users";
-import dp from "../../assets/img/profiles/d1.jpg";
+import { createNotification } from "../../store/notifications";
 
-const FriendRequest = ({ friend }) => {
+const FriendRequest = React.forwardRef((props, ref) => {
+	const { friend } = props
 	const users = useSelector(state => state.entities.users);
 	const dispatch = useDispatch();
-
+ 
 	const handleAcceptFriend = () => {
-		dispatch(acceptRequest(
+		dispatch(createNotification({recipientId: friend._id, type: "accept-friend" }))
+		dispatch(acceptRequest( 
 			_.pick(friend, [
 				"_id",
 				"firstname",
@@ -21,7 +23,7 @@ const FriendRequest = ({ friend }) => {
 		))
 	}
 	return (
-		<li className="friend">
+		<li className="friend" ref={ref}>
 			<figure>
 				<img src={friend?.profileImage} alt="imgz" />
 			</figure>
@@ -41,6 +43,6 @@ const FriendRequest = ({ friend }) => {
 			</button>
 		</li>
 	);
-};
+});
 
 export default FriendRequest;

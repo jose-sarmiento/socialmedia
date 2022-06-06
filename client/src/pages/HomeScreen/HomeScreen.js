@@ -1,28 +1,29 @@
 import React, { useState, useRef, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useSelector } from "react-redux";
-import { HiRefresh } from "react-icons/hi"
-import { IoChatbubble, IoHeartOutline, IoHeart } from "react-icons/io5"
-import { IoIosShareAlt } from "react-icons/io"
+import { HiRefresh } from "react-icons/hi";
+import { useNavigate, Link } from "react-router-dom";
+import { IoChatbubble, IoHeartOutline, IoHeart } from "react-icons/io5";
+import { IoIosShareAlt } from "react-icons/io";
+import { FiUserPlus } from "react-icons/fi";
 import { AppLayout } from "../../container";
-import {
-	Post,
-	SkeletonLoading,
-	AddFriend
-} from "../../components";
+import { FaGift } from "react-icons/fa";
+import { Post, SkeletonLoading, AddFriend } from "../../components";
 import useFetch from "../../hooks/useFetch";
-import dp from "../../assets/img/profiles/d1.jpg"
+import dp from "../../assets/img/profiles/d1.jpg";
 import { listPostsSuccess } from "../../store/posts";
 
-import "./HomeScreen.scss"
+import "./HomeScreen.scss";
 
 const HomeScreen = () => {
 	const [page, setPage] = useState(1);
 
+	const navigate = useNavigate();
+
 	const users = useSelector(state => state.entities.users);
 	const posts = useSelector(state => state.entities.posts);
 
-	const { loading, hasNext } = useFetch('/posts', page, 10, listPostsSuccess);
+	const { loading, hasNext } = useFetch("/posts", page, 10, listPostsSuccess);
 
 	const observer = useRef();
 	const lastElementRef = useCallback(
@@ -39,10 +40,14 @@ const HomeScreen = () => {
 		[loading, hasNext]
 	);
 
+	function handleCommentClick(postId) {
+		navigate(`/posts/${postId}`, { state: { focusCommentInput: true } });
+	}
+
 	if (users.loading.user) return null;
 
 	return (
-		<AppLayout>
+		<AppLayout page="homepage">
 			<div className="section-container timeline">
 				<div className="section-container__header">
 					<h4>Your newsfeed</h4>
@@ -51,9 +56,15 @@ const HomeScreen = () => {
 				<div className="section-container__body">
 					{posts.list.map((post, index) => {
 						let ref = null;
-						if (posts.list.length === index + 1) ref = lastElementRef;
+						if (posts.list.length === index + 1)
+							ref = lastElementRef;
 						return (
-							<Post ref={ref} post={post} key={uuidv4()} />
+							<Post
+								ref={ref}
+								post={post}
+								key={uuidv4()}
+								handleCommentClick={handleCommentClick}
+							/>
 						);
 					})}
 
@@ -62,6 +73,138 @@ const HomeScreen = () => {
 			</div>
 
 			<div className="others">
+				<div className="list list--birthdays">
+					<div className="list__header">
+						<FaGift />
+						<h4>Birthdays</h4>
+						{users.birthdays.length > 2 && <Link to="/friends">See all</Link>}
+					</div>
+					{users.loading.get ? (
+						<div className="birthday">
+							<figure className="skeleton"></figure>
+							<div className="birthday__user">
+								<p className="birthday__username skeleton"></p>
+								<p className="birthday__age skeleton"></p>
+							</div>
+						</div>
+					) : (
+						<>
+							{users.birthdays.length === 0 ? (
+								<div className="birthday birthday--none">
+									<span className="birthday__no-birthday">
+										<FaGift /> No birthdays today
+									</span>
+								</div>
+							) : (
+								<>
+									{users.birthdays.slice(0, 2).map((birthday, idx) => {
+										let today = new Date();
+										let birthDate = new Date(
+											birthday.birthdate
+										);
+										let age =
+											today.getFullYear() -
+											birthDate.getFullYear();
+										return (
+											<div className="birthday" key={idx}>
+												<figure>
+													<img
+														src={
+															birthday.profileImage
+														}
+														alt="birthday user"
+													/>
+												</figure>
+												<div className="birthday__user">
+													<p className="birthday__username">{`${birthday.firstname} ${birthday.lastname}`}</p>
+													<p className="birthday__age">
+														{age} years old
+													</p>
+												</div>
+											</div>
+										);
+									})}
+								</>
+							)}
+						</>
+					)}
+				</div>
+
+				<div className="list list--requests">
+					<div className="list__header">
+						<FaGift />
+						<h4>Friend Requests</h4>
+						<span>See all</span>
+					</div>
+					{users.loading.get ? (
+						<div className="birthday">
+							<figure className="skeleton"></figure>
+							<div className="birthday__user">
+								<p className="birthday__username skeleton"></p>
+								<p className="birthday__age skeleton"></p>
+							</div>
+						</div> 
+						) : (
+						<>
+							{users.friends.length === 0 ? (
+								<div className="request request--none">
+									<span className="birthday__no-request">
+										<Link to="/friends"><FiUserPlus /> Add some friends now</Link>
+									</span>
+								</div>
+							) : (
+								<>
+									{users.friends.slice(0, 2).map((friend, idx) => (
+										<div className="request" key={idx}>
+											<figure>
+												<img src={friend.profileImage} alt="request user" />
+											</figure>
+											<div className="request__user">
+												<p className="request__username">{`${friend.firstname} ${friend.lastname}`}</p>
+												<p className="request__age">@{friend.username}</p>
+												<div className="request__actions">
+													<button className="request__action">
+														Confirm
+													</button>
+													<button className="request__action">
+														Delete
+													</button>
+												</div>
+											</div>
+										</div>
+									)}
+								</>
+							)}
+						</>)
+					}
+
+				</div>
+
+				<div className="list list--actives">
+					<div className="list__header">
+						<FaGift />
+						<h4>Active Contacts</h4>
+						<span>See all</span>
+					</div>
+					<div className="birthday">
+						<figure>
+							<img src={dp} alt="birthday user" />
+						</figure>
+						<div className="birthday__user">
+							<p className="birthday__username">Michael Jordan</p>
+							<p className="birthday__age">22 years old</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</AppLayout>
+	);
+};
+
+export default HomeScreen;
+
+{
+	/*<div className="others">
 				<div className="section-container trending mb-2">
 					<div className="section-container__header">
 						<h4>Trending for you</h4>
@@ -151,25 +294,5 @@ const HomeScreen = () => {
 					</div>
 				</div>
 
-				<div className="section-container">
-					<div className="section-container__header">
-						<h4>People you may know</h4>
-
-						<HiRefresh />
-					</div>
-					<div className="section-container__list">
-						<AddFriend />
-						<AddFriend />
-						<AddFriend />
-						<AddFriend />
-						<AddFriend />
-					</div>
-				</div>
-
-
-			</div>
-		</AppLayout>
-	);
-};
-
-export default HomeScreen;
+			</div>*/
+}

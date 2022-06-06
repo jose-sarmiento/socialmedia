@@ -17,6 +17,9 @@ const ReplySchema = Schema({
         type: String,
         required: true
     },
+    username: {
+        type: String
+    },
     reply: {
         type: String,
         required: true,
@@ -29,7 +32,8 @@ const ReplySchema = Schema({
             min: 0,
             default: 0
         }
-    }
+    },
+    createdAt: { type: Date, default: Date.now },
 })
 
 const CommentSchema = Schema({
@@ -63,6 +67,7 @@ const CommentSchema = Schema({
     },
     reactors: [{ type: Schema.Types.ObjectId, required: true }],
     replies: [ReplySchema],
+    createdAt: { type: Date, default: Date.now },
 })
 
 const validateComment = (body) => {

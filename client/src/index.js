@@ -1,40 +1,25 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import App from "./App";
 import { Provider } from "react-redux";
 
-import { AppProvider } from './contexts/appContext';
-import { SocketProvider } from './contexts/socketContext';
-import { AuthProvider } from './contexts/authContext';
-import { UsersProvider } from './contexts/usersContext';
-import { PostsProvider } from './contexts/postsContext';
-import { MessengerProvider } from './contexts/messengerContext';
+import { SocketProvider } from "./contexts/socketContext";
 
-import './assets/sass/main.scss';
-import './index.css';
+import "./assets/sass/main.scss";
+import "./index.css";
 
-import configureStore from "./store/configureStore"
+import configureStore from "./store/configureStore";
 
-const store = configureStore()
+const store = configureStore();
 
 ReactDOM.render(
 	<Provider store={store}>
-		<AppProvider>
-			<SocketProvider>
-				<AuthProvider>
-					<UsersProvider>
-						<PostsProvider>
-							<MessengerProvider>
-								<Router>
-									<App />
-								</Router>
-							</MessengerProvider>
-						</PostsProvider>
-					</UsersProvider>
-				</AuthProvider>
-			</SocketProvider>
-		</AppProvider>
+		<SocketProvider>
+			<Router>
+				<App />
+			</Router>
+		</SocketProvider>
 	</Provider>,
-	document.getElementById('root')
+	document.getElementById("root")
 );

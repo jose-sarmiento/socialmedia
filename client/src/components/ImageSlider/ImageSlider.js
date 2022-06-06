@@ -58,7 +58,14 @@ const ImageSlider = () => {
 						return (
 							<figure className={position} key={idx}>
 								<img
-									src={img.path}
+									src={
+		                                img.path.substring(0, 4) == "http"
+		                                    ? img.path
+		                                    : `${
+		                                          process.env.REACT_APP_SERVER +
+		                                          img.path
+		                                      }`
+		                            }
 									alt={`slider image ${idx}`}
 									className="slider__img"
 								/>

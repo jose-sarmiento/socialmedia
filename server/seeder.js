@@ -4,6 +4,9 @@ const users = require("./data/users");
 const posts = require("./data/posts");
 const { User } = require("./models/User");
 const { Post } = require("./models/Post");
+const { Friend } = require("./models/Friend");
+const Notification = require("./models/Notification");
+const Conversation = require("./models/Conversation");
 const connectDB = require("./db/connect");
 
 dotenv.config();
@@ -41,12 +44,19 @@ const getReactorsFromUsers = () => {
     return uniqueReactors;
 }
 
+function randomDate(start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
 
 const importData = async () => {
     try {
         await connectDB(process.env.MONGODB_URI);
         await User.deleteMany({});
         await Post.deleteMany({});
+        await Friend.deleteMany({});
+        await Notification.deleteMany({});
+        await Conversation.deleteMany({});
 
         const mockUsers = users.map((user) => {
             const [firstname, lastname] = user.name.split(" ");
@@ -56,7 +66,8 @@ const importData = async () => {
                 firstname,
                 lastname,
                 photos: [],
-                profileImage: user.profileImage ? user.profileImage : faker.image.avatar()
+                profileImage: user.profileImage ? user.profileImage : faker.image.avatar(),
+                birthdate: randomDate(new Date(1997, 1, 1), new Date())
             };
         })
 
@@ -69,6 +80,7 @@ const importData = async () => {
             newPost.body = posts[index].body;
             newPost.multimedia = posts[index].multimedia;
             newPost.author = createdUsers[Math.floor(Math.random() * 50)]._id;
+            newPost.createdAt = randomDate(new Date(2022, 1, 1), new Date());
 
             // add reactors
             let reactors = getReactorsFromUsers();
@@ -86,6 +98,7 @@ const importData = async () => {
                     username: mockUsers[number].username,
                     userProfileImage: mockUsers[number].profileImage,
                     comment: faker.lorem.words(),
+                    createdAt: randomDate(new Date(newPost.createdAt), new Date())
                 }
             });
 
@@ -103,87 +116,6 @@ const importData = async () => {
             }
             await user.save();
         }
-
-        // const authors = [...new Set(createdPosts.map((post) => post.author._id))];
-
-
-        // const getImagesByAuthor = (author) => {
-        //     const postsByAuthor = createdPosts.filter(post => post.author == author);
-
-        //     let imagesContainer = [];
-        //     postsByAuthor.forEach((post) => {
-        //         imagesContainer = [...imagesContainer, ...post.multimedia];
-        //     });
-
-        //     return imagesContainer
-        // }
-
-        // const addPhotos = async (author, images) => {
-        //     const res = await User.findOneAndUpdate(
-        //         { _id: author },
-        //         { $push: { photos: images } },
-        //         { new: true }
-        //     )
-        // }
-
-
-        // const insert = async (x) => {
-        //     const images = getImagesByAuthor(x)
-        //     await addPhotos(x, images)
-        // }
-
-        // await insert(authors[0])
-        // await insert(authors[1])
-        // await insert(authors[2])
-        // await insert(authors[3])
-        // await insert(authors[4])
-
-        // await insert(authors[5])
-        // await insert(authors[6])
-        // await insert(authors[7])
-        // await insert(authors[8])
-        // await insert(authors[9])
-        // await insert(authors[10])
-        // await insert(authors[11])
-        // await insert(authors[12])
-        // await insert(authors[13])
-        // await insert(authors[14])
-        // await insert(authors[15])
-        // await insert(authors[16])
-        // await insert(authors[17])
-        // await insert(authors[18])
-        // await insert(authors[19])
-        // await insert(authors[20])
-        // await insert(authors[21])
-        // await insert(authors[22])
-        // await insert(authors[23])
-        // await insert(authors[24])
-        // await insert(authors[25])
-        // await insert(authors[26])
-        // await insert(authors[27])
-        // await insert(authors[28])
-        // await insert(authors[29])
-        // await insert(authors[30])
-        // await insert(authors[31])
-        // await insert(authors[32])
-        // await insert(authors[33])
-        // await insert(authors[34])
-        // await insert(authors[35])
-        // await insert(authors[36])
-        // await insert(authors[37])
-        // await insert(authors[38])
-        // await insert(authors[39])
-        // await insert(authors[40])
-        // await insert(authors[41])
-        // await insert(authors[42])
-        // await insert(authors[43])
-        // await insert(authors[44])
-        // await insert(authors[45])
-        // await insert(authors[46])
-        // await insert(authors[47])
-        // await insert(authors[48])
-        // await insert(authors[49])
-        // await insert(authors[50])
 
         process.exit();
     } catch (error) {

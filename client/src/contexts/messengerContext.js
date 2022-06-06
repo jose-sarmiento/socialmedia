@@ -38,7 +38,7 @@ export const MessengerProvider = ({ children }) => {
 	useEffect(() => {
 		if (!auth.user) return;
 		getConversations({_id: auth.user._id, token: auth.token})(dispatch)
-	},[auth.user])
+	},[auth.user]) 
 
 	useEffect(() => {
 		if(!auth.user) return;

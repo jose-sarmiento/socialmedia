@@ -12,8 +12,14 @@
 }
 
 :root {
+        --main-font: "Roboto", sans-serif;
+    --heading-font: "Montserrat", sans-serif;
     --primary-color: #1da1f3;
-    --black-color: #14181b;
+    /*--black-color: #14181b;*/
+    /*--black-color:  rgb(54,69,79);*/
+    /*--black-color:  #040720;*/
+    --black-color:  #1c2e4a;
+    --grey:  #6e7f80;
     --gray-color: #c5c5c7;
     --white-color: #ffffff;
     --bg-light: #f4f8fb;
@@ -38,8 +44,7 @@
     --orange:  #F2991D;
     --transition: all 0.3s ease-in;
 
-    --main-font: "Roboto", sans-serif;
-    --heading-font: "Raleway", sans-serif;
+
 }
 
 *,
@@ -64,6 +69,21 @@ body {
     font-size: 1.2rem;
     color: var(--black-color);
     z-index: 1;
+}
+
+body::-webkit-scrollbar {
+  width: 1rem;
+  border-radius: 5rem;
+}
+ 
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(white, 0.1);
+}
+ 
+body::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    outline: 1px solid var(--light-3);
+    border-radius: 5rem;
 }
 
 a,
@@ -190,7 +210,7 @@ img {
     position: relative;
     margin-right: 1rem;
     margin-left: 1rem;
-    color: var(--gray-color);
+    color: var(--light-3);
 }
 
 .grid-2 {
@@ -223,4 +243,9 @@ img {
 
 .p-1 {
     padding: 1rem;
+}
+
+.color-primary {
+    color: var(--primary-color)!important;
+
 }

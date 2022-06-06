@@ -16,7 +16,8 @@ const MediaSchema = Schema({
     type: String,
     required: true
   },
-  name: String
+  name: String,
+  createdAt: { type: Date, default: Date.now },
 })
 
 module.exports = MediaSchema

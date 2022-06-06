@@ -20,6 +20,7 @@ const slice = createSlice({
         loading: {},
         error: {},
         success: {},
+        searchResults: []
     },
     reducers: {
         getUserRequested: (users, action) => {
@@ -32,6 +33,7 @@ const slice = createSlice({
             users.friends = action.payload.friends;
             users.friendRequests = action.payload.friendRequests;
             users.pendingRequests = action.payload.pendingRequests;
+            users.birthdays = action.payload.birthdays;
         },
         getUserFailed: (users, action) => {
             users.loading.get = false;
@@ -146,10 +148,14 @@ const slice = createSlice({
                 x => x._id === action.payload.friendId
             );
             users.people[idx].isPending = true;
+            users.pendingRequests.push({...users.people[idx], status: 1});
         },
         addFriendFailed: (users, action) => {
             users.loading.add = false;
             users.error.add = action.payload.error;
+        },
+        addFriendReset: (users, action) => {
+           users.success.add = false;
         },
         acceptFriendRequested: (users, action) => {
             users.loading.accept = true;
@@ -157,6 +163,7 @@ const slice = createSlice({
         },
         acceptFriendSuccess: (users, action) => {
             users.loading.accept = false;
+            users.success.accept = true;
             users.friends.push(action.payload.friend);
             users.friendRequests = users.friendRequests.filter(
                 friend => friend._id !== action.payload.friend._id
@@ -165,6 +172,9 @@ const slice = createSlice({
         acceptFriendFailed: (users, action) => {
             users.loading.accept = false;
             users.error.accept = action.payload.error;
+        },
+        acceptFriendReset: (users, action) => {
+            users.success.accept = false;
         },
         rejectFriendRequested: (users, action) => {
             users.loading.reject = true;
@@ -180,6 +190,35 @@ const slice = createSlice({
             users.loading.reject = false;
             users.error.reject = action.payload.error;
         },
+        friendRequestAdded: (users, action) => {
+            users.friendRequests.unshift(action.payload.friendRequest);
+            const idx = users.people.findIndex(x => x._id === action.payload.friendRequest._id);
+            if (idx) {
+                users.people[idx].status = 2
+            }
+        },
+        friendRequestAccepted: (users, action) => {
+            users.friends.push(action.payload.friend);
+            users.pendingRequests = users.pendingRequests.filter(x => x._id !== action.payload.friend._id);
+        },
+        searchUsersRequested: (users, action) => {
+            users.loading.search = true;
+            users.error.search = null;
+            users.success.search = false;
+        },
+        searchUsersSuccess: (users, action) => {
+            users.loading.search = false;
+            users.success.search = true;
+            users.searchResults = action.payload;
+        },
+        searchUsersFailed: (users, action) => {
+            users.loading.search = false;
+            users.error.search = "Something wen't wrong";
+        },
+        clearSearchResults: (users, action) => {
+            users.searchResults = []
+            users.success.search = false;
+        }
     },
 });
 
@@ -211,12 +250,20 @@ export const {
     addFriendRequested,
     addFriendSuccess,
     addFriendFailed,
+    addFriendReset,
     acceptFriendRequested,
     acceptFriendSuccess,
     acceptFriendFailed,
+    acceptFriendReset,
     rejectFriendRequested,
     rejectFriendSuccess,
     rejectFriendFailed,
+    friendRequestAdded,
+    friendRequestAccepted,
+    searchUsersRequested,
+    searchUsersSuccess,
+    searchUsersFailed,
+    clearSearchResults,
 } = slice.actions;
 export default slice.reducer;
 
@@ -261,12 +308,19 @@ export const getUserDetails = () => async (dispatch, getState) => {
             },
             url: `/users/${auth.user._id}`,
         });
+        const friends = filterByStatus(data.friends, 3);
         dispatch(
             getUserSuccess({
                 user: _.omit(data, ["friends"]),
-                friends: filterByStatus(data.friends, 3),
+                friends: friends,
                 friendRequests: filterByStatus(data.friends, 2),
                 pendingRequests: filterByStatus(data.friends, 1),
+                birthdays: friends.filter(friend => {
+                    let bdate = new Date(friend.birthdate);
+                    let now = new Date();
+                    if (bdate.getDate() === now.getDate() && bdate.getMonth() === now.getMonth()) return true;
+                    else return false
+                })
             })
         );
     } catch (error) {
@@ -442,20 +496,7 @@ export const addFriend = recipient => async (dispatch, getState) => {
             headers: { Authorization: `Bearer ${auth.token}` },
         });
 
-        const { data: data2 } = await axios({
-            method: "post",
-            url: `/notifications`,
-            headers: { Authorization: `Bearer ${auth.token}` },
-            data: {
-                to: {
-                    _id: recipient._id,
-                    fullname: `${recipient.firstname} ${recipient.lastname}`,
-                    image: recipient.profileImage,
-                },
-                type: "friendrequest",
-            },
-        });
-        dispatch(addFriendSuccess({ friendId: data.recipient._id }));
+        dispatch(addFriendSuccess({ friendId: data.recipientId }));
     } catch (error) {
         dispatchError(dispatch, addFriendFailed, error);
     }
@@ -490,6 +531,20 @@ export const rejectRequest = id => async (dispatch, getState) => {
         dispatchError(dispatch, rejectFriendFailed, error);
     }
 };
+export const searchUsers = (q) => async (dispatch, getState) => {
+     try {
+        dispatch(searchUsersRequested());
+        const { auth } = getState();
+        const { data } = await axios({
+            url: `/users/search`,
+            headers: { Authorization: `Bearer ${auth.token}` },
+            params: {q: q}
+        });
+        dispatch(searchUsersSuccess(data));
+    } catch (error) {
+        dispatchError(dispatch, searchUsersFailed, error);
+    }
+} 
 
 // export const rejectRequest =
 //     ({ userId, token }) =>

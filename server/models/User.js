@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
 		minLength: 2
 	},
 	username: String,
-	middlename: String,
+	middlename: String, 
 	email: {
 		type: String,
 		required: true,
@@ -65,7 +65,8 @@ const userSchema = new mongoose.Schema({
 	bio: String,
 	friends: [{
 		type: mongoose.Schema.Types.ObjectId, ref: 'Friends'}],
-	photos: [photoSchema]
+	photos: [photoSchema],
+	createdAt: { type: Date, default: Date.now },
 })
 
 userSchema.virtual('fullname')

@@ -12,8 +12,9 @@ const friendsSchema = new Schema({
          2,    //'pending',
          3,    //'friends'
      ]
-   }
-}, {timestamps: true})
+   },
+   createdAt: { type: Date, default: Date.now },
+})
 
 const Friend = mongoose.model('Friends', friendsSchema)
 module.exports = {
