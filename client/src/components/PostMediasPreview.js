@@ -4,7 +4,7 @@ import ReactPlayer from "react-player/lazy";
 import { useDispatch } from "react-redux";
 import { openSlider } from "../store/ui";
 
-const PostMediasPreview = ({ medias = [], fullHeight }) => {
+const PostMediasPreview = ({ medias = [], readOnly }) => {
     const dispatch = useDispatch();
 
     if (medias.length === 0) return null;
@@ -15,13 +15,16 @@ const PostMediasPreview = ({ medias = [], fullHeight }) => {
                 {[...medias].slice(0, 3).map((img, idx) => (
                     <div
                         className="post__image-wrapper"
+                        style={readOnly ? {pointerEvents: "none"} : {}}
                         key={uuidv4()}
                         onClick={() => {
+                            if (readOnly) return;
                             dispatch(openSlider(medias, idx));
                         }}
                     >
                         <img
                             className="post__image"
+                            style={readOnly ? {pointerEvents: "none"} : {}}
                             src={
                                 img.thumbnail.substring(0, 4) == "http"
                                     ? img.thumbnail
@@ -45,12 +48,15 @@ const PostMediasPreview = ({ medias = [], fullHeight }) => {
                     <div
                         className="post__image-wrapper"
                         key={uuidv4()}
+                        style={readOnly ? {pointerEvents: "none"} : {}}
                         onClick={() => {
+                            if (readOnly) return;
                             dispatch(openSlider(medias, idx));
                         }}
                     >
                         <img
                             className="post__image"
+                            style={readOnly ? {pointerEvents: "none"} : {}}
                             src={
                                 img.thumbnail.substring(0, 4) == "http"
                                     ? img.thumbnail
@@ -71,12 +77,15 @@ const PostMediasPreview = ({ medias = [], fullHeight }) => {
         <div className="post__media post__media--1">
             <div
                 className="post__image-wrapper"
+                style={readOnly ? {pointerEvents: "none"} : {}}
                 onClick={() => {
+                    if (readOnly) return;
                     dispatch(openSlider(medias, 0));
                 }}
             >
                 <img
                     className="post__image"
+                    style={readOnly ? {pointerEvents: "none"} : {}}
                     src={
                         medias[0].thumbnail.substring(0, 4) == "http"
                             ? medias[0].thumbnail

@@ -2,7 +2,7 @@ import React from "react"
 import { ToastContainer } from 'react-toastify';
 import Header from "../Header/Header"
 import Sidebar from "../Sidebar/Sidebar"
-import { ImageSlider, CreatePostModal } from "../../components"
+import { ImageSlider, CreatePostModal, SharePostModal } from "../../components"
 
 import 'react-toastify/dist/ReactToastify.css';
 import "./AppLayout.scss"
@@ -14,6 +14,7 @@ const AppLayout = ({children, page}) => {
     	<ImageSlider/>
     	<ToastContainer />
     	<CreatePostModal />
+        <SharePostModal />
         <div className="main-container container">
 			<Header />
 

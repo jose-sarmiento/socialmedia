@@ -7,6 +7,7 @@ const { Post } = require("../models/Post");
 const {
   getPosts,
   createPost,
+  sharePost,
   getPost,
   updatePost,
   deletePost,
@@ -28,9 +29,14 @@ router
   .route("/")
   .get(paginate(Post), getPosts)
   .post(upload.array("files"), createPost);
-router.route("/:id").get(getPost).patch(updatePost).delete(deletePost);
+router
+    .route("/:id")
+    .get(getPost)
+    .patch(updatePost).
+    delete(deletePost);
+router.route("/:id/shares").post(sharePost);
 router.route("/:id/likes").patch(likePost);
-
+router.route("/:postId/comments").post(createComment);
 router.route("/:postId/comments").post(createComment);
 router
   .route("/:postId/comments/:commentId")

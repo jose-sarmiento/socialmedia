@@ -35,7 +35,14 @@ const paginate = (model, specificOnly = false) => {
 
       response.docs = await result
          .sort({ createdAt: -1 })
-         .populate('author', 'firstname lastname username profileImage');
+         .populate('author', 'firstname lastname username profileImage')
+         .populate({
+            path : 'sharedPost',
+            populate : {
+                path : 'author',
+                select: 'firstname lastname username profileImage'
+            }
+          });
       response.nbDocs = response.docs.length;
 
       if (endIndex < (await model.countDocuments().exec())) {

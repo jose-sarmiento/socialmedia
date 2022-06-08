@@ -13,7 +13,7 @@ const getPost = async (req, res) => {
 	const post = await Post.findById(req.params.id).populate(
 		"author",
 		"firstname lastname username profileImage"
-	);
+	).populate("sharedPost");
 	if (!post) {
 		throw new NotFound("Post not found");
 	}
@@ -69,10 +69,35 @@ const createPost = async (req, res) => {
 
 	let post = await Post.create({ author: req.user._id, ...reqBody });
 	post = await Post.populate(post, {
-		path: "author",
+		path: "author sharedPost",
 		select: "firstname lastname profileImage username",
 	});
 	res.status(StatusCodes.CREATED).json(post);
+};
+
+const sharePost = async (req, res) => {
+    let post = await Post.create({ 
+        author: req.user._id, 
+        shared: true,
+        sharedPost: req.params.id,
+        ...req.body 
+    });
+
+    const original = await Post.findById(req.params.id);
+    original.rePosters.push(req.user._id);
+    original.meta.shares += 1;
+    await original.save();
+
+    post = await Post.findById(post._id)
+        .populate('author', 'firstname lastname username profileImage')
+        .populate({
+            path : 'sharedPost',
+            populate : {
+                path : 'author',
+                select: 'firstname lastname username profileImage'
+            }
+        });
+    res.status(StatusCodes.CREATED).json(post);
 };
 
 const updatePost = async (req, res) => {
@@ -91,10 +116,20 @@ const updatePost = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
-	const result = await Post.deleteOne({ _id: req.params.id });
+	let post = await Post.findOneAndDelete({_id: req.params.id});
+
+    if (post.shared) {
+        await Post.updateOne(
+            {_id: post.sharedPost},
+            {
+                $inc: { "meta.shares": -1 },
+                $pull: { rePosters: req.user._id } 
+            }
+        )
+    }
+
 	res.status(StatusCodes.OK).send({
-		...result,
-		deleted: result.deletedCount === 0 ? "false" : "true",
+		deletedPost: post
 	});
 };
 
@@ -156,6 +191,7 @@ module.exports = {
 	getPosts,
 	getPost,
 	createPost,
+    sharePost,
 	updatePost,
 	deletePost,
 	likePost,

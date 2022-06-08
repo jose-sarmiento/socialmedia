@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import { useSelector, useDispatch } from "react-redux";
-import { acceptRequest } from "../../store/users";
+import { acceptRequest, rejectRequest } from "../../store/users";
 import { createNotification } from "../../store/notifications";
 
 const FriendRequest = React.forwardRef((props, ref) => {
@@ -22,8 +22,13 @@ const FriendRequest = React.forwardRef((props, ref) => {
 			])
 		))
 	}
+
+    const handleRejectFriend = () => {
+        dispatch(rejectRequest(friend._id))
+    }
+
 	return (
-		<li className="friend" ref={ref}>
+		<li className="friend friend--requests" ref={ref}>
 			<figure>
 				<img src={friend?.profileImage} alt="imgz" />
 			</figure>
@@ -41,6 +46,14 @@ const FriendRequest = React.forwardRef((props, ref) => {
 			>
 				accept
 			</button>
+
+            <button
+                disabled={users.loading.reject}
+                className={users.loading.reject && "loading"}
+                onClick={handleRejectFriend}
+            >
+                delete
+            </button>
 		</li>
 	);
 });

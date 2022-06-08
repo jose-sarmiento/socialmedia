@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
+import { Link } from "react-router-dom"
 import {
     searchUsers,
     clearSearchResults,
@@ -116,15 +117,17 @@ const Header = () => {
             </div>
 
             <div className="header__user">
-                <span className="header__fname">
-                    Hi, {users.user?.firstname}
-                </span>
-                <div className="header__img">
+                <Link to="/users/me">
+                    <span className="header__fname">
+                        Hi, {users.user?.firstname}
+                    </span>
+                </Link>
+                <Link to="/users/me" className="header__img">
                     <img
                         src={users.user?.profileImage}
                         alt={users.user?.firstname}
                     />
-                </div>
+                </Link>
             </div>
         </header>
     );

@@ -179,12 +179,13 @@ const slice = createSlice({
         rejectFriendRequested: (users, action) => {
             users.loading.reject = true;
             users.error.reject = null;
+            users.success.reject = false;
         },
         rejectFriendSuccess: (users, action) => {
             users.loading.reject = false;
-            users.friendRequests = users.friendRequests.filter(
-                friend => friend._id !== action.payload._id
-            );
+            users.success.reject = true;
+            const idx = users.friendRequests.findIndex(x => x._id === action.payload._id);
+            users.friendRequests.splice(idx, 1);
         },
         rejectFriendFailed: (users, action) => {
             users.loading.reject = false;
@@ -193,7 +194,7 @@ const slice = createSlice({
         friendRequestAdded: (users, action) => {
             users.friendRequests.unshift(action.payload.friendRequest);
             const idx = users.people.findIndex(x => x._id === action.payload.friendRequest._id);
-            if (idx) {
+            if (idx !== -1) {
                 users.people[idx].status = 2
             }
         },
@@ -531,6 +532,7 @@ export const rejectRequest = id => async (dispatch, getState) => {
         dispatchError(dispatch, rejectFriendFailed, error);
     }
 };
+
 export const searchUsers = (q) => async (dispatch, getState) => {
      try {
         dispatch(searchUsersRequested());
@@ -545,30 +547,3 @@ export const searchUsers = (q) => async (dispatch, getState) => {
         dispatchError(dispatch, searchUsersFailed, error);
     }
 } 
-
-// export const rejectRequest =
-//     ({ userId, token }) =>
-//     async (dispatch) => {
-//         dispatch({ type: users.rejectFriendRequested });
-//         try {
-//             const { data } = await axios.delete(
-//                 `${process.env.REACT_APP_API_ENDPOINT}/users/${userId}/friends`,
-//                 {},
-//                 {
-//                     headers: { Authorization: `Bearer ${token}` },
-//                 }
-//             );
-//             dispatch({
-//                 type: users.rejectFriendSuccess,
-//                 payload: { ...data, userId },
-//             });
-//         } catch (error) {
-//             dispatch({
-//                 type: users.rejectFriendFailed,
-//                 payload:
-//                     error.response && error.data.message
-//                         ? error.response.data.message
-//                         : error.message,
-//             });
-//         }
-//     };

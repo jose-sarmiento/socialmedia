@@ -34,6 +34,31 @@ const slice = createSlice({
 		uploadProgress: (posts, action) => {
 			posts.uploadPercentage = action.payload.progress;
 		},
+        sharePostRequested: (posts, action) => {
+            posts.loading.share = true;
+            posts.error.share = false;
+            posts.success.share = false;
+        },
+        sharePostSuccess: (posts, action) => {
+            const { userId, sharedPostId, post } = action.payload
+            posts.loading.share = false;
+            posts.success.share = true;
+            posts.myPosts.unshift(post);
+            // increase meta share
+            const inListIdx = posts.list.findIndex(x => x._id === sharedPostId)
+            if (inListIdx >= 0) {
+                posts.list[inListIdx].meta.shares += 1;
+                posts.list[inListIdx].rePosters.push(userId);
+            }
+            if (posts.post && posts.post._id === sharedPostId) {
+                posts.post.meta.shares += 1;
+                posts.post.rePosters.push(userId)
+            }
+        },
+        sharePostFailed: (posts, action) => {
+            posts.loading.share = false;
+            posts.error.share = action.payload.error;
+        },
 		getPostRequested: (posts, action) => {
 			posts.loading.get = true;
 			posts.error.get = false;
@@ -55,13 +80,24 @@ const slice = createSlice({
 			posts.success.delete = false;
 		},
 		deletePostSuccess: (posts, action) => {
+            const { deletedPost, userId } = action.payload;
 			posts.loading.delete = false;
 			posts.success.delete = true;
-			const idx = posts.myPosts.findIndex(x => x._id === action.payload.postId);
+            // remove from my posts
+			let idx = posts.myPosts.findIndex(x => x._id === deletedPost._id);
 			posts.myPosts.splice(idx, 1);
-			if (posts.post && posts.post._id === action.payload.postId) {
+            // update original post
+            idx = posts.list.findIndex(x => x._id === deletedPost.sharedPost)
+            if (idx !== -1) {
+                posts.list[idx].meta.shares -= 1;
+                const reposterIdx = posts.list[idx].rePosters.indexOf(userId);
+                posts.list[idx].rePosters.splice(reposterIdx, 1);
+            }
+            // remove from single post
+			if (posts.post && posts.post._id === deletedPost._id) {
 				posts.post = null
 			}
+
 		},
 		deletePostFailed: (posts, action) => {
 			posts.loading.delete = false;
@@ -70,6 +106,12 @@ const slice = createSlice({
 		deletePostReset: (posts, action) => {
 			posts.success.delete = false;
 		},
+        setSharePost: (posts, action) => {
+            posts.postToBeShared = action.payload;
+        },
+        unsetSharePost: (posts, action) => {
+            posts.postToBeShared = undefined;
+        },
 		listPostsSuccess: (posts, action) => {
 			posts.loading.list = false;
 			posts.list = [...new Set([...posts.list, ...action.payload.posts])];
@@ -280,6 +322,9 @@ export const {
 	createPostSuccess,
 	createPostFailed,
 	uploadProgress,
+    sharePostRequested,
+    sharePostSuccess,
+    sharePostFailed,
 	getPostRequested,
 	getPostSuccess,
 	getPostFailed,
@@ -287,6 +332,8 @@ export const {
 	deletePostSuccess,
 	deletePostFailed,
 	deletePostReset,
+    setSharePost,
+    unsetSharePost,
 	listPostsSuccess,
 	listMyPostsSuccess,
 	listMyPostsReset,
@@ -351,6 +398,44 @@ export const createPost = post => async (dispatch, getState) => {
 	}
 };
 
+export const sharePost = ({post, authorName, postId}) => async (dispatch, getState) => {
+    try {
+        dispatch(sharePostRequested());
+        const { auth } = getState();
+        const response = await axios({
+            method: "post",
+            url: `/posts/${post.sharedPost}/shares`,
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${auth.token}`,
+            },
+            data: post,
+        });
+        dispatch(sharePostSuccess({ 
+            post: response.data, 
+            sharedPostId: postId,
+            userId: auth.user._id 
+        }));
+        toast.success(`You shared ${authorName}'s post`, {
+            autoClose: 3000,
+            hideProgressBar: true,
+        });
+    } catch (error) {
+        dispatch(
+            sharePostFailed({
+                error:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message,
+            })
+        );
+        toast.warn(`Something wen't wrong`, {
+            autoClose: 3000,
+            hideProgressBar: true,
+        });
+    }
+};
+
 export const getPost = id => async (dispatch, getState) => {
 	try {
 		dispatch(getPostRequested());
@@ -385,7 +470,7 @@ export const deletePost = id => async (dispatch, getState) => {
 			url: `/posts/${id}`,
 		});
 
-		dispatch(deletePostSuccess({ postId: id }));
+		dispatch(deletePostSuccess({ deletedPost: data.deletedPost, userId: auth.user._id }));
 		toast.success(`Post deleted successfully`, {
 			autoClose: 3000,
 			hideProgressBar: true,

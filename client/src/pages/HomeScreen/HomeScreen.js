@@ -1,29 +1,52 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useSelector } from "react-redux";
-import { HiRefresh } from "react-icons/hi";
+import _ from "lodash";
+import moment from "moment"
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { IoChatbubble, IoHeartOutline, IoHeart } from "react-icons/io5";
 import { IoIosShareAlt } from "react-icons/io";
 import { FiUserPlus } from "react-icons/fi";
-import { AppLayout } from "../../container";
 import { FaGift } from "react-icons/fa";
+import { AiTwotoneMessage } from "react-icons/ai";
+import { BsClockHistory } from "react-icons/bs";
+import { AppLayout } from "../../container";
 import { Post, SkeletonLoading, AddFriend } from "../../components";
+import { createNotification } from "../../store/notifications";
 import useFetch from "../../hooks/useFetch";
-import dp from "../../assets/img/profiles/d1.jpg";
+
+import { acceptRequest, rejectRequest } from "../../store/users";
 import { listPostsSuccess } from "../../store/posts";
+import dp from "../../assets/img/profiles/d1.jpg";
 
 import "./HomeScreen.scss";
 
 const HomeScreen = () => {
 	const [page, setPage] = useState(1);
+	const [onlineFriends, setOnlineFriends] = useState([]);
 
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const users = useSelector(state => state.entities.users);
 	const posts = useSelector(state => state.entities.posts);
+	const chats = useSelector(state => state.entities.chats);
 
 	const { loading, hasNext } = useFetch("/posts", page, 10, listPostsSuccess);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			const friendIds = users.friends.map(x => x._id);
+			const filtered = chats.onlineUsers.filter(x => friendIds.includes(x._id));
+			setOnlineFriends(filtered);
+		}, 60000)
+		return () => clearInterval(interval)
+	},[])
+
+	useEffect(() => {
+		const friendIds = users.friends.map(x => x._id);
+		const filtered = chats.onlineUsers.filter(x => friendIds.includes(x._id));
+		setOnlineFriends(filtered);
+	}, [chats.onlineUsers, users.friends]);
 
 	const observer = useRef();
 	const lastElementRef = useCallback(
@@ -42,6 +65,37 @@ const HomeScreen = () => {
 
 	function handleCommentClick(postId) {
 		navigate(`/posts/${postId}`, { state: { focusCommentInput: true } });
+	}
+
+	const handleAcceptFriend = friend => {
+		dispatch(
+			createNotification({
+				recipientId: friend._id,
+				type: "accept-friend",
+			})
+		);
+		dispatch(
+			acceptRequest(
+				_.pick(friend, [
+					"_id",
+					"firstname",
+					"lastname",
+					"profileImage",
+					"username",
+				])
+			)
+		);
+	};
+
+	const handleRejectFriend = id => {
+		dispatch(rejectRequest(id));
+	};
+
+	function getDaysDifference(startDate) {
+		const diffInMs  = new Date() - new Date(startDate)
+		const result = diffInMs / (1000 * 60 * 60 * 24);
+		console.log(result)
+		return result
 	}
 
 	if (users.loading.user) return null;
@@ -77,7 +131,9 @@ const HomeScreen = () => {
 					<div className="list__header">
 						<FaGift />
 						<h4>Birthdays</h4>
-						{users.birthdays.length > 2 && <Link to="/friends">See all</Link>}
+						{users.birthdays.length > 2 && (
+							<Link to="/friends">See all</Link>
+						)}
 					</div>
 					{users.loading.get ? (
 						<div className="birthday">
@@ -97,33 +153,38 @@ const HomeScreen = () => {
 								</div>
 							) : (
 								<>
-									{users.birthdays.slice(0, 2).map((birthday, idx) => {
-										let today = new Date();
-										let birthDate = new Date(
-											birthday.birthdate
-										);
-										let age =
-											today.getFullYear() -
-											birthDate.getFullYear();
-										return (
-											<div className="birthday" key={idx}>
-												<figure>
-													<img
-														src={
-															birthday.profileImage
-														}
-														alt="birthday user"
-													/>
-												</figure>
-												<div className="birthday__user">
-													<p className="birthday__username">{`${birthday.firstname} ${birthday.lastname}`}</p>
-													<p className="birthday__age">
-														{age} years old
-													</p>
+									{users.birthdays
+										.slice(0, 2)
+										.map((birthday, idx) => {
+											let today = new Date();
+											let birthDate = new Date(
+												birthday.birthdate
+											);
+											let age =
+												today.getFullYear() -
+												birthDate.getFullYear();
+											return (
+												<div
+													className="birthday"
+													key={idx}
+												>
+													<figure>
+														<img
+															src={
+																birthday.profileImage
+															}
+															alt="birthday user"
+														/>
+													</figure>
+													<div className="birthday__user">
+														<p className="birthday__username">{`${birthday.firstname} ${birthday.lastname}`}</p>
+														<p className="birthday__age">
+															{age} years old
+														</p>
+													</div>
 												</div>
-											</div>
-										);
-									})}
+											);
+										})}
 								</>
 							)}
 						</>
@@ -134,67 +195,108 @@ const HomeScreen = () => {
 					<div className="list__header">
 						<FaGift />
 						<h4>Friend Requests</h4>
-						<span>See all</span>
+						{users.friendRequests.length > 2 && (
+							<span>See all</span>
+						)}
 					</div>
 					{users.loading.get ? (
-						<div className="birthday">
+						<div className="request">
 							<figure className="skeleton"></figure>
-							<div className="birthday__user">
-								<p className="birthday__username skeleton"></p>
-								<p className="birthday__age skeleton"></p>
+							<div className="request__user">
+								<p className="request__username skeleton"></p>
+								<p className="request__age skeleton"></p>
+								<div className="request__actions mt-2">
+									<button className="request__action skeleton"></button>
+									<button className="request__action skeleton"></button>
+								</div>
 							</div>
-						</div> 
-						) : (
+						</div>
+					) : (
 						<>
-							{users.friends.length === 0 ? (
+							{users.friendRequests.length === 0 ? (
 								<div className="request request--none">
-									<span className="birthday__no-request">
-										<Link to="/friends"><FiUserPlus /> Add some friends now</Link>
+									<span className="request__no-request">
+										No friend request at the moment
 									</span>
 								</div>
 							) : (
 								<>
-									{users.friends.slice(0, 2).map((friend, idx) => (
-										<div className="request" key={idx}>
-											<figure>
-												<img src={friend.profileImage} alt="request user" />
-											</figure>
-											<div className="request__user">
-												<p className="request__username">{`${friend.firstname} ${friend.lastname}`}</p>
-												<p className="request__age">@{friend.username}</p>
-												<div className="request__actions">
-													<button className="request__action">
-														Confirm
-													</button>
-													<button className="request__action">
-														Delete
-													</button>
+									{users.friendRequests
+										.slice(0, 2)
+										.map((friend, idx) => (
+											<div className="request" key={idx}>
+												<figure>
+													<img
+														src={
+															friend.profileImage
+														}
+														alt="request user"
+													/>
+												</figure>
+												<div className="request__user">
+													<p className="request__username">{`${friend.firstname} ${friend.lastname}`}</p>
+													<p className="request__age">
+														@{friend.username}
+													</p>
+													<div className="request__actions">
+														<button
+															className="request__action"
+															onClick={() =>
+																handleAcceptFriend(
+																	friend
+																)
+															}
+														>
+															Confirm
+														</button>
+														<button
+															className="request__action"
+															onClick={() =>
+																handleRejectFriend(
+																	friend._id
+																)
+															}
+														>
+															Delete
+														</button>
+													</div>
 												</div>
 											</div>
-										</div>
-									))}
+										))}
 								</>
 							)}
-						</>)
-					}
-
+						</>
+					)}
 				</div>
 
 				<div className="list list--actives">
 					<div className="list__header">
-						<FaGift />
-						<h4>Active Contacts</h4>
-						<span>See all</span>
+						<h4>Active Chats</h4>
 					</div>
-					<div className="birthday">
-						<figure>
-							<img src={dp} alt="birthday user" />
-						</figure>
-						<div className="birthday__user">
-							<p className="birthday__username">Michael Jordan</p>
-							<p className="birthday__age">22 years old</p>
+					{onlineFriends.map(friend => (
+						<div className="active-chat" key={friend._id}>
+							<figure>
+								<img
+									src={friend.profileImage}
+									alt="active-chat user"
+								/>
+							</figure>
+							<div className="active-chat__user">
+								<p className="active-chat__username">{`${friend.firstname} ${friend.lastname}`}</p>
+								{friend.status === "online" ? (
+									<p className="active-chat__online">
+										<span className="active-chat__circle"></span>
+										online
+									</p>
+								) : (
+									<p className="active-chat__online">
+										<BsClockHistory className="active-chat__ago" />
+										active {moment(friend.lastOnline).fromNow()}
+									</p>
+								)}
+							</div>
 						</div>
-					</div>
+					))}
 				</div>
 			</div>
 		</AppLayout>
@@ -202,97 +304,3 @@ const HomeScreen = () => {
 };
 
 export default HomeScreen;
-
-{
-	/*<div className="others">
-				<div className="section-container trending mb-2">
-					<div className="section-container__header">
-						<h4>Trending for you</h4>
-
-						<HiRefresh />
-					</div>
-					<div className="trending__post">
-						<div className="trending__user">
-							<div className="trending__img-wrapper">
-								<img src={dp} alt="trend" />
-							</div>
-							<span className="name">John Doe</span>
-							<span className="username">@john_doe</span>
-							<span className="time">3 hr</span>
-						</div>
-						<div className="trending__body">
-							Lorem ipsum dolor sit amet consectetur adipisicing, elit. Sit ducimus deleniti cum voluptatibus delectus accusantium totam quasi recusandae, quos dolores.
-						</div>
-						<div className="trending__footer">
-							<div className="reactions active">
-								<IoHeart />
-								<span>256</span>
-							</div>
-							<div className="comments active">
-								<IoChatbubble />
-								<span>543</span>
-							</div>
-							<div className="readmore">
-								<IoIosShareAlt/>
-								<span>123</span>
-							</div>
-						</div>
-					</div>
-					<div className="trending__post">
-						<div className="trending__user">
-							<div className="trending__img-wrapper">
-								<img src={dp} alt="trend" />
-							</div>
-							<span className="name">John Doe</span>
-							<span className="username">@john_doe</span>
-							<span className="time">3 hr</span>
-						</div>
-						<div className="trending__body">
-							Lorem ipsum dolor sit amet consectetur adipisicing, elit. Sit ducimus deleniti cum voluptatibus delectus accusantium totam quasi recusandae, quos dolores.
-						</div>
-						<div className="trending__footer">
-							<div className="reactions">
-								<IoHeart />
-								<span>256</span>
-							</div>
-							<div className="comments">
-								<IoChatbubble className="active" />
-								<span>543</span>
-							</div>
-							<div className="readmore">
-								<IoIosShareAlt/>
-								<span>123</span>
-							</div>
-						</div>
-					</div>
-					<div className="trending__post">
-						<div className="trending__user">
-							<div className="trending__img-wrapper">
-								<img src={dp} alt="trend" />
-							</div>
-							<span className="name">John Doe</span>
-							<span className="username">@john_doe</span>
-							<span className="time">3 hr</span>
-						</div>
-						<div className="trending__body">
-							Lorem ipsum dolor sit amet consectetur adipisicing, elit. Sit ducimus deleniti cum voluptatibus delectus accusantium totam quasi recusandae, quos dolores.
-						</div>
-						<div className="trending__footer">
-							<div className="reactions">
-								<IoHeart />
-								<span>256</span>
-							</div>
-							<div className="comments">
-								<IoChatbubble />
-								<span>543</span>
-							</div>
-							<div className="readmore">
-								<IoIosShareAlt/>
-								<span>123</span>
-							</div>
-						</div>
-					</div>
-				</div>
-
-			</div>*/
-}

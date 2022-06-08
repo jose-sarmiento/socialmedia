@@ -13,6 +13,7 @@ export { default as Profile } from './Profile';
 export { default as Signup } from './Signup';
 export { default as Toast } from './Toast';
 export { default as Post } from './Post/Post';
+export { default as PostPreview } from './Post/PostPreview';
 export { default as SkeletonLoading } from './Post/SkeletonLoading';
 export { default as Comment } from './Comment/Comment';
 // export { default as Reply } from './Reply';
@@ -27,6 +28,7 @@ export { default as ImageSlider } from './ImageSlider/ImageSlider';
 export { default as ChatBubble } from './ChatBubble/ChatBubble';
 export { default as Message } from './Message/Message';
 export { default as CreatePostModal } from './CreatePostModal/CreatePostModal';
+export { default as SharePostModal } from './SharePostModal/SharePostModal';
 export { default as Reply } from './Reply/Reply';
 export { default as ProgressBar } from './ProgressBar';
 

@@ -95,20 +95,21 @@
     padding: 1rem 2rem;
 
     &--none {
-        background: var(--bg-light);
+        // background: var(--bg-light);
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 1.5rem 2rem;
+        padding: 2.5rem 2rem;
     }
 
     &__no-birthday {
-        text-transform: capitalize;
-        color: var(--grey);
+       color: var(--grey);
+        font-weight: 400;
+        font-family: 'Helvetica';
 
         svg {
             margin-right: 1rem;
-            color: var(--red);
+            // color: var(--red);
         }
     }
 
@@ -158,6 +159,117 @@
     border-bottom: 1px solid var(--light-3);
     margin-bottom: .5rem;
 
+    &--none {
+        background: white;
+        border: none;
+    }
+
+    &__no-request {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--grey);
+        font-weight: 400;
+        font-family: 'Helvetica';
+        width: 100%;
+        text-transform: capitalize;
+        padding: 1rem 2rem;
+    }
+
+    figure {
+        height: 4rem;
+        width: 4rem;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 2rem;
+    }
+
+    &__user {
+        flex: 1;
+    }
+
+    &__username {
+        line-height: 1;
+        font-size: 1.4rem;
+        font-weight: 500;
+        font-family: 'Helvetica';
+    }
+
+    &__username.skeleton {
+        display: inline-block;
+        height: 1rem;
+        width: 12rem;
+        border-radius: 4rem;
+    }
+    &__age {
+        color: var(--grey);
+        font-size: 1rem;
+        font-family: 'Helvetica';
+        margin-top: .8rem;
+    }
+     &__age.skeleton {
+        display: block;
+        height: .8rem;
+        width: 8rem;
+        border-radius: 4rem;
+    }
+    &__actions {
+        margin-top: .8rem;
+    }
+
+    &__action {
+        border: none;
+        padding: .8rem 1.5rem;
+        color: var(--black-color);
+        font-family: inherit;
+        font-size: 1.2rem;
+        border-radius: 3px;
+        background: var(--white-color);
+        text-transform: lowercase;
+        cursor: pointer;
+        transition: all .3s ease;
+    }
+
+    &__action:nth-child(1) {
+        background: var(--primary-color);
+        color: var(--white-color);
+        margin-right: 1.5rem;
+    }
+
+     &__action:nth-child(1):hover {
+        background: darken($primary-color, 5%);
+    }
+
+      &__action:nth-child(2):hover {
+        background: var(--light-2);
+    }
+
+    &__action.skeleton {
+        pointer-events: none;
+        height: 2rem;
+        width: 6rem;
+        background: none;
+    }
+}
+
+
+.active-chat {
+    display: flex;
+    padding: 1.5rem 2rem;
+    align-items: center;
+
+    &__no-request {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--grey);
+        font-weight: 400;
+        font-family: 'Helvetica';
+        width: 100%;
+        text-transform: capitalize;
+        padding: 1rem 2rem;
+    }
+
     figure {
         height: 4rem;
         width: 4rem;
@@ -174,31 +286,34 @@
         line-height: 1;
         font-size: 1.2rem;
         font-weight: 500;
-        // font-family: 'Helvetica';
+        font-family: 'Roboto';
     }
 
-    &__age {
+    &__username.skeleton {
+        display: inline-block;
+        height: 1rem;
+        width: 12rem;
+        border-radius: 4rem;
+    }
+    &__online {
         color: var(--grey);
+        font-size: 1.2rem;
+        font-family: 'Helvetica';
         margin-top: .6rem;
-    }
-    &__actions {
-        margin-top: .6rem;
-    }
+        display: flex;
+        align-items: center;
 
-    &__action {
-        border: none;
-        padding: .5rem 1.2rem;
-        color: var(--black-color);
-        font-family: inherit;
-        font-size: 1.1rem;
-        border-radius: 3px;
-        background: var(--white-color);
+        span {
+            display: inline-block;
+            height: 1rem;
+            width: 1rem;
+            border-radius: 50%;
+            background: var(--green);
+            margin-right: 1rem;
+        }
     }
-
-    &__action:nth-child(1) {
-        background: var(--primary-color);
-        color: var(--white-color);
-        margin-right: 1.5rem;
-
+    
+    &__ago {
+        margin-right: 1rem;
     }
 }

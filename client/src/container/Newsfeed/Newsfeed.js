@@ -54,7 +54,6 @@ const Newsfeed = ({userId}) => {
 		<div className="section-container newsfeed">
 			<div className="section-container__header">
 				<h4>Newsfeed</h4>
-				<HiRefresh />
 			</div> 
 
 			<div className="section-container__body">

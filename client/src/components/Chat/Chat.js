@@ -46,12 +46,12 @@ const Chat = ({ chat, active }) => {
 
 	return (
 		<div
-			className={active ? "chat chat--active" : !latest?.seenBy.includes(auth.user._id) ? "chat chat--unseen" : "chat"}
+			className={active ? "chat chat--active" : (latest && !latest?.seenBy.includes(auth.user._id)) ? "chat chat--unseen" : "chat"}
 			onClick={handleChatSelect}
 		>
 			<figure>
 				<img src={sender?.profileImage} />
-				{chats.onlineUsers.some(i => i._id === sender?._id) && (
+				{chats.onlineUsers.some(i => i._id === sender?._id && i.status === "online" ) && (
 					<span className="indicator"></span>
 				)}
 			</figure>

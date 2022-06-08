@@ -67,9 +67,20 @@ const state = {
 io.on("connection", (socket) => {
 	socket.on("event://setup", user => {
 		socket.join(user._id)
-		state.users.push({...user, socketId: socket.id});
+        const idx = state.users.findIndex(x => x._id === user._id);
+        if (idx === -1) {
+    		state.users.push({
+                ...user, 
+                socketId: socket.id, 
+                status: "online",
+                lastOnline: new Date()
+            });
+        } else {
+            state.users[idx].socketId = socket.id;
+            state.users[idx].status = "online";
+        }
+        console.log(state.users)
 		io.emit("event://get-users", state.users)
-		console.log(state.users)
 	})
 
 	socket.on("event://open-chat", room => {
@@ -107,11 +118,25 @@ io.on("connection", (socket) => {
 		}
 	})
 
+    socket.on("event://disconnect", () => {
+        console.log('disconnect')
+        let idx = state.users.findIndex(x => x.socketId === socket.id)
+        if (idx !== -1) {
+            state.users[idx].status = "offline";
+            state.users[idx].lastOnline = new Date();
+            io.emit("event://get-users", state.users)
+            console.log(state.users)
+        }
+    })
+
 	socket.on("disconnect", () => {
+        console.log('disconnect')
 		let idx = state.users.findIndex(x => x.socketId === socket.id)
 		if (idx !== -1) {
-			state.users.splice(idx, 1);
+			state.users[idx].status = "offline";
+            state.users[idx].lastOnline = new Date();
 			io.emit("event://get-users", state.users)
+            console.log(state.users)
 		}
 	})
 })
