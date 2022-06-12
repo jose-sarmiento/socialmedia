@@ -3601,12 +3601,10 @@ const data = [
     }
 ]
 
-const photos = data.map(photo => {
-	return {
-		type: 'image',
-		path: photo.regular,
-		thumbnail: photo.small
-	}
-})
+const photos = data.map(photo => ({
+    type: 'image',
+    path: photo.regular,
+    thumbnail: photo.small
+}))
 
 module.exports = photos;

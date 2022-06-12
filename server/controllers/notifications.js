@@ -1,54 +1,53 @@
-const _ = require("lodash");
-const { BadRequest } = require("../errors");
-const Notification = require("../models/Notification");
+const Notification = require('../models/Notification');
 
 const getNotifications = async (req, res) => {
-    const notifications = await Notification.find({ to: req.user._id });
-    res.json(notifications);
+  const notifications = await Notification.find({ to: req.user._id });
+  res.json(notifications);
 };
 
 const createNotification = async (req, res) => {
-    let notif = new Notification({
-        to: req.body.to,
-        type: req.body.type,
-    });
+  let notif = new Notification({
+    to: req.body.to,
+    type: req.body.type,
+  });
 
-    if (req.body.from) {
-        notif.from = req.body.from;
-    }
-    notif = await notif.save();
-    res.json(notif);
+  if (req.body.from) {
+    notif.from = req.body.from;
+  }
+  notif = await notif.save();
+  res.json(notif);
 };
 
 const updateNotification = async (req, res) => {
-    let notification = await Notification.findOneAndUpdate(
-        {
-            _id: req.params.notificationId,
-        },
-        req.body,
-        { new: true }
-    );
+  const notification = await Notification.findOneAndUpdate(
+    {
+      _id: req.params.notificationId,
+    },
+    req.body,
+    { new: true }
+  );
 
-    res.json(notification);
+  res.json(notification);
 };
 
 const readAllNotifications = async (req, res) => {
-    await Notification.updateMany(
-        {
-            to: req.user._id,
-        },
-        {
-            $set: {
-               isRead: true 
-            }
-        });
+  await Notification.updateMany(
+    {
+      to: req.user._id,
+    },
+    {
+      $set: {
+        isRead: true,
+      },
+    }
+  );
 
-    res.json({success: true, message: "Successfully masked as read"});
+  res.json({ success: true, message: 'Successfully masked as read' });
 };
 
 module.exports = {
-    getNotifications,
-    createNotification,
-    updateNotification,
-    readAllNotifications
+  getNotifications,
+  createNotification,
+  updateNotification,
+  readAllNotifications,
 };

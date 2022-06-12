@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
 
+const { Schema } = mongoose
 
-const MediaSchema = Schema({ 
+const MediaSchema = Schema({
   type: {
     type: String,
     enum: ['image', 'video'],

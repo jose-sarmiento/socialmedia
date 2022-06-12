@@ -1,6 +1,6 @@
 const express = require('express');
+
 const router = express.Router();
-const { User } = require('../models/User');
 const { Post } = require('../models/Post');
 const {
   getUsers,
@@ -17,7 +17,6 @@ const {
   deleteRequest,
   getFriends
 } = require('../controllers/users');
-const paginateUsers = require('../middleware/paginate-user');
 const paginate = require('../middleware/paginate');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');

@@ -8,14 +8,13 @@ const {
 	createMessage,
 	readMessagesInConversation,
 	readMessage,
-	deleteMessage
+	deleteMessage,
 } = require("../controllers/conversations");
 
 router.use(auth);
-router.route("/")
-	.get(getConversations)
-	.post(createConversation);
-router.route("/:conversationId")
+router.route("/").get(getConversations).post(createConversation);
+router
+	.route("/:conversationId")
 	.get(getConversation)
 	.patch(readMessagesInConversation);
 router

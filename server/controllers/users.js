@@ -1,10 +1,9 @@
+const mongoose = require("mongoose");
+const flatten = require('flat')
 const { User } = require("../models/User");
 const { Friend } = require("../models/Friend");
-const { BadRequest } = require("../errors");
-const { StatusCodes } = require("http-status-codes");
+const { BadRequest, NotFound } = require("../errors");
 const { generateThumb } = require("./posts");
-const mongoose = require("mongoose");
-var flatten = require('flat') 
 const formatURL = require("../utils/formatURL")
 
 const getUsers = async (req, res) => {
@@ -34,11 +33,11 @@ const getUsers = async (req, res) => {
 };
 
 const searchUsers = async (req, res) => {
-	const { q, limit, page } = req.query
+	const { q } = req.query
 
 	const users = await User.aggregate([
-	  {$project: {profileImage: 1, username: 1, "name" : { $concat : [ "$firstname", " ", "$lastname" ] } }},
-	  {$match: {"_id": { $ne: req.user._id}, "name": {$regex: new RegExp(q, 'i')}}},
+		{ $project: { profileImage: 1, username: 1, "name": { $concat: ["$firstname", " ", "$lastname"] } } },
+		{ $match: { "_id": { $ne: req.user._id }, "name": { $regex: new RegExp(q, 'i') } } },
 	])
 
 	res.json(users)
@@ -97,12 +96,12 @@ const getUser = async (req, res) => {
 
 	res.json(user[0]);
 }
- 
+
 const updateUser = async (req, res) => {
 	const updateObj = flatten(req.body);
-	const user = await User.findOneAndUpdate({ _id: req.params.id }, {$set: updateObj}, {
+	const user = await User.findOneAndUpdate({ _id: req.params.id }, { $set: updateObj }, {
 		fields: { password: 0, friends: 0 },
-		upsert: true, 
+		upsert: true,
 		new: true,
 		runValidators: true,
 	});
@@ -129,9 +128,9 @@ const uploadCover = async (req, res) => {
 
 	const photoObj = {
 		_id: new mongoose.Types.ObjectId(),
-		path: formatURL(req) + "/" + req.file.filename,
+		path: `${formatURL(req)}/${req.file.filename}`,
 		name: req.file.originalname,
-		thumbnail: formatURL(req) + "/" + thumbnail,
+		thumbnail: `${formatURL(req)}/${thumbnail}`,
 	}
 	const user = await User.findById(req.user._id);
 	user.coverImage = photoObj.path;
@@ -148,9 +147,9 @@ const uploadProfile = async (req, res) => {
 
 	const photoObj = {
 		_id: new mongoose.Types.ObjectId(),
-		path: formatURL(req) + "/" + req.file.filename,
+		path: `${formatURL(req)}/${req.file.filename}`,
 		name: req.file.originalname,
-		thumbnail: formatURL(req) + "/" + thumbnail,
+		thumbnail: `${formatURL(req)}/${thumbnail}`,
 	}
 
 	const user = await User.findById(req.user._id);
@@ -227,7 +226,7 @@ const getFriends = async (req, res) => {
 		})),
 	});
 };
- 
+
 const addNewFriend = async (req, res) => {
 	const requester = await Friend.findOneAndUpdate(
 		{ requester: req.user._id, recipient: req.params.userId },
@@ -249,9 +248,9 @@ const addNewFriend = async (req, res) => {
 	);
 
 	res.json({
-		requester: requester,
+		requester,
 		requesterId: updateRequesterUser._id,
-		recipient: recipient,
+		recipient,
 		recipientId: updateRecipientUser._id,
 	});
 };
@@ -317,20 +316,21 @@ const deleteRequest = async (req, res) => {
 		},
 	});
 };
- 
+
 const getBirthdays = async () => {
-	return await User.aggregate([
-       {
-       	$match: {
-       		$expr: {
-       			$and: [
-       				{$eq: [{ $dayOfMonth: "$birthdate" }, {$dayOfMonth: new Date(2014, 3, 23)}]},
-       				{$eq: [{ $month: "$birthdate" }, {$month: new Date(2014, 3, 23)}]}
-       			]
-       		}
-       	}
-       }
-    ]);
+	// unfinished
+	await User.aggregate([
+		{
+			$match: {
+				$expr: {
+					$and: [
+						{ $eq: [{ $dayOfMonth: "$birthdate" }, { $dayOfMonth: new Date(2014, 3, 23) }] },
+						{ $eq: [{ $month: "$birthdate" }, { $month: new Date(2014, 3, 23) }] }
+					]
+				}
+			}
+		}
+	])
 }
 
 module.exports = {

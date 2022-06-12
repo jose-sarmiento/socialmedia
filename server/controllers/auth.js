@@ -1,17 +1,17 @@
-const _ = require('lodash')
-const { BadRequest } = require('../errors')
-const { User, validateUser } = require('../models/User')
+const _ = require('lodash');
+const { BadRequest } = require('../errors');
+const { User, validateUser } = require('../models/User');
 
 const login = async (req, res) => {
-  const { email, password } = req.body
+  const { email, password } = req.body;
 
-  const user = await User.findOne({ email: email })
-  if (!user) throw new BadRequest('Invalid email or password')
+  const user = await User.findOne({ email });
+  if (!user) throw new BadRequest('Invalid email or password');
 
-  const isValid = await user.verifyPassword(password)
-  if (!isValid) throw new BadRequest('Invalid email or password' )
+  const isValid = await user.verifyPassword(password);
+  if (!isValid) throw new BadRequest('Invalid email or password');
 
-  const token = user.generateToken()
+  const token = user.generateToken();
 
   res
     .header('x-auth-token', token)
@@ -25,10 +25,10 @@ const login = async (req, res) => {
         'email',
         'sex',
         'profileImage',
-        'photos'
+        'photos',
       ])
-    )
-}
+    );
+};
 
 const register = async (req, res) => {
   const { error } = validateUser(req.body);
@@ -40,23 +40,24 @@ const register = async (req, res) => {
   const createdUser = await User.create(req.body);
 
   const token = createdUser.generateToken();
-  res.header("x-auth-token", token)
+  res
+    .header('x-auth-token', token)
     .status(201)
     .send(
       _.pick(createdUser, [
-        "_id",
-        "firstname",
-        "lastname",
-        "coverImage",
-        "email",
-        "sex",
-        "profileImage",
-        "photos"
+        '_id',
+        'firstname',
+        'lastname',
+        'coverImage',
+        'email',
+        'sex',
+        'profileImage',
+        'photos',
       ])
     );
-}
+};
 
 module.exports = {
   login,
-  register
-}
+  register,
+};

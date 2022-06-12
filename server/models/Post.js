@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+
+const { Schema } = mongoose
 const Joi = require('joi')
 Joi.objectId = require('joi-objectid')(Joi)
 const MediaSchema = require('./Media')
@@ -18,17 +19,17 @@ const PostSchema = new Schema({
 	multimedia: [MediaSchema],
 	comments: [CommentSchema],
 	reactors: [{ type: Schema.Types.ObjectId, required: true }],
-    'rePosters': [{ type: Schema.Types.ObjectId, required: true }],
+	'rePosters': [{ type: Schema.Types.ObjectId, required: true }],
 	meta: {
 		likes: { type: Number, min: 0, default: 0 },
 		shares: { type: Number, min: 0, default: 0 },
 		comments: { type: Number, min: 0, default: 0 }
 	},
-    shared: {type: Boolean, default: false},
-    sharedPost: {
-        type: Schema.Types.ObjectId,
-        ref: 'Post',
-    },
+	shared: { type: Boolean, default: false },
+	sharedPost: {
+		type: Schema.Types.ObjectId,
+		ref: 'Post',
+	},
 	createdAt: { type: Date, default: Date.now },
 })
 
@@ -39,8 +40,8 @@ const validatePost = (body) => {
 		author: Joi.objectId().required(),
 		body: Joi.string().min(1),
 		multimedia: Joi.array().min(1),
-        shared: Joi.string(),
-        sharedPost:Joi.string()
+		shared: Joi.string(),
+		sharedPost: Joi.string()
 	}).min(1)
 	return schema.validate(body)
 }

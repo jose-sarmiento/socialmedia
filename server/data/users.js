@@ -14,8 +14,8 @@ const users = [
 		"bio": "pellentesque a, facilisis non, bibendum sed, est. Nunc laoreet lectus quis massa. Mauris vestibulum, neque sed dictum eleifend, nunc risus varius orci, in consequat enim diam vel arcu. Curabitur ut odio vel est tempor bibendum. Donec felis orci, adipiscing non, luctus sit amet, faucibus",
 		"password": bcrypt.hashSync('123456', 10),
 		"status": "2",
-		"profileImage": baseUrl + "/cathleen.jpg",
-		"coverImage": baseUrl + "/cathleen-cover.jpg"
+		"profileImage": `${baseUrl  }/cathleen.jpg`,
+		"coverImage": `${baseUrl  }/cathleen-cover.jpg`
 	},
 	{
 		_id: mongoose.Types.ObjectId(),
@@ -27,8 +27,8 @@ const users = [
 		"bio": "ipsum porta elit, a feugiat tellus lorem eu metus. In lorem. Donec elementum, lorem ut aliquam iaculis, lacus pede sagittis augue, eu tempor erat neque non quam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam fringilla cursus",
 		"password": bcrypt.hashSync('123456', 10),
 		"status": "3",
-		"profileImage": baseUrl + "/camden.jpg",
-		"coverImage": baseUrl + "/camden-cover.jpg"
+		"profileImage": `${baseUrl  }/camden.jpg`,
+		"coverImage": `${baseUrl  }/camden-cover.jpg`
 	},
 	{
 		_id: mongoose.Types.ObjectId(),
@@ -40,8 +40,8 @@ const users = [
 		"bio": "urna justo faucibus lectus, a sollicitudin orci sem eget massa. Suspendisse eleifend. Cras sed leo. Cras vehicula aliquet libero. Integer in magna. Phasellus dolor elit, pellentesque a, facilisis non, bibendum sed, est. Nunc laoreet lectus",
 		"password": bcrypt.hashSync('123456', 10),
 		"status": "4",
-		"profileImage": baseUrl + "/brian.jpg",
-		"coverImage": baseUrl + "/brian-cover.jpg"
+		"profileImage": `${baseUrl  }/brian.jpg`,
+		"coverImage": `${baseUrl  }/brian-cover.jpg`
 	},
 	{
 		_id: mongoose.Types.ObjectId(),
@@ -53,8 +53,8 @@ const users = [
 		"bio": "sed dui. Fusce aliquam, enim nec tempus scelerisque, lorem ipsum sodales purus, in molestie tortor nibh sit amet orci. Ut sagittis lobortis mauris. Suspendisse aliquet molestie tellus. Aenean egestas hendrerit neque. In ornare sagittis felis. Donec",
 		"password": bcrypt.hashSync('123456', 10),
 		"status": "1",
-		"profileImage": baseUrl + "/kirsten.jpg",
-		"coverImage": baseUrl + "/kirsten-cover.jpg"
+		"profileImage": `${baseUrl  }/kirsten.jpg`,
+		"coverImage": `${baseUrl  }/kirsten-cover.jpg`
 	},
 	{
 		_id: mongoose.Types.ObjectId(),
@@ -66,8 +66,8 @@ const users = [
 		"bio": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec feugiat metus sit amet ante. Vivamus non lorem vitae odio sagittis semper. Nam tempor diam dictum sapien. Aenean massa. Integer vitae nibh. Donec est mauris, rhoncus id, mollis nec,",
 		"password": bcrypt.hashSync('123456', 10),
 		"status": "2",
-		"profileImage": baseUrl + "/evan.jpg",
-		"coverImage": baseUrl + "/evan-cover.jpg"
+		"profileImage": `${baseUrl  }/evan.jpg`,
+		"coverImage": `${baseUrl  }/evan-cover.jpg`
 	},
 	{
 		_id: mongoose.Types.ObjectId(),

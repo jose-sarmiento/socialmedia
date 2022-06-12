@@ -1,4 +1,5 @@
 const express = require("express");
+
 const router = express.Router();
 const auth = require("../middleware/auth");
 const paginate = require("../middleware/paginate");
@@ -30,10 +31,10 @@ router
   .get(paginate(Post), getPosts)
   .post(upload.array("files"), createPost);
 router
-    .route("/:id")
-    .get(getPost)
-    .patch(updatePost).
-    delete(deletePost);
+  .route("/:id")
+  .get(getPost)
+  .patch(updatePost).
+  delete(deletePost);
 router.route("/:id/shares").post(sharePost);
 router.route("/:id/likes").patch(likePost);
 router.route("/:postId/comments").post(createComment);

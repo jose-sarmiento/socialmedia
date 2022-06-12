@@ -17,7 +17,7 @@ const messageSchema = new mongoose.Schema(
 
 const conversationSchema = new mongoose.Schema(
 	{
-		members: [{type: mongoose.Types.ObjectId, ref: 'User'}],
+		members: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
 		messages: [messageSchema],
 		createdAt: { type: Date, default: Date.now },
 	});

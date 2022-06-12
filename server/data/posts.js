@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const photos = require('./photos')
 
-var data = [
+const data = [
 	{
 		title: 'mauris sit amet lorem semper',
 		body: 'amet ornare lectus justo eu arcu. Morbi sit amet massa. Quisque porttitor eros nec tellus. Nunc lectus pede, ultrices a, auctor non, feugiat nec, diam. Duis mi enim, condimentum eget, volutpat ornare, facilisis eget, ipsum.',
@@ -2005,21 +2005,24 @@ var data = [
 ];
 
 function getRandom(arr, n) {
-    var result = new Array(n),
-        len = arr.length,
-        taken = new Array(len);
+	let size = n;
+    const result = new Array(n);
+	let len = arr.length;
+    const taken = new Array(len);
     if (n > len)
         throw new RangeError("getRandom: more elements taken than available");
-    while (n--) {
-        var x = Math.floor(Math.random() * len);
+		// eslint-disable-next-line no-plusplus
+    while (size--) {
+        const x = Math.floor(Math.random() * len);
         result[n] = arr[x in taken ? taken[x] : x];
+		// eslint-disable-next-line no-plusplus
         taken[x] = --len in taken ? taken[len] : len;
     }
     return result;
 }
 
 const posts = data.map((post) => {
-	let size = Math.floor(Math.random() * 5)
+	const size = Math.floor(Math.random() * 5)
 	return {
 		...post,
 		_id: mongoose.Types.ObjectId(),

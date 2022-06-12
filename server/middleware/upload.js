@@ -6,8 +6,8 @@ const storage = multer.diskStorage({
 		cb(null, 'uploads/')
 	},
 	filename(req, file, cb) {
-		const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+		const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`
+		cb(null, `${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`)
 	}
 })
 
@@ -18,14 +18,13 @@ function checkFileType(file, cb) {
 
 	if (extname && mimeType) {
 		return cb(null, true)
-	} else {
-		cb('Unsupported file type')
 	}
+	return cb('Unsupported file type')
 }
 
 const upload = multer({
 	storage,
-	fileFilter: function(req, file, cb) {
+	fileFilter(req, file, cb) {
 		checkFileType(file, cb)
 	}
 })

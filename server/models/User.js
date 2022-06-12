@@ -1,11 +1,12 @@
+/* eslint-disable func-names */
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Joi = require('joi')
 
 const photoSchema = new mongoose.Schema({
-	path: String, 
-	thumbnail: String, 
+	path: String,
+	thumbnail: String,
 	name: String,
 	createdAt: { type: Date, default: Date.now },
 })
@@ -22,7 +23,7 @@ const userSchema = new mongoose.Schema({
 		minLength: 2
 	},
 	username: String,
-	middlename: String, 
+	middlename: String,
 	email: {
 		type: String,
 		required: true,
@@ -49,12 +50,12 @@ const userSchema = new mongoose.Schema({
 	address: String,
 	status: {
 		type: Number,
-     	enums: [
-         1,    //'single',
-         2,    //'engaged',
-         3,    //'married'
-         4,    //'separated'
-     ]
+		enums: [
+			1,    // 'single',
+			2,    // 'engaged',
+			3,    // 'married'
+			4,    // 'separated'
+		]
 	},
 	phone: String,
 	school: {
@@ -64,26 +65,27 @@ const userSchema = new mongoose.Schema({
 	},
 	bio: String,
 	friends: [{
-		type: mongoose.Schema.Types.ObjectId, ref: 'Friends'}],
+		type: mongoose.Schema.Types.ObjectId, ref: 'Friends'
+	}],
 	photos: [photoSchema],
 	createdAt: { type: Date, default: Date.now },
 })
 
 userSchema.virtual('fullname')
-	.get(function() {
-		return this.firstname + ' ' + this.lastname
+	.get(function () {
+		return `${this.firstname} ${this.lastname}`
 	})
 
-userSchema.methods.generateToken = function() {
-	return 	jwt.sign({_id: this._id}, process.env.JWT_SECRET)
+userSchema.methods.generateToken = function () {
+	return jwt.sign({ _id: this._id }, process.env.JWT_SECRET)
 }
 
-userSchema.methods.verifyPassword = async function(password) {
+userSchema.methods.verifyPassword = async function (password) {
 	const isValid = await bcrypt.compare(password, this.password)
 	return isValid
 }
 
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
 	if (!this.isModified('password')) {
 		next()
 	}
