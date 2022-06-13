@@ -328,13 +328,16 @@
 			font-size: 1.3rem;
         }
 
-        div {
+        button {
             padding: 1rem 0;
 			transition: all .3s ease-in-out;
 			cursor: pointer;
+			outline: none;
+			border: none;
+			background: transparent;
         }
 
-        div:hover {
+        button:hover {
             background: var(--bg-light);
         }
 	}

@@ -1,0 +1,48 @@
+@import "../../variables";
+
+.signup {
+	grid-column: 2/-1;
+	background: $light-1;
+	display: flex;
+	align-items: center;
+	// justify-content: center;
+	flex-direction: column;
+	padding: 4rem;
+
+	&__title {
+		font-weight: 800;
+		font-family: myFontBold;
+		color: $primary-color;
+	}
+
+	&__input {
+		font-family: inherit;
+		font-size: 1.3rem;
+		width: 28rem;
+		display: block;
+		padding: 1rem;
+		text-align: center;
+		border: none;
+		border-bottom: 1px solid $primary-color;
+
+		&::placeholder {
+			color: $grey-3;
+		}
+
+		&:not(:last-of-type) {
+			margin-bottom: 1.8rem;
+		}
+
+		&:last-child {
+			margin-bottom: 3rem;
+		}
+
+		&:focus {
+			outline: none;
+		}
+	}
+
+	&__btn {
+		display: inline-block;
+	}
+}

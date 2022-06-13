@@ -1,11 +1,14 @@
-import { Navigate } from 'react-router-dom';
-import { useSelector } from "react-redux"
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const GuestRoute = ({ children }) => {
-	const auth = useSelector(state => state.auth);
+function GuestRoute({ children }) {
+  const auth = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
-	if (auth.user) return <Navigate to={-1} />;
-	return children;
-};
+  if (auth.user) {
+    return navigate(-1);
+  }
+  return children;
+}
 
-export default GuestRoute
+export default GuestRoute;
