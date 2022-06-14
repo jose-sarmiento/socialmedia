@@ -1,0 +1,158 @@
+.icon {
+   color: $primary-color;
+   font-size: 1.6rem;
+   padding: 0;
+   border: none;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   cursor: pointer;
+
+   &::active {
+      outline: none;
+   }
+}
+.btn-wrapper {
+   @include flex-center;
+
+}
+
+.btn {
+   border: none;
+   display: inline-block;
+   cursor: pointer;
+   font-size: 1.1rem;
+   box-shadow: 0 3px 5px rgba($color: #000000, $alpha: .25);
+   transition: $transition;
+   padding: .5rem 1rem;
+
+
+   &:not(:last-of-type) {
+      margin-right: 1rem;
+   }
+
+   &:active {
+      transform: scale(.88);
+   }
+
+   &--circle {
+      padding: .5rem 1rem;
+      border-radius: 50%;
+   }
+
+   &--square {
+      padding: .5rem 1rem;
+      border-radius: 3px;
+   }
+
+   &--circle {
+      padding: 0;
+      height: 3rem;
+      width: 3rem;
+      border-radius: 50%;
+
+      &--small {
+         height: 2.5rem;
+         width: 2.5rem;
+         font-size: .8rem;
+      }
+   }
+
+   &--blue {
+      color: $primary-color;
+      background-color: transparent;
+      box-shadow: none;
+      font-weight: 600;
+
+      &:hover {
+         color: $light-1;
+         background-color: $primary-color;
+         box-shadow: 0 3px 5px rgba($color: #000000, $alpha: .25);
+      }
+   }
+
+   &--primary {
+      color: $light-1;
+      background-image: $gradient-reverse;
+   }
+
+   &--secondary {
+      color: $grey-1;
+      background: $light-1;
+
+      &:hover {
+         background: $light-2;
+      }
+   }
+   
+   &--white {
+      color: $grey-4;
+      background-color: $light-1;
+   }
+
+   &__icon--paper-plane {
+      transform: rotate(45deg);
+   }
+
+   &--label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+   }
+}
+
+.button {
+   text-decoration: none;
+   height: 3.8rem;
+   text-align: center;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: 25rem;
+   border-radius: 3rem;
+   font-family: inherit;
+   font-size: 1.3rem;
+   color: $light-1;
+   position: relative;
+   cursor: pointer;
+   box-shadow: $shadow-light;
+
+   &--primary {
+      color: $light-1;
+      background: $primary-color;
+      border: 1px solid $primary-color;
+   }
+
+   &--outline {
+      color: $light-1;
+      background: $primary-color;
+      border: 1px solid $primary-color-light;
+   }
+
+   &--outline-reverse {
+      background: $light-1;
+      border: 1px solid $primary-color;
+      color: $primary-color;
+      font-weight: 500;
+   }
+
+   &__icon-wrapper {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background: $light-1;
+      height: 100%;
+      width: 3.8rem;
+      border-radius: 3rem;
+      color: $primary-color;
+      display: flex;
+      @include flex-center;
+      font-size: 1rem;
+
+      &--blue {
+         background: $primary-color;
+         color: $light-1;
+      }
+   }
+}
