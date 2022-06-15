@@ -1,35 +1,28 @@
-# client ignore files
-.env
-
-# dependencies
-web/node_modules
-web/.pnp
-web/.pnp.js
-web/.env
+# client
+client/node_modules
+client/.pnp
+client/.pnp.js
+client/.env
 
 # testing
-web/coverage
+client/coverage
 
 # production
-web/build
+client/build
 
 # misc
-web/.DS_Store
-web/.env.local
-web/.env.development.local
-web/.env.test.local
-web/.env.production.local
+client/.DS_Store
+client/.env.local
+client/.env.development.local
+client/.env.test.local
+client/.env.production.local
 
-web/npm-debug.log*
-web/yarn-debug.log*
-web/yarn-error.log*
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
 
 # server ignore files
-
-server/node_modules
-server/.env
-server/public
-
-# dev dependencies
-/node_modules
-.gitignore
+node_modules
+.env
+test
+test*requests/
