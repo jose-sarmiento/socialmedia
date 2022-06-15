@@ -43,16 +43,12 @@ function Header() {
     }
 
     searchUsers();
-    // return () => source.cancel();
+    return () => source.cancel();
   }, [searchTerm, auth.token, dispatch]);
 
   return (
     <header className="header">
       {/* for logo */}
-      {/* <div className="header__links">
-                <span className="header__link">About</span>
-                <span className="header__link">Help</span>
-            </div> */}
 
       <div className="search-container">
         <form className="search">

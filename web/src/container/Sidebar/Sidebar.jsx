@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { HiHome, HiUser, HiUsers, HiBell, HiChatAlt2 } from 'react-icons/hi';
 import { logout } from '../../store/auth';
@@ -7,6 +7,7 @@ import { useSocketContext } from '../../contexts/socketContext';
 import { showModal } from '../../store/ui';
 
 import './Sidebar.scss';
+import logo from '../../assets/img/socialize-logo.png';
 
 function Sidebar() {
   const [msgCount, setMsgCount] = useState();
@@ -71,6 +72,10 @@ function Sidebar() {
 
   return (
     <div className="sidebar">
+      <Link to="/" className="sidebar__logo-wrapper">
+        <img src={logo} alt="socialize logo" className="sidebar__logo" />
+      </Link>
+
       <ul className="sidebar__links">
         {links.map((link) => (
           <li className="sidebar__link-item" key={link.id}>

@@ -25,20 +25,11 @@ function ViewPostScreen() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const scrollToRef = useRef();
   const inputRef = useRef();
   const { state: locationState } = useLocation();
 
   const posts = useSelector((state) => state.entities.posts);
   const { post, loading, success } = posts;
-
-  useEffect(() => {
-    scrollToRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'nearest',
-      inline: 'start',
-    });
-  });
 
   useEffect(() => {
     if (success.delete) {
@@ -54,7 +45,6 @@ function ViewPostScreen() {
   useEffect(() => {
     if (locationState && locationState.focusCommentInput) {
       inputRef.current.focus();
-      // inputRef.current.scrollIntoView({ behavior: "smooth" });
       window.history.replaceState({}, document.title);
     }
   }, [locationState]);
@@ -92,7 +82,7 @@ function ViewPostScreen() {
         <div className="post-container__header">
           <BiArrowBack onClick={() => navigate(-1)} />
           <h2>
-            Viewing
+            Viewing {" "}
             {post?.author.firstname}
             &apos;s Post
           </h2>
@@ -102,32 +92,7 @@ function ViewPostScreen() {
           {post && (
             <Post post={post} wide handleCommentClick={handleCommentClick} />
           )}
-
-          <h4 className="post-container__comments-header">Comments</h4>
-          <div className="post-comments">
-            {post?.comments.length === 0 && (
-              <div className="post-comments__no-comments">
-                <span>Be the first to comment in Your Post</span>
-              </div>
-            )}
-
-            {post?.comments.map((value) => (
-              <Comment
-                comment={value}
-                postId={post?._id}
-                key={uuidv4()}
-                reactComment={handleCommentReact}
-                handleReplyClick={handleReplyClick}
-              />
-            ))}
-            <span ref={scrollToRef} />
-          </div>
-          <div className="comment-form">
-            <h6>
-              {activeInput === 'comment'
-                ? `Write comment in ${post?.author.firstname}'s post`
-                : `Write reply on ${comment?.userName} comment`}
-            </h6>
+          {!loading.get && <div className="comment-form">
             <form className="comment-form__form" onSubmit={handleSubmit}>
               <input
                 type="text"
@@ -148,7 +113,27 @@ function ViewPostScreen() {
                 <FaPaperPlane />
               </button>
             </form>
+          </div>}
+
+          {!loading.get && <h4 className="post-container__comments-header">Comments {post?.meta.comments > 0 && <span>({post.meta.comments})</span>}</h4>}
+          <div className="post-comments">
+            {post?.comments.length === 0 && (
+              <div className="post-comments__no-comments">
+                <span>Be the first to comment in Your Post</span>
+              </div>
+            )}
+
+            {post?.comments.map((value) => (
+              <Comment
+                comment={value}
+                postId={post?._id}
+                key={uuidv4()}
+                reactComment={handleCommentReact}
+                handleReplyClick={handleReplyClick}
+              />
+            ))}
           </div>
+          
         </div>
       </div>
     </AppLayout>

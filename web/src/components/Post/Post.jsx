@@ -63,7 +63,7 @@ const Post = React.forwardRef((props, ref) => {
   };
 
   if (posts.loading.get) return <SkeletonLoading />;
-
+ 
   return (
     <div className={wide ? 'post post--wide' : 'post'} ref={ref}>
       {!wide && (

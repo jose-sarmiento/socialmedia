@@ -8,6 +8,17 @@
 	height: 100vh;
     background: var(--white-color);
 
+    &__logo-wrapper {
+        display: block;
+        height: 5.5rem;
+        margin-left: 1.5rem;
+    }
+    
+    &__logo {
+        // height: 3rem;
+        width: 70%;
+    }
+
 
     &__links {
         width: 100%;

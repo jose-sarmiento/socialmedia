@@ -67,6 +67,11 @@
         // }
     }
 
+    &__reply-count {
+        border: none;
+        background: transparent;
+    }
+
 	&__actions {
 		padding: 0 0.5rem;
 		margin-top: 0.6rem;
@@ -91,7 +96,13 @@
             margin-left: .8rem;
         }
 
-        span.colored {
+        button {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+        }
+
+        button.colored {
             color: var(--primary-color);
             font-weight: 500;
         }
