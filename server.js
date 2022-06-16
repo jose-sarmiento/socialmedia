@@ -43,6 +43,14 @@ app.use('/api/v1/posts', posts);
 app.use('/api/v1/conversations', conversations);
 app.use('/api/v1/notifications', notifications);
 
+// serving static assets from react client
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
+
 app.use(notFound);
 app.use(errorHandler);
 
