@@ -14,7 +14,7 @@ import { friendRequestAdded, friendRequestAccepted } from '../store/users';
 const SocketContext = React.createContext();
 
 export function SocketProvider({ children }) {
-  const socket = useRef(io('ws://localhost:8000'));
+  const socket = useRef(io('ws://socialize-v1.herokuapp.com'));
   const dispatch = useDispatch();
 
   const users = useSelector((state) => state.entities.users);

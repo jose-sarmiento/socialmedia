@@ -27,7 +27,7 @@ function HomeScreen() {
   const posts = useSelector((state) => state.entities.posts);
   const chats = useSelector((state) => state.entities.chats);
 
-  const { loading, hasNext } = useFetch('/posts', page, 10, listPostsSuccess);
+  const { loading, hasNext } = useFetch('/api/v1/posts', page, 10, listPostsSuccess);
 
   useEffect(() => {
     const interval = setInterval(() => {

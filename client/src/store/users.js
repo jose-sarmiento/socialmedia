@@ -5,7 +5,6 @@ import _ from 'lodash';
 
 import { updateAuthorImage } from './posts';
 
-axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT;
 
 const slice = createSlice({
   name: 'users',
@@ -313,7 +312,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${auth.token}`,
       },
-      url: `/users/${auth.user._id}`,
+      url: `/api/v1/users/${auth.user._id}`,
     });
     const friends = filterByStatus(data.friends, 3);
     dispatch(
@@ -347,7 +346,7 @@ export const viewUserProfile = (id) => async (dispatch, getState) => {
       headers: {
         Authorization: `Bearer ${auth.token}`,
       },
-      url: `/users/${id}`,
+      url: `/api/v1/users/${id}`,
     });
     dispatch(
       viewUserSuccess({
@@ -366,7 +365,7 @@ export const updateUser = (fields) => async (dispatch, getState) => {
     const { auth } = getState();
     await axios({
       method: 'patch',
-      url: `/users/${auth.user._id}`,
+      url: `/api/v1/users/${auth.user._id}`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${auth.token}`,
@@ -393,7 +392,7 @@ export const uploadCover = (formData) => async (dispatch, getState) => {
     const { auth } = getState();
     const { data } = await axios({
       method: 'post',
-      url: '/users/cover',
+      url: '/api/v1/users/cover',
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${auth.token}`,
@@ -420,7 +419,7 @@ export const uploadProfile = (formData) => async (dispatch, getState) => {
     const { auth } = getState();
     const { data } = await axios({
       method: 'post',
-      url: '/users/profile',
+      url: '/api/v1/users/profile',
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${auth.token}`,
@@ -452,7 +451,7 @@ export const deletePhoto = (photoId) => async (dispatch, getState) => {
     const { auth } = getState();
     await axios({
       method: 'delete',
-      url: `/users/photos/${photoId}`,
+      url: `/api/v1/users/photos/${photoId}`,
       headers: {
         Authorization: `Bearer ${auth.token}`,
       },
@@ -476,7 +475,7 @@ export const getPeople = () => async (dispatch, getState) => {
     dispatch(getPeopleRequested());
     const { auth } = getState();
     const { data } = await axios({
-      url: '/users',
+      url: '/api/v1/users',
       headers: { Authorization: `Bearer ${auth.token}` },
     });
     dispatch(getPeopleSuccess({ people: data }));
@@ -490,7 +489,7 @@ export const getFriends = (userId) => async (dispatch, getState) => {
     dispatch(getFriendsRequested());
     const { auth } = getState();
     const { data } = await axios({
-      url: `/users/${userId}/friends`,
+      url: `/api/v1/users/${userId}/friends`,
       headers: { Authorization: `Bearer ${auth.token}` },
     });
     dispatch(getFriendsSuccess({ friends: data.friends }));
@@ -505,7 +504,7 @@ export const addFriend = (recipient) => async (dispatch, getState) => {
     const { auth } = getState();
     const { data } = await axios({
       method: 'post',
-      url: `/users/${recipient._id}/friends`,
+      url: `/api/v1/users/${recipient._id}/friends`,
       headers: { Authorization: `Bearer ${auth.token}` },
     });
 
@@ -521,7 +520,7 @@ export const acceptRequest = (friend) => async (dispatch, getState) => {
     const { auth } = getState();
     await axios({
       method: 'put',
-      url: `/users/${friend._id}/friends`,
+      url: `/api/v1/users/${friend._id}/friends`,
       headers: { Authorization: `Bearer ${auth.token}` },
     });
     dispatch(acceptFriendSuccess({ friend }));
@@ -536,7 +535,7 @@ export const rejectRequest = (id) => async (dispatch, getState) => {
     const { auth } = getState();
     await axios({
       method: 'delete',
-      url: `/users/${id}/friends`,
+      url: `/api/v1/users/${id}/friends`,
       headers: { Authorization: `Bearer ${auth.token}` },
     });
     dispatch(rejectFriendSuccess({ _id: id }));
@@ -550,7 +549,7 @@ export const searchUsers = (q) => async (dispatch, getState) => {
     dispatch(searchUsersRequested());
     const { auth } = getState();
     const { data } = await axios({
-      url: '/users/search',
+      url: '/api/v1/users/search',
       headers: { Authorization: `Bearer ${auth.token}` },
       params: { q },
     });

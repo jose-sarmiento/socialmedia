@@ -21,7 +21,7 @@ function Newsfeed({ userId }) {
   }, [dispatch]);
 
   const { loading, hasNext } = useFetch(
-    `/users/${userId}/posts`,
+    `/api/v1/users/${userId}/posts`,
     page,
     10,
     listMyPostsSuccess

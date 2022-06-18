@@ -96,11 +96,7 @@ function ViewUserScreen() {
               </button>
               <figure>
                 <img
-                  src={
-                    viewUser.profileImage.startsWith('http')
-                      ? viewUser.profileImage
-                      : process.env.REACT_APP_SERVER + viewUser.profileImage
-                  }
+                  src={viewUser.profileImage}
                   alt="profile"
                 />
               </figure>

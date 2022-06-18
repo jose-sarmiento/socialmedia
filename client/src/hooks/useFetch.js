@@ -18,7 +18,6 @@ export default function useFetch(url, page, limit, onSuccess) {
     setError(false);
 
     axios({
-      baseURL: process.env.REACT_APP_API_ENDPOINT,
       method: 'GET',
       url,
       params: { page, limit },

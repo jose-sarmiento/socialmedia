@@ -58,11 +58,7 @@ function ImageSlider() {
             return (
               <figure className={position} key={uuidv4()}>
                 <img
-                  src={
-                    img.path.substring(0, 4) === 'http'
-                      ? img.path
-                      : `${process.env.REACT_APP_SERVER + img.path}`
-                  }
+                  src={img.path}
                   alt="post content media"
                   className="slider__img"
                 />

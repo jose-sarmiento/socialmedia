@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { createSlice } from '@reduxjs/toolkit';
 
-axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT;
-
 const slice = createSlice({
   name: 'chats',
   initialState: {
@@ -158,7 +156,7 @@ export const getAllConversations = () => async (dispatch, getState) => {
     const { auth } = getState();
     const { data } = await axios({
       headers: { Authorization: `Bearer ${auth.token}` },
-      url: '/conversations',
+      url: '/api/v1/conversations',
     });
     dispatch(listChatsSuccess({ list: data.conversations }));
   } catch (error) {
@@ -175,7 +173,7 @@ export const createNewConversation =
       const { data } = await axios({
         method: 'post',
         headers: { Authorization: `Bearer ${auth.token}` },
-        url: '/conversations',
+        url: '/api/v1/conversations',
         data: { receiverId },
       });
       dispatch(createChatSuccess({ chat: data }));
@@ -193,7 +191,7 @@ export const readMessagesInConversation =
       const { data } = await axios({
         method: 'patch',
         headers: { Authorization: `Bearer ${auth.token}` },
-        url: `/conversations/${conversationId}`,
+        url: `/api/v1/conversations/${conversationId}`,
       });
       dispatch(
         readMessagesSuccess({ messages: data.messages, conversationId })
@@ -217,7 +215,7 @@ export const readMessageInConversation =
       await axios({
         method: 'patch',
         headers: { Authorization: `Bearer ${auth.token}` },
-        url: `/conversations/${conversationId}/messages/${messageId}`,
+        url: `/api/v1/conversations/${conversationId}/messages/${messageId}`,
       });
       dispatch(
         readMessageSuccess({
@@ -243,7 +241,7 @@ export const sendMessage = (params) => async (dispatch, getState) => {
     const { data } = await axios({
       method: 'post',
       headers: { Authorization: `Bearer ${auth.token}` },
-      url: `/conversations/${activeChatId}/messages`,
+      url: `/api/v1/conversations/${activeChatId}/messages`,
       data: {
         text,
         receiverId,

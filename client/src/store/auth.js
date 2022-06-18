@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { createSlice } from '@reduxjs/toolkit';
 
-axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT;
-
 const AUTH_STORAGE_KEY = 'socialmedia_userinfo';
 
 const authFromStorage = localStorage.getItem(AUTH_STORAGE_KEY)
@@ -72,7 +70,7 @@ export const login = (reqObj) => async (dispatch) => {
   try {
     const { data, headers } = await axios({
       method: 'post',
-      url: '/auth/login',
+      url: '/api/v1/auth/login',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -98,7 +96,7 @@ export const register = (data) => async (dispatch) => {
   try {
     const response = await axios({
       method: 'post',
-      url: '/auth/register',
+      url: '/api/v1/auth/register',
       headers: {
         'Content-Type': 'application/json',
       },

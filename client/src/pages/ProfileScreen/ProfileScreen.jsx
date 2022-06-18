@@ -71,11 +71,7 @@ function ProfileScreen() {
             <div className="userinfo">
               <figure>
                 <img
-                  src={
-                    user.profileImage.startsWith('http')
-                      ? user.profileImage
-                      : process.env.REACT_APP_SERVER + user.profileImage
-                  }
+                  src={user.profileImage}
                   alt="profile"
                 />
                 <label htmlFor="edit-profile">

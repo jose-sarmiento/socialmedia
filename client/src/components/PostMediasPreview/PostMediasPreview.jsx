@@ -25,11 +25,7 @@ function PostMediasPreview({ medias = [], readOnly }) {
             <img
               className="post__image"
               style={readOnly ? { pointerEvents: 'none' } : {}}
-              src={
-                img.thumbnail.substring(0, 4) === 'http'
-                  ? img.thumbnail
-                  : `${process.env.REACT_APP_SERVER + img.thumbnail}`
-              }
+              src={img.thumbnail}
               alt="test"
             />
           </div>
@@ -55,11 +51,7 @@ function PostMediasPreview({ medias = [], readOnly }) {
             <img
               className="post__image"
               style={readOnly ? { pointerEvents: 'none' } : {}}
-              src={
-                img.thumbnail.substring(0, 4) === 'http'
-                  ? img.thumbnail
-                  : `${process.env.REACT_APP_SERVER + img.thumbnail}`
-              }
+              src={img.thumbnail}
               alt="post media"
             />
           </div>
@@ -82,11 +74,7 @@ function PostMediasPreview({ medias = [], readOnly }) {
         <img
           className="post__image"
           style={readOnly ? { pointerEvents: 'none' } : {}}
-          src={
-            medias[0].thumbnail.substring(0, 4) === 'http'
-              ? medias[0].thumbnail
-              : `${process.env.REACT_APP_SERVER + medias[0].thumbnail}`
-          }
+          src={medias[0].thumbnail}
           alt="post media"
         />
       </div>

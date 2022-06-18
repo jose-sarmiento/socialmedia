@@ -2,8 +2,6 @@ import axios from 'axios';
 import { createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 
-axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT;
-
 const slice = createSlice({
   name: 'posts',
   initialState: {
@@ -363,7 +361,7 @@ export const createPost = (post) => async (dispatch, getState) => {
     const { auth } = getState();
     const response = await axios({
       method: 'post',
-      url: '/posts',
+      url: '/api/v1/posts',
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${auth.token}`,
@@ -400,7 +398,7 @@ export const sharePost = (params) => async (dispatch, getState) => {
     const { auth } = getState();
     const response = await axios({
       method: 'post',
-      url: `/posts/${post.sharedPost}/shares`,
+      url: `/api/v1/posts/${post.sharedPost}/shares`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${auth.token}`,
@@ -441,7 +439,7 @@ export const getPost = (id) => async (dispatch, getState) => {
 
     const response = await axios({
       headers: { Authorization: `Bearer ${auth.token}` },
-      url: `/posts/${id}`,
+      url: `/api/v1/posts/${id}`,
     });
 
     dispatch(getPostSuccess({ post: response.data }));
@@ -465,7 +463,7 @@ export const deletePost = (id) => async (dispatch, getState) => {
     const { data } = await axios({
       method: 'delete',
       headers: { Authorization: `Bearer ${auth.token}` },
-      url: `/posts/${id}`,
+      url: `/api/v1/posts/${id}`,
     });
 
     dispatch(
@@ -502,7 +500,7 @@ export const createComment =
           'Content-Type': 'application/json',
           Authorization: `Bearer ${auth.token}`,
         },
-        url: `/posts/${postId}/comments`,
+        url: `/api/v1/posts/${postId}/comments`,
         data: { comment },
       });
 
@@ -531,7 +529,7 @@ export const reactPost = (postId, authorName) => async (dispatch, getState) => {
 
     const response = await axios({
       method: 'patch',
-      url: `/posts/${postId}/likes`,
+      url: `/api/v1/posts/${postId}/likes`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${auth.token}`,
@@ -579,7 +577,7 @@ export const reactComment =
 
       const { data } = await axios({
         method: 'post',
-        url: `/posts/${postId}/comments/${commentId}/likes`,
+        url: `/api/v1/posts/${postId}/comments/${commentId}/likes`,
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },
@@ -628,7 +626,7 @@ export const createReply =
 
       const { data } = await axios({
         method: 'post',
-        url: `/posts/${postId}/comments/${commentId}/replies`,
+        url: `/api/v1/posts/${postId}/comments/${commentId}/replies`,
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },
@@ -672,7 +670,7 @@ export const reactReply =
 
       const { data } = await axios({
         method: 'put',
-        url: `/posts/${postId}/comments/${commentId}/replies/${replyId}/likes`,
+        url: `/api/v1/posts/${postId}/comments/${commentId}/replies/${replyId}/likes`,
         headers: {
           Authorization: `Bearer ${auth.token}`,
         },

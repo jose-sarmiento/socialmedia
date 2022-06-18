@@ -2,8 +2,6 @@ import axios from 'axios';
 import { createSlice } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-axios.defaults.baseURL = process.env.REACT_APP_API_ENDPOINT;
-
 const slice = createSlice({
   name: 'notifications',
   initialState: {
@@ -117,7 +115,7 @@ export const getAllNotifications = () => async (dispatch, getState) => {
     const { auth } = getState();
     const { data } = await axios({
       method: 'get',
-      url: '/notifications',
+      url: '/api/v1/notifications',
       headers: { Authorization: `Bearer ${auth.token}` },
     });
     dispatch(listNotificationsSuccess({ list: data }));
@@ -133,7 +131,7 @@ export const createNotification = (params) => async (dispatch, getState) => {
     const { auth, entities } = getState();
     const { data } = await axios({
       method: 'post',
-      url: '/notifications',
+      url: '/api/v1/notifications',
       headers: { Authorization: `Bearer ${auth.token}` },
       data: {
         to: recipientId,
@@ -186,7 +184,7 @@ export const readALlNotifications = () => async (dispatch, getState) => {
     const { auth } = getState();
     await axios({
       method: 'patch',
-      url: '/notifications/readall',
+      url: '/api/v1/notifications/readall',
       headers: { Authorization: `Bearer ${auth.token}` },
     });
     dispatch(readAllNotificationsSuccess());
