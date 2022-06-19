@@ -5,7 +5,6 @@ import _ from 'lodash';
 
 import { updateAuthorImage } from './posts';
 
-
 const slice = createSlice({
   name: 'users',
   initialState: {
@@ -117,7 +116,8 @@ const slice = createSlice({
     },
     getPeopleSuccess: (users, action) => {
       users.loading.people = false;
-      users.people = [...users.people, ...action.payload.people];
+      const filteredUsers = action.payload.people.filter(x => x._id !== users.user._id);
+      users.people = [...users.people, ...filteredUsers];
     },
     getPeopleFailed: (users, action) => {
       users.loading.people = false;

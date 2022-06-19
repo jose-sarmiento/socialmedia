@@ -59,7 +59,7 @@
 	}
 
 	&__options {
-		position: absolute;
+		position: absolute; 
 		left: 120%;
 		bottom: 1rem;
 		width: 12rem;
@@ -79,6 +79,16 @@
 		padding: 1rem 0;
 		border-bottom: 1px solid var(--light-3);
 		cursor: pointer;
+		display: block;
+		width: 100%;
+		background: transparent;
+		font-family: inherit;
+		border: none;
+		outline: none;
+	}
+
+	&__option:focus {
+		outline: none;
 	}
 
     &__repost {
