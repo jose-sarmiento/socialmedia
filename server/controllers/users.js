@@ -126,14 +126,11 @@ const uploadCover = async (req, res) => {
 
 	const thumbnail = await generateThumb(req.file);
 
-    console.log(req.file);
-    console.log(thumbnail);
-
 	const photoObj = {
 		_id: new mongoose.Types.ObjectId(),
-		path: `${formatURL(req)}/${req.file.filename}`,
+		path: `/${req.file.filename}`,
 		name: req.file.originalname,
-		thumbnail: `${formatURL(req)}/${thumbnail}`,
+		thumbnail: `/${thumbnail}`,
 	}
 	const user = await User.findById(req.user._id);
 	user.coverImage = photoObj.path;
@@ -150,9 +147,9 @@ const uploadProfile = async (req, res) => {
 
 	const photoObj = {
 		_id: new mongoose.Types.ObjectId(),
-		path: `${formatURL(req)}/${req.file.filename}`,
+		path: `/${req.file.filename}`,
 		name: req.file.originalname,
-		thumbnail: `${formatURL(req)}/${thumbnail}`,
+		thumbnail: `/${thumbnail}`,
 	}
 
 	const user = await User.findById(req.user._id);
