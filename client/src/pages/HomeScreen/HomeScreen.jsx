@@ -38,8 +38,7 @@ function HomeScreen() {
       setOnlineFriends(filtered);
     }, 60000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [chats.onlineUsers, users.friends]);
 
   useEffect(() => {
     const friendIds = users.friends.map((x) => x._id);
