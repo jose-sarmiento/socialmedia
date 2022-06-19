@@ -126,6 +126,9 @@ const uploadCover = async (req, res) => {
 
 	const thumbnail = await generateThumb(req.file);
 
+    console.log(req.file);
+    console.log(thumbnail);
+
 	const photoObj = {
 		_id: new mongoose.Types.ObjectId(),
 		path: `${formatURL(req)}/${req.file.filename}`,
