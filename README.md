@@ -2,6 +2,8 @@
 
 A socialmedia application built from scratch using MongoDB, Express, React, NodeJs (MERN stack).
 
+[See project live](https://socialize-v1.herokuapp.com/)
+
 ## Technology used
 
 * NodeJs with Express Framework
@@ -42,7 +44,8 @@ This project is currently in development. Users can filter tweets by username an
 #### Frontend
 
 ![Socialize Homepage!](screenshots/homepage.png)
-
+<br/>
+<br/>
 ![Socialize Profile Screen!](screenshots/profile.png)
 
 #### Backend   
