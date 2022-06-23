@@ -188,6 +188,7 @@ function MessagesScreen() {
                 value={searchTerm}
                 onChange={handleSearchChange}
                 onFocus={() => setSearchIsFocus(true)}
+                autoComplete="off"
               />
             </form>
           </div>

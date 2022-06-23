@@ -6,11 +6,11 @@ Create, likes, share posts. Chat with friends using realtime messaging and many 
 [See project live](https://socialize-v1.herokuapp.com/)
 
 #### Use this login credentials to test the project
-email: ut@aol.net
-password: 123456
+* email: ut@aol.net
+* password: 123456
 <br/>
-email: dignissim.tempor.arcu@protonmail.couk
-password: 123456
+* email: dignissim.tempor.arcu@protonmail.couk
+* password: 123456
 
 ## Technology used
 
@@ -49,15 +49,13 @@ This project is currently in development. Users can filter tweets by username an
 
 ## Project Screen Shot(s)
 
-#### Frontend
-
+#### Homepage
 ![Socialize Homepage!](screenshots/homepage.png)
-<br/>
-<br/>
+
+#### Profile page
 ![Socialize Profile Screen!](screenshots/profile.png)
 
-#### Backend   
-
+#### Project Structure and sample code 
 ![Backend Server!](screenshots/backend.png)
 
 ## Installation and Setup Instructions
@@ -67,6 +65,8 @@ Clone down this repository. You will need `node` and `npm` installed globally on
 Installation:
 
 `npm install`  
+
+`cd client && npm install`
 
 To Start Server:
 
