@@ -1,8 +1,16 @@
 ## Socialize  ( socialmedia app)
 
 A socialmedia application built from scratch using MongoDB, Express, React, NodeJs (MERN stack).
+Create, likes, share posts. Chat with friends using realtime messaging and many more.
 
 [See project live](https://socialize-v1.herokuapp.com/)
+
+#### Use this login credentials to test the project
+email: ut@aol.net
+password: 123456
+<br/>
+email: dignissim.tempor.arcu@protonmail.couk
+password: 123456
 
 ## Technology used
 

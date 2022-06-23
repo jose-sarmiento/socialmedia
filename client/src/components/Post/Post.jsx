@@ -171,12 +171,12 @@ const Post = React.forwardRef((props, ref) => {
             />
             <span>{post.meta.comments} comments</span>
           </button>
-          <button type="button" className="readmore" onClick={handleSharePost}>
-            <BiShare
-              className={post.rePosters.includes(auth.user._id) ? 'active' : ''}
-            />
-            <span>{post.meta.shares} shares</span>
-          </button>
+          {!post.shared && <button type="button" disabled={post.author._id === auth.user._id} className="readmore" onClick={handleSharePost}>
+              <BiShare
+                className={post.rePosters.includes(auth.user._id) ? 'active' : ''}
+              />
+              <span>{post.meta.shares} shares</span>
+            </button>}
         </div>
       </div>
     </div>

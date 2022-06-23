@@ -13,45 +13,49 @@ import {
 import './Header.scss';
 
 function Header() {
-  const [isFocus, setIsFocus] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
 
   const auth = useSelector((state) => state.auth);
   const users = useSelector((state) => state.entities.users);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (searchTerm.trim() === '') {
-        dispatch(clearSearchResults())
-        return;
-    };
-    const source = axios.CancelToken.source();
+    if(searchTerm === "") {
+      setIsSearching(false);
+      setSearchResults([]);
+      setError(undefined);
+    }
+  }, [searchTerm])
 
-    async function searchUsers() {
-      try {
-        dispatch(searchUsersRequested());
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if(searchTerm.trim() === "" ) return;
+     try {
+        setLoading(true);
+        setIsSearching(true);
         const { data } = await axios({
-          url: '/users/search',
+          url: '/api/v1/users/search',
           headers: { Authorization: `Bearer ${auth.token}` },
           params: { q: searchTerm },
-          cancelToken: source.token,
         });
-        dispatch(searchUsersSuccess(data));
+        setSearchResults(data);
+        setLoading(false);
       } catch (error) {
-        dispatch(searchUsersFailed("Something wen't wrong"));
+        setError("Something wen't wrong")
+        setLoading(false);
       }
-    }
-
-    searchUsers();
-    return () => source.cancel();
-  }, [searchTerm, auth.token, dispatch]);
+  }
 
   return (
     <header className="header">
       {/* for logo */}
 
       <div className="search-container">
-        <form className="search">
+        <form className="search" onSubmit={handleSubmit}>
           <FaSearch className="search__icon" />
           <input
             type="search"
@@ -59,46 +63,42 @@ function Header() {
             id="search"
             className="search__input"
             placeholder="Search something..."
-            autoComplete="false"
+            autoComplete="off"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
           />
         </form>
 
-        {isFocus && users.success.search && (
-          <>
-            {' '}
-            {/* eslint-disable-next-line no-nested-ternary */}
-            {users.loading.search ? (
-              <div className="search-container__suggestions">
-                {[...Array(3).keys()].map(() => (
-                  <div className="user user--skeleton">
-                    <figure className="skeleton" />
-                    <span className="skeleton" />
-                    <span className="skeleton ml-1" />
-                  </div>
-                ))}
-              </div>
-            ) : users.searchResults.length === 0 ? (
-              <div className="search-container__suggestions">
+        <div className={isSearching ? "search-container__suggestions search-container__suggestions--show" : "search-container__suggestions"}>
+          {loading ? (
+            <>
+              {[...Array(3).keys()].map(() => (
+                <div className="user user--skeleton">
+                  <figure className="skeleton" />
+                  <span className="skeleton" />
+                  <span className="skeleton ml-1" />
+                </div>
+              ))}
+            </>
+          ) : (
+            <>
+              {searchResults.length === 0 ? (
                 <div className="no-results">No results found</div>
-              </div>
-            ) : (
-              <div className="search-container__suggestions">
-                {users.searchResults.map((x) => (
-                  <div className="user">
-                    <figure>
-                      <img src={x.profileImage} alt={x.name} />
-                    </figure>
-                    <span>{x.name}</span>
-                  </div>
-                ))}
-              </div>
-            )}{' '}
-          </>
-        )}
+              ) : (
+                <>
+                  {searchResults.map((x) => (
+                    <div className="user">
+                      <figure>
+                        <img src={x.profileImage} alt={x.name} />
+                      </figure>
+                      <span>{x.name}</span>
+                    </div>
+                  ))}
+                </>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       <div className="header__user">

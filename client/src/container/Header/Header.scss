@@ -57,6 +57,11 @@
         max-height: 60vh;
         overflow-x: hidden;
         overflow-y: auto;
+        display: none;
+
+        &--show {
+            display: block;
+        }
 
         .no-results {
             padding: 1rem;

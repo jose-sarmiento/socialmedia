@@ -345,6 +345,10 @@
         button:hover {
             background: var(--bg-light);
         }
+
+        button:disabled {
+            pointer-events: none;
+        }
 	}
 
 	&--skeleton {

@@ -12,7 +12,13 @@ const getPosts = async (req, res) => {
 const getPost = async (req, res) => {
 	const post = await Post.findById(req.params.id)
 		.populate('author', 'firstname lastname username profileImage')
-		.populate('sharedPost');
+		.populate({
+             path: 'sharedPost',
+             populate: {
+                path: 'author',
+                select: 'firstname lastname username profileImage'
+             }
+          });
 	if (!post) {
 		throw new NotFound('Post not found');
 	}
