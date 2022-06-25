@@ -87,12 +87,12 @@ function Header() {
               ) : (
                 <>
                   {searchResults.map((x) => (
-                    <div className="user">
+                    <Link to={`/users/${x._id}`} className="user">
                       <figure>
                         <img src={x.profileImage} alt={x.name} />
                       </figure>
                       <span>{x.name}</span>
-                    </div>
+                    </Link>
                   ))}
                 </>
               )}

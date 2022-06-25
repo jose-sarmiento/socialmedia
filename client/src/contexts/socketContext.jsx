@@ -75,6 +75,7 @@ export function SocketProvider({ children }) {
     });
 
     socket.current.on('event://receive-new-chat', (chat) => {
+        console.log(chat)
       dispatch(newChatReceived(chat));
     });
 
