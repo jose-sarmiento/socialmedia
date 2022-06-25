@@ -9,6 +9,7 @@ import './Message.scss';
 
 const Message = React.forwardRef((props, ref) => {
   const { message, sameAsPrevious, isLastItem } = props;
+  console.log(message);
 
   const auth = useSelector((state) => state.auth);
 

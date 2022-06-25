@@ -136,6 +136,10 @@
 		cursor: pointer;
 	}
 
+    &__message:disabled {
+        cursor: progress;
+    }
+
 
 	figure {
 		height: 7rem;

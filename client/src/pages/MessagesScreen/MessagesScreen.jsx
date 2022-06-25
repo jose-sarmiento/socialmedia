@@ -58,6 +58,7 @@ function MessagesScreen() {
       setMessages([]);
       return;
     }
+    console.log(list);
     setMessages(convo.messages.map((msg) => ({ ...msg, sent: true })));
   }, [list, activeChatId]);
 

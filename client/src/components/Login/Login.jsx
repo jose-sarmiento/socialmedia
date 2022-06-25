@@ -47,7 +47,7 @@ function Login() {
 
   return (
     <div className="signin">
-      <h2 className="signin__title mb-4">This is not You?</h2>
+      <h2 className="signin__title mb-4">Howdy, Welcome back!</h2>
       <form className="w-100 form" onSubmit={handleSubmit}>
         {error && <p className="form__error">{error}</p>}
         {auth.errors?.login && (

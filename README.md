@@ -5,11 +5,14 @@ Create, likes, share posts. Chat with friends using realtime messaging and many 
 
 [See project live](https://socialize-v1.herokuapp.com/)
 
-#### Use this login credentials to test the project
-- email: ut@aol.net
-- password: 123456
-- email: dignissim.tempor.arcu@protonmail.couk
-- password: 123456
+#### Use this login credentials for demo
+```
+    email: ut@aol.net
+    password: 123456
+    
+    email: dignissim.tempor.arcu@protonmail.couk
+    password: 123456
+```
 
 ## Technology used
 
@@ -78,6 +81,10 @@ To Start Client:
 To Start both Frontend and Server:
 
 `npm run dev`  
+
+## Status (Unfinished)
+* some unexpected behavious happening in messages screen. It is working but not what i expected to be
+* uploading image is temporary then deleted by herouku, it is temporary only since i cant afford cloud service for uploading like aws
 
 ## Reflection
 

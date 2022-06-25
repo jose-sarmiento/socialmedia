@@ -1,0 +1,2 @@
+loading incdicator when creating chat in profile screen
+fix messegas screen

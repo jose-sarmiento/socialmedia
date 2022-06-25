@@ -39,7 +39,7 @@ function ViewUserScreen() {
   const users = useSelector((state) => state.entities.users);
   const { viewUser } = users;
   const chats = useSelector((state) => state.entities.chats);
-  const { createdChat } = chats;
+  const { createdChat, loading } = chats;
   const { emitChat } = useSocketContext();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ function ViewUserScreen() {
     emitChat(createdChat, viewUser._id);
     navigate('/messages');
     dispatch(createChatReset());
-  }, [createdChat, viewUser._id, navigate, dispatch, emitChat]);
+  }, [createdChat, viewUser, navigate, dispatch, emitChat]);
 
   const messageHandler = () => {
     const exists = chats.list.find((chat) =>
@@ -89,6 +89,7 @@ function ViewUserScreen() {
             <div className="userinfo">
               <button
                 type="button"
+                disabled={loading.create}
                 className="userinfo__message"
                 onClick={messageHandler}
               >

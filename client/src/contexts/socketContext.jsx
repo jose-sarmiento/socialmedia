@@ -68,6 +68,7 @@ export function SocketProvider({ children }) {
     });
 
     socket.current.on('event://receive-message', (payload) => {
+        console.log(payload);
       const { conversationId, message } = payload;
       dispatch(readMessageInConversation(conversationId, message._id));
       dispatch(messageReceived(payload));
