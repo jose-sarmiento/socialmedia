@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
 	},
 	profileImage: {
 		type: String,
-		default: 'http://127.0.0.1:8000/profiles/defaultProfile.jpg'
+		default: '/defaultProfile.jpg'
 	},
 	coverImage: String,
 	birthdate: {
