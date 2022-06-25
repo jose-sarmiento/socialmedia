@@ -123,7 +123,6 @@ function HomeScreen() {
           <div className="list__header">
             <FaGift />
             <h4>Birthdays</h4>
-            {users.birthdays.length > 2 && <Link to="/friends">See all</Link>}
           </div>
           {/* eslint-disable-next-line */}
           {users.loading.get ? (
@@ -166,7 +165,7 @@ function HomeScreen() {
           <div className="list__header">
             <FaGift />
             <h4>Friend Requests</h4>
-            {users.friendRequests.length > 2 && <span>See all</span>}
+            {users.friendRequests.length > 2 && <Link to="/friends">See all</Link>}
           </div>
           {/* eslint-disable-next-line */}
           {users.loading.get ? (
