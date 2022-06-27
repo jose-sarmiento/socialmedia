@@ -93,12 +93,10 @@ io.on('connection', (socket) => {
   });
 
   socket.on('event://send-message', (payload) => {
-    console.log(payload);
     socket.broadcast.emit('event://receive-message', payload);
   });
 
   socket.on('event://send-new-chat', (payload) => {
-    console.log(payload);
     socket.join(payload.receiverId);
     socket.broadcast.emit('event://receive-new-chat', payload);
   });

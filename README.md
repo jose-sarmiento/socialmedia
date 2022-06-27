@@ -82,9 +82,8 @@ To Start both Frontend and Server:
 
 `npm run dev`  
 
-## Status (Unfinished)
-* some unexpected behavious happening in messages screen. It is working but not what i expected to be
-* uploading image is temporary then deleted by herouku, it is temporary only since i cant afford cloud service for uploading like aws
+## Note
+* uploading image is ok temporary then deleted by herouku after some time, it is temporary only since i cant afford cloud service for uploading like aws atleast for now.
 
 ## Reflection
 
